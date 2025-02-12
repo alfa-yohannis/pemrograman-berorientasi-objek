@@ -1,0 +1,1133 @@
+\chapter{Konsep Dasar Pemrograman Berorientasi Objek}
+
+\section{Pendahuluan}
+
+Bab ini membahas konsep dasar pemrograman berorientasi objek (\textit{Object-Oriented Programming} atau OOP) dalam bahasa Java serta berbagai prinsip dan teknik yang mendukung pengembangan perangkat lunak yang modular, fleksibel, dan dapat digunakan kembali. Java adalah bahasa pemrograman yang berorientasi objek, di mana setiap program dibangun menggunakan objek dan kelas sebagai komponen utama. Dengan memahami prinsip OOP dan teknik desain perangkat lunak, pengembang dapat membangun aplikasi yang lebih terstruktur dan mudah dipelihara.
+
+Setiap program dalam Java harus berada dalam sebuah kelas yang berfungsi sebagai cetak biru untuk objek yang akan dibuat. Kelas mendefinisikan atribut dan metode yang merepresentasikan karakteristik serta perilaku dari suatu entitas. Selain itu, Java memungkinkan penggunaan konsep enkapsulasi untuk membatasi akses terhadap data, pewarisan untuk mendukung kode yang lebih efisien, polimorfisme untuk meningkatkan fleksibilitas metode, serta abstraksi untuk menyederhanakan kompleksitas sistem. Pemahaman keempat prinsip utama OOP ini merupakan dasar dalam membangun perangkat lunak berbasis Java.
+
+Selain konsep OOP, mata kuliah ini juga akan membahas penerapan berbagai teknik desain perangkat lunak yang digunakan dalam pengembangan aplikasi Java modern. Salah satunya adalah penggunaan \textbf{Object-Relational Mapping} (ORM) seperti \textit{Hibernate}, yang memungkinkan pengembang untuk mengelola basis data menggunakan konsep objek tanpa perlu menulis kueri SQL secara langsung. ORM membantu meningkatkan efisiensi dalam interaksi antara aplikasi dan basis data.
+
+Dalam pengembangan antarmuka pengguna berbasis Java, \textbf{JavaFX} menjadi salah satu teknologi utama yang mendukung pemrograman berbasis event dan penggunaan pola desain seperti \textit{Model-View-Controller} (MVC), \textit{Observer}, dan \textit{Dependency Injection}. Dengan memahami JavaFX dan pola desain yang digunakan, pengembang dapat membangun aplikasi yang lebih modular dan mudah dikelola.
+
+Selain itu, mata kuliah ini juga membahas representasi visual dari desain perangkat lunak menggunakan \textbf{Unified Modeling Language} (UML). Diagram UML seperti \textit{Diagram Kelas, Diagram Objek, Diagram Sekuensial, Diagram Aktivitas, Diagram Keadaan, dan Diagram Use Case} membantu dalam memahami serta merancang struktur dan aliran kerja dalam sistem perangkat lunak.
+
+Untuk meningkatkan kualitas desain perangkat lunak, mata kuliah ini juga memperkenalkan \textbf{Prinsip SOLID}, yaitu kumpulan prinsip desain yang digunakan untuk membangun kode yang lebih bersih dan terstruktur:
+\begin{itemize}
+	\item \textbf{Single Responsibility Principle} – Setiap kelas harus memiliki satu alasan untuk berubah.
+	\item \textbf{Open/Closed Principle} – Kode harus dapat diperluas tanpa perlu mengubah kode yang sudah ada.
+	\item \textbf{Liskov Substitution Principle} – Subkelas harus dapat menggantikan kelas induknya tanpa mengubah perilaku yang diharapkan.
+	\item \textbf{Interface Segregation Principle} – Sebuah kelas tidak boleh dipaksa untuk mengimplementasikan antarmuka yang tidak diperlukan.
+	\item \textbf{Dependency Inversion Principle} – Modul tingkat tinggi tidak boleh bergantung pada modul tingkat rendah; keduanya harus bergantung pada abstraksi.
+\end{itemize}
+
+Mata kuliah ini juga akan membahas berbagai \textbf{pola desain} yang digunakan dalam pengembangan perangkat lunak berbasis Java. Pola desain ini dibagi menjadi tiga kategori utama:
+\begin{itemize}
+	\item \textbf{Pola Kreasi}, seperti \textit{Singleton, Factory, Abstract Factory, Builder, dan Prototype}, yang membantu dalam pengelolaan pembuatan objek.
+	\item \textbf{Pola Struktural}, seperti \textit{Adapter, Decorator, Bridge, Composite, Facade, Proxy, dan Flyweight}, yang membantu dalam pengorganisasian struktur kode agar lebih fleksibel.
+	\item \textbf{Pola Perilaku}, seperti \textit{Strategy, Command, Mediator, Observer, State, Chain of Responsibility, dan Template Method}, yang digunakan untuk mengelola interaksi antara objek dalam sistem.
+\end{itemize}
+
+Dengan memahami konsep OOP, ORM, JavaFX, UML, Prinsip SOLID, serta pola desain dalam pengembangan perangkat lunak, pelajar diharapkan mampu membangun aplikasi yang modular, fleksibel, dan dapat digunakan kembali. Materi dalam mata kuliah ini akan menjadi dasar yang kuat bagi pelajar dalam memahami teknik-teknik rekayasa perangkat lunak yang lebih lanjut. 
+
+Berikut adalah topik-topik yang akan dipelajari dalam 14 pertemuan:
+
+\begin{enumerate}
+	\item Pengenalan Pemrograman Berorientasi Objek (OOP)
+	\item Pengenalan ORM (Object-Relational Mapping)
+	\item Pengenalan JavaFX dan Pola Desain yang Digunakan (MVC, Observer, Dependency Injection)
+	\item Komponen JavaFX dan Scene Graph
+	\item Diagram UML untuk Desain Berorientasi Objek (Bagian 1) (Diagram Kelas, Diagram Objek, Asosiasi, Agregasi, Komposisi)
+	\item Diagram UML untuk Desain Berorientasi Objek (Bagian 2) (Diagram Sekuensial, Diagram Aktivitas, Diagram Keadaan, Diagram Use Case)
+	\item Prinsip Desain Berorientasi Objek (SOLID: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, Dependency Inversion)
+	\item Pengenalan Pola Desain dan Pola Kreasi (Bagian 1) (Singleton, Factory, Abstract Factory)
+	\item Pola Kreasi Lanjutan (Bagian 2) (Builder, Prototype, Dependency Injection)
+	\item Pola Struktural Dasar (Adapter, Decorator, Bridge)
+	\item Pola Struktural Lanjutan (Composite, Facade, Proxy)
+	\item Pola Struktural Tambahan dan Pengenalan Pola Perilaku (Flyweight, Interpreter, Observer)
+	\item Pola Perilaku Dasar (Strategy, Command, Mediator)
+	\item Pola Perilaku Lanjutan (State, Chain of Responsibility, Template Method)
+\end{enumerate}
+
+
+
+\section{Deskripsi Outcome-Based Education (OBE)}
+
+Pendekatan Outcome-Based Education (OBE) dalam materi ini dirancang untuk memastikan bahwa mahasiswa memahami dan dapat menerapkan berbagai konsep pemrograman berorientasi objek, desain pola, dan pengembangan aplikasi Java. Setiap pertemuan memiliki target formatif yang terukur (\textit{measurable outcome}) guna memastikan pemahaman yang progresif sebelum mencapai capaian sumatif di akhir.
+
+\subsection{Capaian Formatif Per Pertemuan}
+
+\begin{enumerate}
+	
+	\item \textbf{Pengenalan Pemrograman Berorientasi Objek (OOP)}  \\
+	\textbf{Target Formatif:} Mahasiswa memahami konsep dasar pemrograman berorientasi objek (OOP) dan bagaimana mengimplementasikannya dalam Java.  \\
+	\textbf{Measurable Outcomes:}
+	\begin{itemize}
+		\item Menjelaskan konsep dasar OOP, termasuk kelas, objek, enkapsulasi, pewarisan, polimorfisme, dan abstraksi.
+		\item Mengembangkan kelas Java sederhana dengan atribut dan metode yang sesuai.
+		\item Menggunakan prinsip enkapsulasi dalam pembuatan kelas.
+		\item Menginstansiasi objek dari sebuah kelas dan mengakses metode serta atributnya.
+	\end{itemize}
+	
+	\item \textbf{Pengenalan ORM (Object-Relational Mapping)}  \\
+	\textbf{Target Formatif:} Mahasiswa memahami konsep ORM dan bagaimana menggunakan Hibernate untuk menghubungkan objek dengan database.  \\
+	\textbf{Measurable Outcomes:}
+	\begin{itemize}
+		\item Menjelaskan konsep dasar ORM dan perbedaannya dengan pendekatan tradisional SQL.
+		\item Memahami kelebihan (\textit{abstraction, maintainability, portability}) dan kekurangan (\textit{performance overhead, complex configuration}) dari ORM.
+		\item Menggunakan Hibernate untuk melakukan pemetaan objek ke tabel database.
+		\item Membangun aplikasi CRUD sederhana menggunakan Hibernate dan menganalisis keuntungannya dalam pengelolaan data.
+	\end{itemize}
+	
+	\item \textbf{Pengembangan Antarmuka Pengguna dengan JavaFX}  \\
+	\textbf{Target Formatif:} Mahasiswa memahami prinsip dasar JavaFX, pola desain yang digunakan, serta mampu merancang dan mengimplementasikan antarmuka pengguna yang modular dan event-driven.  \\
+	\textbf{Measurable Outcomes:}
+	\begin{itemize}
+		\item Menjelaskan konsep dasar JavaFX, termasuk Scene Graph dan pola desain MVC dalam pengembangan antarmuka pengguna.
+		\item Mendesain dan mengimplementasikan antarmuka pengguna berbasis JavaFX dengan pemisahan antara model, view, dan controller.
+		\item Menggunakan berbagai komponen JavaFX dan tata letak seperti VBox, HBox, dan GridPane untuk membangun antarmuka yang dinamis dan interaktif.
+	\end{itemize}
+	
+	
+	\item \textbf{Pemodelan Perangkat Lunak dengan Diagram UML}  \\
+	\textbf{Target Formatif:} Mahasiswa memahami berbagai jenis diagram UML dan mampu menggunakannya untuk mendokumentasikan dan merancang sistem perangkat lunak secara sistematis.  \\
+	\textbf{Measurable Outcomes:}
+	\begin{itemize}
+		\item Menjelaskan konsep dan manfaat diagram UML, termasuk diagram kelas, objek, sekuensial, aktivitas, dan use case dalam rekayasa perangkat lunak.
+		\item Mendesain berbagai diagram UML untuk merepresentasikan struktur dan alur kerja suatu sistem perangkat lunak.
+		\item Menggunakan alat bantu seperti \texttt{PlantUML} atau \texttt{Draw.io} untuk membuat dan mengevaluasi diagram UML dalam studi kasus nyata.
+	\end{itemize}
+	
+	
+	\item \textbf{Prinsip Desain Berorientasi Objek}  \\
+	\textbf{Target Formatif:} Mahasiswa memahami prinsip SOLID dan bagaimana menggunakannya untuk meningkatkan kualitas desain perangkat lunak.  \\
+	\textbf{Measurable Outcomes:}
+	\begin{itemize}
+		\item Menjelaskan prinsip SOLID: Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, dan Dependency Inversion.
+		\item Menganalisis kode yang melanggar prinsip SOLID dan memberikan perbaikan yang sesuai.
+		\item Mendesain aplikasi yang mengikuti prinsip SOLID untuk meningkatkan maintainability dan scalability.
+		\item Merefaktor kode Java berdasarkan prinsip SOLID.
+	\end{itemize}
+	
+	
+	\item \textbf{Penerapan Pola Desain dalam Pengembangan Perangkat Lunak}  \\
+	\textbf{Target Formatif:} Mahasiswa memahami konsep pola desain dalam pengembangan perangkat lunak dan mampu menerapkannya untuk meningkatkan modularitas, fleksibilitas, dan maintainability sistem.  \\
+	\textbf{Measurable Outcomes:}
+	\begin{itemize}
+		\item Menjelaskan perbedaan dan manfaat pola desain kreasi (Singleton, Factory, Abstract Factory, Builder, Prototype, Dependency Injection), struktural (Adapter, Decorator, Bridge, Composite, Facade, Proxy, Flyweight), dan perilaku (Strategy, Command, Mediator, Observer, State, Chain of Responsibility, Template Method) dalam konteks pengembangan perangkat lunak.
+		\item Mengimplementasikan berbagai pola desain dalam Java untuk meningkatkan modularitas dan keterbacaan kode sesuai dengan kebutuhan sistem.
+		\item Mengevaluasi penerapan pola desain dalam proyek perangkat lunak untuk memastikan efisiensi, skalabilitas, dan kemudahan pemeliharaan sistem.
+	\end{itemize}
+	
+	
+\end{enumerate}
+
+\subsection{Capaian Sumatif}
+
+Sebagai bagian dari capaian sumatif, mahasiswa akan mengembangkan proyek perangkat lunak yang mengintegrasikan konsep UML, prinsip SOLID, ORM, JavaFX, dan pola desain. Proyek ini akan mencakup desain, implementasi, dokumentasi, serta evaluasi peer review untuk memastikan kualitas dan efektivitas solusi yang dihasilkan.
+
+\section{Struktur Kode Program Java}
+
+Kode program Java terdiri dari beberapa komponen utama yang membentuk struktur sebuah aplikasi. Berikut adalah penjelasan mengenai struktur dasar kode program Java:
+
+\subsection{Kelas (Class)}
+
+Semua kode Java harus didefinisikan dalam kelas. Kelas adalah blueprint atau template untuk objek yang akan dibuat. Berikut adalah contoh deklarasi kelas:
+
+\begin{lstlisting}[style=JavaStyle]
+	public class MyClass {
+		// Kode kelas di sini
+	}
+\end{lstlisting}
+
+\subsection{Metode Utama (Main Method)}
+
+Metode utama adalah titik masuk program Java. Program mulai dieksekusi dari metode ini. Berikut adalah sintaks untuk metode utama:
+
+\begin{lstlisting}[style=JavaStyle]
+	public static void main(String[] args) {
+		// Kode program di sini
+	}
+\end{lstlisting}
+
+\subsection{Atribut dan Variabel}
+\textbf{Atribut} adalah variabel yang didefinisikan di dalam sebuah kelas dan digunakan untuk merepresentasikan properti atau karakteristik dari sebuah objek. Sementara itu, \textbf{variabel} digunakan untuk menyimpan data dan biasanya dideklarasikan di dalam metode atau blok kode. Perbedaan utama antara atribut dan variabel adalah pada cakupan dan tujuannya:
+\begin{itemize}
+	\item \textbf{Atribut} terikat pada keadaan objek dan merupakan bagian dari kelas atau instansinya.
+	\item \textbf{Variabel} biasanya digunakan untuk penyimpanan sementara dan perhitungan di dalam metode atau blok kode.
+\end{itemize}
+
+\subsection{Deklarasi Atribut}
+Atribut dideklarasikan di dalam kelas untuk merepresentasikan karakteristik dari objek. Berikut adalah contoh deklarasi atribut dalam sebuah kelas:
+
+\begin{lstlisting}[style=JavaStyle]
+	class Person {
+		String name;
+		int age;
+	}
+\end{lstlisting}
+
+Pada contoh ini, \texttt{name} dan \texttt{age} adalah atribut dari kelas \texttt{Person}.
+
+\subsection{Deklarasi Variabel}
+Variabel digunakan untuk menyimpan data. Variabel harus dideklarasikan dengan tipe data sebelum digunakan. Berikut adalah contoh deklarasi variabel:
+
+\begin{lstlisting}[style=JavaStyle]
+	int age = 30;
+	String name = "John";
+\end{lstlisting}
+
+Pada contoh ini, \texttt{age} dan \texttt{name} adalah variabel yang menyimpan data secara lokal di dalam metode atau blok kode.
+
+
+\subsection{Metode (Methods)}
+
+Metode adalah blok kode yang melakukan tugas tertentu dan dapat dipanggil dari bagian lain program. Berikut adalah contoh metode:
+
+\begin{lstlisting}[style=JavaStyle]
+	public void greet() {
+		System.out.println("Hello!");
+	}
+\end{lstlisting}
+
+\subsection{Komentar}
+
+Komentar digunakan untuk menjelaskan kode dan tidak dieksekusi. Ada dua jenis komentar dalam Java:
+
+\begin{itemize}
+	\item \texttt{// Ini adalah komentar satu baris}
+	\item \texttt{/* Ini adalah komentar multi-baris */}
+\end{itemize}
+
+\begin{lstlisting}[style=JavaStyle]
+	// Ini adalah komentar satu baris
+	/*
+	Ini adalah komentar multi-baris
+	*/
+\end{lstlisting}
+
+\subsection{Import}
+
+Pernyataan \texttt{import} digunakan untuk memasukkan kelas dari paket lain ke dalam program. Berikut adalah contoh pernyataan import:
+
+\begin{lstlisting}[style=JavaStyle]
+	import java.util.Scanner;
+\end{lstlisting}
+
+\section{Contoh Kasus Sederhana: Program HelloWorld}
+
+Untuk memberikan gambaran lengkap tentang struktur kode program Java, mari kita lihat sebuah contoh kasus sederhana: program "Hello World" yang telah dibahas sebelumnya. Program ini akan menunjukkan bagaimana semua komponen yang telah dibahas bekerja bersama.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh Program HelloWorld.java}]
+	package hello;
+	
+	import java.util.Scanner; // Mengimpor kelas Scanner
+	
+	public class HelloWorld {
+		// Metode utama: Titik masuk program
+		public static void main(String[] args) {
+			// Deklarasi variabel
+			String name;
+			
+			// Membuat objek Scanner untuk menerima input dari pengguna
+			Scanner scanner = new Scanner(System.in);
+			
+			// Meminta input dari pengguna
+			System.out.print("Masukkan nama Anda: ");
+			name = scanner.nextLine();  // Membaca input nama dari pengguna
+			
+			// Menampilkan output dengan input pengguna
+			System.out.println("Hello " + name + "!");
+			
+			// Menutup objek Scanner
+			scanner.close();
+		}
+	}
+\end{lstlisting}
+
+
+\begin{itemize}
+	\item \texttt{package hello;} - Mendeklarasikan paket tempat kelas ini berada. Paket membantu dalam mengorganisir kode.
+	\item \texttt{import java.util.Scanner;} - Mengimpor kelas \texttt{Scanner} dari paket \texttt{java.util} untuk menerima input dari pengguna.
+	\item \texttt{public class HelloWorld \{ \}} - Mendefinisikan kelas publik \texttt{HelloWorld}. Kelas ini berfungsi sebagai blueprint untuk objek.
+	\item \texttt{public static void main(String[] args) \{ \}} - Metode utama yang dieksekusi pertama kali. Kode program dimulai dari sini.
+	\item \texttt{String name;} - Deklarasi variabel \texttt{name} yang akan menyimpan input nama pengguna.
+	\item \texttt{Scanner scanner = new Scanner(System.in);} - Membuat objek \texttt{Scanner} untuk membaca input dari konsol.
+	\item \texttt{System.out.print("Masukkan nama Anda: ");} - Mencetak pesan ke konsol meminta pengguna untuk memasukkan nama.
+	\item \texttt{name = scanner.nextLine();} - Membaca input nama dari pengguna dan menyimpannya dalam variabel \texttt{name}.
+	\item \texttt{System.out.println("Hello " + name + "!");} - Mencetak pesan "Hello [Nama]!" ke konsol dengan nama yang dimasukkan oleh pengguna.
+	\item \texttt{scanner.close();} - Menutup objek \texttt{Scanner} untuk menghindari kebocoran sumber daya.
+\end{itemize}
+
+Program ini merupakan contoh sederhana yang mencakup semua komponen dasar dari sebuah aplikasi Java. Anda dapat mengubah dan memperluas program ini dengan menambahkan lebih banyak logika, metode, dan fitur lainnya sesuai dengan kebutuhan aplikasi Anda.
+
+\section{Kode Java: Menghitung Panjang Hipotenusa}
+
+Kode berikut merupakan contoh program Java sederhana untuk menghitung panjang hipotenusa dari sebuah segitiga siku-siku menggunakan rumus Pythagoras. Program ini menghitung panjang hipotenusa berdasarkan panjang kedua sisi segitiga yang diketahui.
+
+\begin{lstlisting}[style=JavaStyle, caption={Kode Java: MyTest.java}]
+	package org.pradita.ddp.pertemuan02;
+	
+	public class MyTest {
+		public static void main(String[] args) {
+			double a, b;
+			a = 3.0;
+			b = 4.0;
+			double c = Math.sqrt(a * a + b * b);
+			System.out.println(c);
+		}
+	}
+\end{lstlisting}
+
+Kode di atas merupakan program Java yang menghitung panjang hipotenusa segitiga siku-siku. Berikut adalah penjelasan dari setiap bagian kode tersebut:
+
+\begin{itemize}
+	\item \texttt{package org.pradita.ddp.pertemuan02;} - Mendeklarasikan paket tempat kelas ini berada. Paket membantu dalam mengorganisir dan mengelompokkan kelas.
+	\item \texttt{public class MyTest \{ \}} - Mendefinisikan kelas publik \texttt{MyTest}. Kelas ini adalah blueprint dari objek yang akan dibuat.
+	\item \texttt{public static void main(String[] args) \{ \}} - Metode utama yang dijalankan pertama kali ketika program dieksekusi. Ini adalah titik masuk dari aplikasi Java.
+	\item \texttt{double a, b;} - Mendeklarasikan dua variabel bertipe \texttt{double} yang akan menyimpan nilai panjang sisi segitiga.
+	\item \texttt{a = 3.0;} - Menginisialisasi variabel \texttt{a} dengan nilai 3.0.
+	\item \texttt{b = 4.0;} - Menginisialisasi variabel \texttt{b} dengan nilai 4.0.
+	\item \texttt{double c = Math.sqrt(a * a + b * b);} - Menghitung panjang hipotenusa \texttt{c} menggunakan rumus Pythagoras dan fungsi \texttt{Math.sqrt()} untuk menghitung akar kuadrat dari hasil penjumlahan kuadrat \texttt{a} dan \texttt{b}.
+	\item \texttt{System.out.println(c);} - Mencetak hasil perhitungan panjang hipotenusa ke konsol.
+\end{itemize}
+
+Program ini adalah contoh sederhana yang mendemonstrasikan penggunaan operasi matematika dan metode dari kelas \texttt{Math} di Java untuk menyelesaikan masalah geometris. Anda dapat mengubah nilai dari \texttt{a} dan \texttt{b} untuk menghitung panjang hipotenusa dari segitiga dengan sisi yang berbeda.
+
+\section{Kode Java: Kelas Person dan Penggunaannya}
+
+Di bawah ini adalah contoh program Java yang mendemonstrasikan penggunaan kelas dan metode dalam Java. Program ini terdiri dari dua kelas: \texttt{Person} dan \texttt{Main}. Kelas \texttt{Person} mengilustrasikan konsep enkapsulasi dengan menggunakan metode getter dan setter, serta konstruktor. Kelas \texttt{Main} menunjukkan cara membuat dan menggunakan objek dari kelas \texttt{Person}.
+
+\subsection{Kode Kelas Person.java}
+
+\begin{lstlisting}[style=JavaStyle, caption={Kode Java: Person.java}]
+	package org.pradita.ddp.pertemuan02;
+	
+	public class Person {
+		
+		private String name, lastName;
+		private int age;
+		
+		public Person() {
+			this.name = "Charlie";
+			this.age = 17;
+			this.lastName = "Chaplin";
+		}
+		
+		public Person(String name, String lastName, int age) {
+			this.name = name;
+			this.age = age;
+			this.lastName = lastName;
+		}
+		
+		public String getFullName() {
+			return name + " " + lastName;
+		}
+		
+		public void introduceMyself() {
+			System.out.println("My name is " + this.getFullName() + " and my age is " + this.getAge());
+		}
+		
+		public String getName() {
+			return this.name;
+		}
+		
+		public int getAge() {
+			return this.age;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public void setAge(int age) {
+			this.age = age;
+		}
+	}
+\end{lstlisting}
+
+\subsection{Kode Kelas Main.java}
+
+\begin{lstlisting}[style=JavaStyle, caption={Kode Java: Main.java}]
+	package org.pradita.ddp.pertemuan02;
+	
+	public class Main {
+		
+		public static void main(String[] args) {
+			
+			Person person1 = new Person();
+			Person person2 = new Person("Alice", "Wonderland", 31);
+			
+			System.out.println("Person1's name is " + person1.getName() + ", age " + person1.getAge());
+			System.out.println("Person2's name is " + person2.getName() + ", age " + person2.getAge());
+			
+			System.out.println("Person1's fullname is " + person1.getFullName() + ", age " + person1.getAge());
+			System.out.println("Person2's fullname is " + person2.getFullName() + ", age " + person2.getAge());
+			
+			person1.introduceMyself();
+			
+			person2.setName("Bob");
+			person2.introduceMyself();
+		}
+		
+	}
+\end{lstlisting}
+
+\subsection{Penjelasan Kode}
+
+\subsubsection{Kelas dan Objek}
+
+Dalam Java, sebuah \textbf{kelas} adalah blueprint atau template yang digunakan untuk membuat objek. Kelas mendefinisikan atribut dan metode yang dimiliki oleh objek. 
+
+\textbf{Objek} adalah instansi dari kelas. Ketika Anda membuat objek dari kelas, Anda dapat menggunakan atribut dan metode yang didefinisikan dalam kelas tersebut.
+
+\subsubsection{Atribut}
+
+\textbf{Atribut} adalah variabel yang dideklarasikan di dalam kelas dan digunakan untuk menyimpan data tentang objek. Dalam contoh kode di atas, atribut dari kelas \texttt{Person} termasuk \texttt{name}, \texttt{lastName}, dan \texttt{age}. Atribut ini menyimpan informasi tentang seseorang.
+
+\subsubsection{Metode}
+
+\textbf{Metode} adalah fungsi yang dideklarasikan di dalam kelas dan dapat melakukan operasi pada atribut atau melakukan tindakan tertentu. Misalnya, metode \texttt{getFullName()} di kelas \texttt{Person} mengembalikan nama lengkap seseorang dengan menggabungkan \texttt{name} dan \texttt{lastName}. Metode \texttt{introduceMyself()} mencetak informasi pribadi ke konsol.
+
+Program ini terdiri dari dua bagian utama:
+
+\begin{itemize}
+	\item \textbf{Kelas Person:} Kelas ini mendefinisikan atribut pribadi \texttt{name}, \texttt{lastName}, dan \texttt{age} untuk menyimpan informasi tentang seseorang. Terdapat dua konstruktor: satu konstruktor default dan satu konstruktor dengan parameter untuk menginisialisasi atribut. Metode \texttt{getFullName()} mengembalikan nama lengkap, dan \texttt{introduceMyself()} mencetak informasi pribadi ke konsol.
+	\item \textbf{Kelas Main:} Kelas ini berfungsi sebagai titik masuk program. Di sini, dua objek \texttt{Person} dibuat menggunakan kedua konstruktor yang tersedia. Program mencetak nama dan umur dari kedua objek, nama lengkap, serta menggunakan metode \texttt{introduceMyself()}. Selain itu, nama dari objek \texttt{person2} diubah dan diperkenalkan kembali.
+\end{itemize}
+
+\section{Konsep Dasar Pemrograman Berorientasi Objek di Java}
+
+\subsection{Kelas Abstrak}
+
+Kelas abstrak adalah kelas yang tidak dapat diinstansiasi dan sering digunakan sebagai dasar untuk kelas lain. Kelas ini dapat memiliki metode abstrak (metode tanpa implementasi) yang harus diimplementasikan oleh kelas turunannya. Kelas abstrak juga dapat memiliki metode konkret (metode dengan implementasi).
+
+\textbf{Contoh Kelas Abstrak:}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	public abstract class Shape {
+		private String color;
+		
+		public Shape(String color) {
+			this.color = color;
+		}
+		
+		public String getColor() {
+			return color;
+		}
+		
+		public abstract double getArea();
+	}
+\end{lstlisting}
+
+Pada contoh di atas, kelas \texttt{Shape} adalah kelas abstrak yang memiliki metode abstrak \texttt{getArea()} yang harus diimplementasikan oleh kelas turunannya. Kelas ini juga memiliki metode konkret \texttt{getColor()}.
+
+\subsection{Pewarisan (Inheritance)}
+
+Pewarisan memungkinkan sebuah kelas (kelas turunan) untuk mewarisi atribut dan metode dari kelas lain (kelas dasar). Ini memungkinkan penggunaan kembali kode dan mendukung hierarki kelas. Kelas turunan dapat mengakses metode dan atribut dari kelas dasar, serta menambahkan atau memodifikasi fungsionalitas sesuai kebutuhan.
+
+\textbf{Contoh Pewarisan:}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	public class Rectangle extends Shape {
+		private double width;
+		private double height;
+		
+		public Rectangle(String color, double width, double height) {
+			super(color);
+			this.width = width;
+			this.height = height;
+		}
+		
+		@Override
+		public double getArea() {
+			return width * height;
+		}
+		
+		public double getWidth() {
+			return width;
+		}
+		
+		public double getHeight() {
+			return height;
+		}
+	}
+\end{lstlisting}
+
+\subsection{Override}
+
+\texttt{Override} adalah konsep dalam pewarisan di mana sebuah metode di kelas turunan menggantikan atau mengubah implementasi dari metode yang diwarisi dari kelas dasar. Kata kunci \texttt{@Override} digunakan untuk menunjukkan bahwa metode tersebut dimaksudkan untuk menggantikan metode yang ada di kelas dasar. Ini membantu menghindari kesalahan dan memastikan bahwa metode yang ditulis benar-benar menggantikan metode di kelas dasar.
+
+\textbf{Contoh Override:}
+
+\begin{lstlisting}[style=JavaStyle]
+	@Override
+	public double getArea() {
+		return width * height;
+	}
+\end{lstlisting}
+
+Pada contoh di atas, metode \texttt{getArea()} yang dideklarasikan dalam kelas \texttt{Rectangle} menggantikan metode \texttt{getArea()} yang dideklarasikan dalam kelas \texttt{Shape}. Dengan menggunakan \texttt{@Override}, kita menandakan bahwa metode ini menggantikan implementasi metode yang sama dari kelas dasar, sehingga meningkatkan kejelasan dan mencegah potensi kesalahan.
+
+\subsection{Interface}
+
+\textbf{Interface} adalah sebuah kontrak dalam pemrograman berorientasi objek yang mendefinisikan metode tanpa memberikan implementasinya. Interface berguna untuk mendefinisikan perilaku umum yang harus dimiliki oleh berbagai kelas tanpa memerlukan pewarisan langsung. Setiap kelas yang mengimplementasikan sebuah interface harus menyediakan implementasi untuk semua metode yang didefinisikan dalam interface tersebut.
+
+\textbf{Contoh Interface:}
+
+\begin{lstlisting}[style=JavaStyle, caption={Drawable.java}]
+	package edu.example;
+	
+	public interface Drawable {
+		void draw();
+	}
+\end{lstlisting}
+
+Pada contoh di atas, \texttt{Drawable} adalah interface dengan metode \texttt{draw()} yang harus diimplementasikan oleh kelas apa pun yang mengimplementasikan interface ini. Interface ini memungkinkan berbagai kelas untuk memiliki metode \texttt{draw()} dengan cara yang sesuai dengan kelas masing-masing.
+
+\subsection{Implementasi Kelas \texttt{Rectangle}}
+
+Kelas \texttt{Rectangle} adalah salah satu kelas turunan dari \texttt{Shape} yang juga mengimplementasikan interface \texttt{Drawable}. Kelas ini memiliki atribut untuk lebar (\texttt{width}) dan tinggi (\texttt{height}) serta metode untuk menghitung luas dan menggambar persegi panjang.
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	public class Rectangle extends Shape implements Drawable {
+		private double width;
+		private double height;
+		
+		public Rectangle(String color, double width, double height) {
+			super(color);
+			this.width = width;
+			this.height = height;
+		}
+		
+		@Override
+		public double getArea() {
+			return width * height;
+		}
+		
+		@Override
+		public void draw() {
+			System.out.println("Drawing a rectangle with width " + width + " and height " + height);
+		}
+	}
+\end{lstlisting}
+
+Pada contoh di atas, kelas \texttt{Rectangle} mengimplementasikan interface \texttt{Drawable} dan menyediakan implementasi untuk metode \texttt{draw()}. Selain itu, kelas ini mengoverride metode abstrak \texttt{getArea()} dari \texttt{Shape} untuk menghitung luas persegi panjang.
+
+\subsection{Implementasi Kelas \texttt{Triangle}}
+
+Sebagai tambahan dari \texttt{Rectangle}, kita juga dapat membuat kelas \texttt{Triangle} yang mengimplementasikan interface \texttt{Drawable} dan mewarisi kelas abstrak \texttt{Shape}. Kelas \texttt{Triangle} ini akan memiliki metode untuk menghitung luas dan menggambar segitiga.
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	public class Triangle extends Shape implements Drawable {
+		private double base;
+		private double height;
+		
+		public Triangle(String color, double base, double height) {
+			super(color);
+			this.base = base;
+			this.height = height;
+		}
+		
+		@Override
+		public double getArea() {
+			return 0.5 * base * height;
+		}
+		
+		@Override
+		public void draw() {
+			System.out.println("Drawing a triangle with base " + base + " and height " + height);
+		}
+	}
+\end{lstlisting}
+
+Pada contoh di atas, kelas \texttt{Triangle} mengimplementasikan interface \texttt{Drawable} dan menyediakan implementasi untuk metode \texttt{draw()}. Selain itu, kelas ini mengoverride metode abstrak \texttt{getArea()} untuk menghitung luas segitiga.
+
+\subsection{Demonstrasi Polimorfisme dengan \texttt{Rectangle} dan \texttt{Triangle}}
+
+Polimorfisme memungkinkan kita untuk menggunakan objek \texttt{Rectangle} dan \texttt{Triangle} secara seragam melalui referensi kelas abstrak \texttt{Shape} atau interface \texttt{Drawable}. Berikut adalah contoh kode yang menunjukkan cara menggunakan polimorfisme dalam program untuk menggambar dan menghitung luas bentuk-bentuk ini.
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	public class ShapeDemo {
+		public static void main(String[] args) {
+			Shape[] shapes = {
+				new Rectangle("blue", 4, 5),
+				new Triangle("green", 3, 6)
+			};
+			
+			for (Shape shape : shapes) {
+				System.out.println("Color: " + shape.getColor());
+				System.out.println("Area: " + shape.getArea());
+				
+				if (shape instanceof Drawable) {
+					((Drawable) shape).draw();
+				}
+				
+				System.out.println();
+			}
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+Pada contoh di atas, array \texttt{shapes} berisi objek \texttt{Rectangle} dan \texttt{Triangle}. Dengan menggunakan referensi \texttt{Shape}, kita dapat memanggil metode \texttt{getColor()} dan \texttt{getArea()} untuk masing-masing objek tanpa harus mengetahui tipe spesifiknya. Selain itu, kita menggunakan polimorfisme dengan interface \texttt{Drawable} untuk memanggil metode \texttt{draw()} pada objek yang mengimplementasikan interface ini.
+
+
+\subsection{Implementasi dan Penggunaan}
+
+Kelas abstrak, pewarisan, dan \texttt{override} digunakan untuk membangun struktur hierarki yang lebih kompleks dengan kode yang dapat digunakan kembali. Kelas turunan dapat memperluas fungsionalitas kelas dasar, menyesuaikan perilaku metode, dan memperbaiki implementasi metode abstrak sesuai dengan kebutuhan aplikasi.
+
+\section{Contoh Implementasi Kode Abstrak dan Pewarisan di Java}
+
+\subsection{Kelas \texttt{Question}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	public abstract class Question {
+		
+		private String text;
+		private Object correctAnswer;
+		
+		public Question(String text, Object correctAnswer) {
+			this.text = text;
+			this.correctAnswer = correctAnswer;
+		}
+		
+		public void display() {
+			System.out.println(this.getText());
+		}
+		
+		public boolean checkSubmittedAnswer(Object submittedAnswer) {
+			if (correctAnswer.equals(submittedAnswer)) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+		
+		public String getText() {
+			return text;
+		}
+		
+		public Object getCorrectAnswer() {
+			return correctAnswer;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{Question} adalah kelas abstrak yang menyimpan informasi umum tentang pertanyaan, termasuk teks pertanyaan dan jawaban yang benar. Metode \texttt{display()} menampilkan teks pertanyaan, dan metode \texttt{checkSubmittedAnswer(Object submittedAnswer)} memeriksa apakah jawaban yang diberikan sesuai dengan jawaban yang benar.
+
+\subsection{Kelas \texttt{OpenQuestion}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	public class OpenQuestion extends Question {
+		
+		public OpenQuestion(String text) {
+			super(text, null);
+		}
+		
+		@Override
+		public boolean checkSubmittedAnswer(Object submittedAnswer) {
+			return true;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{OpenQuestion} adalah turunan dari kelas \texttt{Question} untuk pertanyaan terbuka. Konstruktor hanya memerlukan teks pertanyaan dan tidak memerlukan jawaban yang benar. Metode \texttt{checkSubmittedAnswer(Object submittedAnswer)} selalu mengembalikan \texttt{true} karena semua jawaban dianggap benar.
+
+\subsection{Kelas \texttt{NumericQuestion}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	public class NumericQuestion extends Question {
+		
+		public NumericQuestion(String text, int correctAnswer) {
+			super(text, correctAnswer);
+		}
+		
+		public NumericQuestion(String text, double correctAnswer) {
+			super(text, correctAnswer);
+		}
+		
+		@Override
+		public boolean checkSubmittedAnswer(Object submittedAnswer) {
+			return (double) this.getCorrectAnswer() == Double.valueOf(submittedAnswer.toString());
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{NumericQuestion} menangani pertanyaan dengan jawaban numerik. Terdapat dua konstruktor untuk menerima jawaban yang benar bertipe \texttt{int} atau \texttt{double}. Metode \texttt{checkSubmittedAnswer(Object submittedAnswer)} memeriksa apakah jawaban yang diberikan sesuai dengan jawaban numerik yang benar.
+
+\subsection{Kelas \texttt{FilledInQuestion}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	public class FilledInQuestion extends Question {
+		
+		public FilledInQuestion(String text, String correctAnswer) {
+			super(text, correctAnswer);
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{FilledInQuestion} menangani pertanyaan dengan jawaban yang harus diisi. Konstruktor menerima teks pertanyaan dan jawaban yang benar bertipe \texttt{String}.
+
+\subsection{Kelas \texttt{MultipleChoiceQuestion}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	import java.util.ArrayList;
+	import java.util.List;
+	
+	public class MultipleChoiceQuestion extends Question {
+		
+		private List<Object> choices = new ArrayList<>();
+		
+		public MultipleChoiceQuestion(String text, Object correctAnswer, List<Object> choices) {
+			super(text, correctAnswer);
+			this.choices.addAll(choices);
+		}
+		
+		@Override
+		public void display() {
+			display(true);
+		}
+		
+		public void display(boolean withAbc) {
+			super.display();
+			int code = 97;
+			for (Object choice : choices) {
+				char head = '-';
+				if (withAbc) {
+					head = (char) code;
+				}
+				System.out.println(head + " " + choice);
+				code++;
+			}
+		}
+		
+		public List<Object> getChoices() {
+			return choices;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{MultipleChoiceQuestion} menangani pertanyaan pilihan ganda. Selain teks pertanyaan dan jawaban yang benar, kelas ini juga menyimpan daftar pilihan jawaban. Metode \texttt{display()} menampilkan pertanyaan dan opsi jawaban dengan atau tanpa huruf ABC.
+
+\subsection{Kelas \texttt{TrueFalseQuestion}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	import java.util.ArrayList;
+	import java.util.Arrays;
+	
+	public class TrueFalseQuestion extends MultipleChoiceQuestion {
+		
+		public TrueFalseQuestion(String text, Object correctAnswer) {
+			super(text, true, new ArrayList<>(Arrays.asList(true, false)));
+		}
+		
+		@Override
+		public boolean checkSubmittedAnswer(Object submittedAnswer) {
+			return (boolean) this.getCorrectAnswer() == Boolean.valueOf(submittedAnswer.toString());
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{TrueFalseQuestion} adalah turunan dari \texttt{MultipleChoiceQuestion} khusus untuk pertanyaan benar/salah. Konstruktornya menerima teks pertanyaan dan jawaban yang benar, dan selalu menyertakan pilihan \texttt{true} dan \texttt{false}.
+
+\subsection{Kelas \texttt{Main}}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.pradita;
+	
+	import java.util.ArrayList;
+	import java.util.Arrays;
+	import java.util.List;
+	import java.util.Scanner;
+	
+	public class Main {
+		
+		public static void main(String[] args) {
+			
+			List<Question> questions = new ArrayList<>();
+			
+			questions.add(new FilledInQuestion("He is __ farmer.", "a"));
+			questions.add(new NumericQuestion("1 + 1 = ?", 2));
+			questions.add(new OpenQuestion("What is your plan for the next semester?"));
+			questions.add(new MultipleChoiceQuestion("_____ in the Wonderland.",
+			"Alice",
+			new ArrayList<>(Arrays.asList("Alice", "Bob", "Charlie"))
+			));
+			questions.add(new TrueFalseQuestion("Is today Tuesday?", true));
+			
+			Scanner scanner = new Scanner(System.in);
+			
+			for (int lineNum = 1; lineNum <= questions.size(); lineNum++) {
+				Question question = questions.get(lineNum - 1);
+				System.out.println("Question " + lineNum + ":");
+				question.display();
+				System.out.print("Your answer: ");
+				String answer = scanner.nextLine().trim();
+				boolean result = question.checkSubmittedAnswer(answer);
+				System.out.println("Result: " + result);
+				System.out.println();
+			}
+			
+			scanner.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:} Kelas \texttt{Main} adalah kelas utama yang menampilkan dan memproses daftar pertanyaan. Program membuat beberapa pertanyaan dari berbagai jenis, menambahkannya ke dalam daftar, dan kemudian menampilkan setiap pertanyaan satu per satu. Pengguna diminta untuk memberikan jawaban, yang kemudian diperiksa dengan metode \texttt{checkSubmittedAnswer()}. Hasil dari setiap jawaban ditampilkan setelah input.
+
+
+\section{Unit Test dan Exception Handling dalam Java}
+
+\subsection{Unit Testing dengan JUnit}
+
+Unit testing adalah metode pengujian perangkat lunak yang memeriksa bagian kecil dari kode, seperti metode atau kelas, untuk memastikan bahwa ia bekerja sesuai dengan yang diharapkan. Dalam Java, unit testing dapat dilakukan menggunakan framework \textbf{JUnit}.
+
+\textbf{Contoh Pengujian dengan JUnit:}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example.test;
+	
+	import edu.example.Rectangle;
+	import org.junit.jupiter.api.Test;
+	import static org.junit.jupiter.api.Assertions.*;
+	
+	class RectangleTest {
+		
+		@Test
+		void testGetArea() {
+			Rectangle rect = new Rectangle("Red", 4, 5);
+			assertEquals(20, rect.getArea(), 0.001);
+		}
+		
+		@Test
+		void testGetColor() {
+			Rectangle rect = new Rectangle("Blue", 4, 5);
+			assertEquals("Blue", rect.getColor());
+		}
+	}
+\end{lstlisting}
+
+Pada contoh di atas:
+- \textbf{\texttt{@Test}} digunakan untuk mendeklarasikan metode uji.
+- \textbf{\texttt{assertEquals(expected, actual, delta)}} digunakan untuk memverifikasi hasil.
+- Pengujian ini memeriksa apakah metode \texttt{getArea()} dan \texttt{getColor()} dari kelas \texttt{Rectangle} berfungsi dengan benar.
+
+\subsection{Exception Handling dalam Java}
+
+Exception handling adalah mekanisme dalam Java untuk menangani kesalahan atau kejadian tak terduga yang dapat terjadi selama eksekusi program. Exception dapat ditangani menggunakan blok \textbf{\texttt{try-catch}}, dan kita juga dapat membuat exception kustom.
+
+\textbf{Contoh Penanganan Exception:}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	public class ExceptionExample {
+		public static void main(String[] args) {
+			try {
+				int result = divide(10, 0);
+				System.out.println("Hasil: " + result);
+			} catch (ArithmeticException e) {
+				System.out.println("Kesalahan: Tidak dapat membagi dengan nol.");
+			}
+		}
+		
+		public static int divide(int a, int b) {
+			return a / b; // Akan melempar ArithmeticException jika b = 0
+		}
+	}
+\end{lstlisting}
+
+Pada contoh di atas:
+- Blok \textbf{\texttt{try-catch}} menangani \textbf{\texttt{ArithmeticException}} yang terjadi saat pembagian dengan nol.
+- Jika terjadi kesalahan, program tidak akan crash, tetapi akan menampilkan pesan error yang ditangkap di dalam blok \texttt{catch}.
+
+\subsection{Membuat Exception Kustom}
+
+Dalam Java, kita juga dapat membuat exception sendiri dengan memperluas kelas \texttt{Exception} atau \texttt{RuntimeException}.
+
+\textbf{Contoh Exception Kustom:}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example;
+	
+	class InvalidDimensionException extends Exception {
+		public InvalidDimensionException(String message) {
+			super(message);
+		}
+	}
+	
+	public class CustomExceptionExample {
+		public static void main(String[] args) {
+			try {
+				Rectangle rect = new Rectangle("Red", -5, 10);
+			} catch (InvalidDimensionException e) {
+				System.out.println("Kesalahan: " + e.getMessage());
+			}
+		}
+	}
+	
+	class Rectangle {
+		private double width, height;
+		
+		public Rectangle(String color, double width, double height) throws InvalidDimensionException {
+			if (width <= 0 || height <= 0) {
+				throw new InvalidDimensionException("Dimensi harus lebih dari nol.");
+			}
+			this.width = width;
+			this.height = height;
+		}
+	}
+\end{lstlisting}
+
+Pada contoh di atas:
+- \textbf{\texttt{InvalidDimensionException}} adalah exception kustom yang dibuat dengan mewarisi kelas \textbf{\texttt{Exception}}.
+- Exception ini dilemparkan jika lebar atau tinggi bernilai negatif atau nol.
+- Exception ditangkap di dalam blok \texttt{try-catch}, sehingga program tidak langsung berhenti saat terjadi kesalahan.
+
+\subsection{Menggunakan Unit Test untuk Menguji Exception}
+
+JUnit juga dapat digunakan untuk menguji apakah suatu metode benar-benar melemparkan exception yang diharapkan.
+
+\textbf{Contoh Pengujian Exception dengan JUnit:}
+
+\begin{lstlisting}[style=JavaStyle]
+	package edu.example.test;
+	
+	import edu.example.Rectangle;
+	import edu.example.InvalidDimensionException;
+	import org.junit.jupiter.api.Test;
+	import static org.junit.jupiter.api.Assertions.*;
+	
+	class RectangleExceptionTest {
+		
+		@Test
+		void testInvalidRectangle() {
+			Exception exception = assertThrows(InvalidDimensionException.class, () -> {
+				new Rectangle("Red", -5, 10);
+			});
+			assertEquals("Dimensi harus lebih dari nol.", exception.getMessage());
+		}
+	}
+\end{lstlisting}
+
+Pada contoh di atas:
+- \textbf{\texttt{assertThrows}} digunakan untuk memastikan bahwa exception benar-benar dilemparkan saat parameter tidak valid diberikan.
+- \textbf{\texttt{assertEquals}} digunakan untuk memverifikasi pesan error yang dihasilkan.
+
+
+Unit testing dan exception handling merupakan aspek penting dalam pengembangan perangkat lunak untuk memastikan bahwa aplikasi bekerja dengan benar dan menangani kesalahan dengan baik. Dengan menggunakan \textbf{JUnit}, pengembang dapat menguji fungsionalitas kode secara otomatis dan mendeteksi bug lebih awal. Selain itu, exception handling yang baik memungkinkan program menangani kesalahan tanpa menyebabkan crash yang tidak diinginkan. Menerapkan teknik ini dengan baik akan meningkatkan keandalan, skalabilitas, dan maintainability aplikasi yang dikembangkan.
+
+
+\section{Latihan: Contoh Sistem Pemesanan Transportasi}
+
+\subsubsection{Langkah 1: Kelas Abstrak dan Pewarisan}
+
+\textbf{Kode:} Mendefinisikan kelas abstrak \texttt{Vehicle} dan kelas konkret \texttt{Car} serta \texttt{Bus}.
+
+\begin{lstlisting}[style=JavaStyle, caption={Vehicle.java}]
+	package com.example.transport;
+	
+	public abstract class Vehicle {
+		String id;
+		
+		public Vehicle(String id) {
+			this.id = id;
+		}
+		
+		public abstract double calculateFare(double distance);
+		
+		public void displayType() {
+			System.out.println("Vehicle ID: " + id);
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Car.java}]
+	package com.example.transport.types;
+	
+	import com.example.transport.Vehicle;
+	
+	public class Car extends Vehicle {
+		public Car(String id) {
+			super(id);
+		}
+		
+		@Override
+		public double calculateFare(double distance) {
+			return distance * 0.5;
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Bus.java}]
+	package com.example.transport.types;
+	
+	import com.example.transport.Vehicle;
+	
+	public class Bus extends Vehicle {
+		public Bus(String id) {
+			super(id);
+		}
+		
+		@Override
+		public double calculateFare(double distance) {
+			return distance * 0.2;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Pertanyaan Refleksi:}
+\begin{enumerate}
+	\item Cobalah buat objek dari kelas abstrak dalam metode \texttt{main}! Apa hasilnya? Mengapa demikian?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Coba buat objek dari kelas-kelas turunan dari kelas abstrak \texttt{Vehicle}. Apa hasilnya? Mengapa demikian?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Bagaimana mendefinisikan \texttt{Vehicle} sebagai kelas abstrak membantu mengelompokkan atribut dan metode umum untuk semua tipe kendaraan?
+	\begin{tcolorbox}[colback=white, colframe=black, width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Apa manfaat pewarisan saat mengimplementasikan tipe kendaraan yang berbeda seperti \texttt{Car} dan \texttt{Bus}?
+	\begin{tcolorbox}[colback=white, colframe=black, width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Dalam skenario apa Anda mempertimbangkan untuk menggunakan pola ini dalam aplikasi lain?
+	\begin{tcolorbox}[colback=white, colframe=black, width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+\end{enumerate}
+
+\subsubsection{Langkah 2: Implementasi Interface}
+
+\textbf{Kode:} Mengimplementasikan antarmuka \texttt{Trackable} untuk \texttt{Train}.
+
+\begin{lstlisting}[style=JavaStyle, caption={Trackable.java}]
+	package com.example.transport.features;
+	
+	public interface Trackable {
+		void getLocation();
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Train.java}]
+	package com.example.transport.types;
+	
+	import com.example.transport.Vehicle;
+	import com.example.transport.features.Trackable;
+	
+	public class Train extends Vehicle implements Trackable {
+		public Train(String id) {
+			super(id);
+		}
+		
+		@Override
+		public double calculateFare(double distance) {
+			return distance * 0.3;
+		}
+		
+		@Override
+		public void getLocation() {
+			System.out.println("Tracking train location for ID: " + id);
+		}
+	}
+\end{lstlisting}
+
+\textbf{Pertanyaan Refleksi:}
+\begin{enumerate}
+	\item Bagaimana antarmuka \texttt{Trackable} memungkinkan \texttt{Train} memiliki perilaku unik tanpa mengubah kelas \texttt{Vehicle}?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Mengapa memisahkan perilaku pelacakan lokasi ke dalam antarmuka merupakan hal yang bermanfaat?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Bagaimana Anda akan menggunakan antarmuka \texttt{Trackable} untuk tipe kendaraan lain yang memerlukan pelacakan?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+\end{enumerate}
+
+\subsubsection{Langkah 3: Demonstrasi Polimorfisme}
+
+\textbf{Kode:} Menunjukkan perilaku polimorfisme dengan kelas \texttt{BookingSystem}.
+
+\begin{lstlisting}[style=JavaStyle, caption={BookingSystem.java}]
+	package com.example.transport.system;
+	
+	import com.example.transport.Vehicle;
+	import com.example.transport.features.Trackable;
+	import com.example.transport.types.Car;
+	import com.example.transport.types.Bus;
+	import com.example.transport.types.Train;
+	
+	public class BookingSystem {
+		public static void main(String[] args) {
+			Vehicle[] vehicles = {
+				new Car("C123"),
+				new Bus("B456"),
+				new Train("T789")
+			};
+			
+			for (Vehicle vehicle : vehicles) {
+				vehicle.displayType();
+				System.out.println("Fare for 100 miles: $" + vehicle.calculateFare(100));
+				if (vehicle instanceof Trackable) {
+					((Trackable) vehicle).getLocation();
+				}
+			}
+		}
+	}
+\end{lstlisting}
+
+\textbf{Pertanyaan Refleksi:}
+\begin{enumerate}
+	\item Bagaimana polimorfisme memungkinkan kita menggunakan referensi \texttt{Vehicle} untuk mengelola berbagai jenis kendaraan?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Fleksibilitas apa yang ditambahkan oleh desain ini jika kita perlu menambahkan tipe kendaraan baru, seperti \texttt{Taxi}?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Mengapa polimorfisme berguna dalam sistem seperti sistem pemesanan transportasi?
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm, boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+\end{enumerate}
+
+\subsubsection{Langkah 4: Menyimpulkan}
+Dari eksperimen di atas, buatlah pengertian dan manfaat dari konsep-konsep berikut dalam konteks pemrograman berorientasi objek dengan menggunakan kata-kata Anda sendiri.
+\begin{enumerate}
+	\item Kelas Abstrak
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm,  boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Pewarisan/\textit{Inheritance} (\texttt{extends})
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm,  boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Overriding
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm,  boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Interface
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm,  boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+	\item Polimorfisme
+	\begin{tcolorbox}[colback=white, colframe=black,  width=\linewidth, height=3cm,  boxrule=1pt, sharp corners]
+	\end{tcolorbox}
+\end{enumerate}
+

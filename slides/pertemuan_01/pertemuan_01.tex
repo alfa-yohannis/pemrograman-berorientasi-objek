@@ -1,0 +1,480 @@
+\documentclass[aspectratio=169, table]{beamer}
+
+%\usepackage[beamertheme=./praditatheme]{Pradita}
+\usepackage[utf8]{inputenc}
+
+\usepackage{listings}
+
+% Define Java language style for listings
+\lstdefinestyle{JavaStyle}{
+	language=Java,
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinestyle{sql}{
+	language=sql,
+	keywords={use, insert, into, values, select, from,
+		update, set, delete, create, where, join, left, right, inner, order, by, primary, key},
+	ndkeywords={max, min, varchar, int},
+	ndkeywordstyle=\color{purple}\bfseries,
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+
+\usetheme{Pradita}
+
+\subtitle{IF220303 - Object-oriented Programming}
+
+\title{\LARGE Foundational Concepts of\\Object-oriented Programming \vspace{10pt}}
+\date[Serial]{\scriptsize {PRU/SPMI/FR-BM-18/0222}}
+\author[Pradita]{\small {\textbf{Alfa Yohannis}}}
+
+\begin{document}
+	
+	\frame{\titlepage}
+%	
+%	
+%	{
+%		\setbeamertemplate{navigation symbols}{}
+%		\setbeamertemplate{footline}{}		
+%		\begin{frame}
+%			\frametitle{TOGAF Architecture Development Method (ADM)}
+%			\framesubtitle{\hspace{1cm}}
+%			\vspace{10pt}
+%			\begin{center}
+%%				\includegraphics[width=0.38\textwidth]{../figures/adm}
+%			\end{center}
+%		\end{frame}
+%	}
+	
+\begin{frame}[fragile]
+	\frametitle{Contents}
+	\tableofcontents
+\end{frame}
+
+
+\section{Introduction}
+
+\begin{frame}[fragile]
+	\frametitle{Introduction}
+	
+	\begin{itemize}
+		\item This course covers fundamental concepts of \textbf{Object-Oriented Programming (OOP)} in Java.
+		\item Focus on principles and techniques for \textbf{modular, flexible, and reusable software development}.
+		\item Java is a \textbf{object-oriented programming language}, where programs are built using \textbf{objects and classes}.
+		\item Understanding OOP principles and software design techniques helps in building \textbf{structured and maintainable applications}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Core Concepts of OOP in Java}
+	
+	\begin{itemize}
+		\item Every Java program is structured within a \textbf{class}, serving as a blueprint for objects.
+		\item A class defines \textbf{attributes} and \textbf{methods} representing an entity’s characteristics and behaviors.
+		\item Key OOP principles:
+		\begin{itemize}
+			\item \textbf{Encapsulation} – Restricts direct access to data.
+			\item \textbf{Inheritance} – Allows code reuse by extending existing classes.
+			\item \textbf{Polymorphism} – Enables methods to behave differently based on context.
+			\item \textbf{Abstraction} – Hides unnecessary details and simplifies system complexity.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Software Design Techniques in Java}
+	
+	\begin{itemize}
+		\item \textbf{Object-Relational Mapping (ORM)} (e.g., Hibernate) allows database interaction without SQL queries.
+		\item \textbf{JavaFX} supports event-driven programming and design patterns like:
+		\begin{itemize}
+			\item \textbf{Model-View-Controller (MVC)}
+			\item \textbf{Observer}
+			\item \textbf{Dependency Injection}
+		\end{itemize}
+		\item \textbf{Unified Modeling Language (UML)} diagrams for system design:
+		\begin{itemize}
+			\item Class Diagram, Object Diagram, Sequence Diagram
+			\item Activity Diagram, State Diagram, Use Case Diagram
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{SOLID Principles in Software Design}
+	
+	\begin{itemize}
+		\item \textbf{Single Responsibility Principle} – Each class should have only one reason to change.
+		\item \textbf{Open/Closed Principle} – Classes should be open for extension but closed for modification.
+		\item \textbf{Liskov Substitution Principle} – Subclasses should be replaceable without altering expected behavior.
+		\item \textbf{Interface Segregation Principle} – Classes should not be forced to implement interfaces they do not use.
+		\item \textbf{Dependency Inversion Principle} – High-level modules should not depend on low-level modules; both should rely on abstractions.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Design Patterns in Java}
+	
+	\begin{itemize}
+		\item \textbf{Creational Patterns} – Manage object creation.
+		\begin{itemize}
+			\item \textbf{Singleton, Factory, Abstract Factory, Builder, Prototype}
+		\end{itemize}
+		\item \textbf{Structural Patterns} – Define relationships between classes and objects.
+		\begin{itemize}
+			\item \textbf{Adapter, Decorator, Bridge, Composite, Facade, Proxy, Flyweight}
+		\end{itemize}
+		\item \textbf{Behavioral Patterns} – Manage interactions between objects.
+		\begin{itemize}
+			\item \textbf{Strategy, Command, Mediator, Observer, State, Chain of Responsibility, Template Method}
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Learning Outcomes}
+	
+	\begin{itemize}
+		\item Understanding of \textbf{OOP, ORM, JavaFX, UML, SOLID principles, and design patterns}.
+		\item Ability to build \textbf{modular, flexible, and reusable applications}.
+		\item Foundational knowledge for \textbf{advanced software engineering techniques}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Course Topics (14 Weeks)}
+	
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\footnotesize
+		\begin{enumerate}
+			\item Introduction to Object-Oriented Programming (OOP)
+			\item Introduction to ORM (Object-Relational Mapping)
+			\item JavaFX and Design Patterns (MVC, Observer, Dependency Injection)
+			\item JavaFX Components and Scene Graph
+			\item UML Diagrams for Object-Oriented Design (structural modelling)
+			\item UML Diagrams for Object-Oriented Design (behavioural modelling)
+			\item SOLID Principles in Software Design
+		\end{enumerate}
+		
+		\column{0.5\textwidth}
+		\footnotesize
+		\begin{enumerate}
+			\setcounter{enumi}{7}
+			\item Introduction to Design Patterns and Creational Patterns (Part 1)
+			\item Advanced Creational Patterns (Part 2)
+			\item Basic Structural Patterns (Adapter, Decorator, Bridge)
+			\item Advanced Structural Patterns (Composite, Facade, Proxy)
+			\item Additional Structural Patterns and Behavioral Patterns (Flyweight, Interpreter, Observer)
+			\item Basic Behavioral Patterns (Strategy, Command, Mediator)
+			\item Advanced Behavioral Patterns (State, Chain of Responsibility, Template Method)
+		\end{enumerate}
+	\end{columns}
+\end{frame}
+
+\section{Java Program Structure}
+
+\begin{frame}[fragile]
+	\frametitle{Java Program Structure}
+	
+	\begin{itemize}
+		\item Java code consists of several key components that form the structure of an application.
+		\item Understanding the basic structure is essential for writing well-organized Java programs.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Class (\textbf{Kelas})}
+	
+	\begin{itemize}
+		\item All Java code must be defined inside a \textbf{class}.
+		\item A class acts as a blueprint or template for objects.
+	\end{itemize}
+	
+	\textbf{Example of a class declaration:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class MyClass {
+			// Class code here
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Main Method (\textbf{Metode Utama})}
+	
+	\begin{itemize}
+		\item The \textbf{main method} is the entry point of a Java program.
+		\item Program execution begins from this method.
+	\end{itemize}
+	
+	\textbf{Syntax of the main method:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public static void main(String[] args) {
+			// Program code here
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Attributes and Variables (\textbf{Atribut dan Variabel})}
+	
+	\textbf{Attributes:}
+	\begin{itemize}
+		\item Defined inside a class.
+		\item Represent properties or characteristics of an object.
+	\end{itemize}
+	
+	\textbf{Variables:}
+	\begin{itemize}
+		\item Store temporary data.
+		\item Declared inside methods or code blocks.
+	\end{itemize}
+	
+	\textbf{Key differences:}
+	\begin{itemize}
+		\item \textbf{Attributes} belong to an object and are part of a class or instance.
+		\item \textbf{Variables} are used for temporary storage and calculations inside a method.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Attribute Declaration (\textbf{Deklarasi Atribut})}
+	
+	\begin{itemize}
+		\item Attributes are declared inside a class to represent object characteristics.
+	\end{itemize}
+	
+	\textbf{Example of attribute declaration:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		class Person {
+			String name;
+			int age;
+		}
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \texttt{name} and \texttt{age} are attributes of the \texttt{Person} class.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Variable Declaration (\textbf{Deklarasi Variabel})}
+	
+	\begin{itemize}
+		\item Variables store data and must be declared with a data type before use.
+	\end{itemize}
+	
+	\textbf{Example of variable declaration:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		int age = 30;
+		String name = "John";
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item \texttt{age} and \texttt{name} are variables storing local data inside a method or block.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Methods (\textbf{Metode})}
+	
+	\begin{itemize}
+		\item A \textbf{method} is a block of code that performs a specific task.
+		\item Methods can be called from other parts of the program.
+	\end{itemize}
+	
+	\textbf{Example of a method:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public void greet() {
+			System.out.println("Hello!");
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Comments (\textbf{Komentar})}
+	
+	\begin{itemize}
+		\item Comments are used to explain code and are not executed.
+		\item Java supports two types of comments:
+		\begin{itemize}
+			\item \texttt{// Single-line comment}
+			\item \texttt{/* Multi-line comment */}
+		\end{itemize}
+	\end{itemize}
+	
+	\textbf{Example of comments:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		// This is a single-line comment
+		
+		/*
+		This is a multi-line comment
+		*/
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Import Statement (\textbf{Import})}
+	
+	\begin{itemize}
+		\item The \textbf{import} statement is used to include classes from other packages into a program.
+	\end{itemize}
+	
+	\textbf{Example of an import statement:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		import java.util.Scanner;
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Example Program: \texttt{HelloWorld.java} (Part 1)}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Example Program: HelloWorld.java (Part 1)}]
+		package hello;
+		
+		import java.util.Scanner; // Import Scanner class
+		
+		public class HelloWorld {
+			// Main method: Entry point of the program
+			public static void main(String[] args) {
+				// Declare variable
+				String name;
+				
+				// Create a Scanner object to take user input
+				Scanner scanner = new Scanner(System.in);
+			\end{lstlisting}
+		\end{frame}
+		
+		\begin{frame}[fragile]
+			\frametitle{Example Program: \texttt{HelloWorld.java} (Part 2)}
+			
+			\begin{lstlisting}[style=JavaStyle, caption={Example Program: HelloWorld.java (Part 2)}]
+				// Prompt user for input
+				System.out.print("Enter your name: ");
+				name = scanner.nextLine();  // Read user input
+				
+				// Print output with user input
+				System.out.println("Hello " + name + "!");
+				
+				// Close Scanner object
+				scanner.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Java Code: \texttt{MyTest.java}}
+	\begin{lstlisting}[style=JavaStyle, caption={Java Code: MyTest.java}]
+		package org.pradita.ddp.pertemuan02;
+		
+		public class MyTest {
+			public static void main(String[] args) {
+				double a, b;
+				a = 3.0;
+				b = 4.0;
+				double c = Math.sqrt(a * a + b * b);
+				System.out.println(c);
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Abstract Class (\texttt{Kelas Abstrak})}
+	
+	\begin{itemize}
+		\item An \textbf{abstract class} is a class that \textbf{cannot be instantiated}.
+		\item It is commonly used as a \textbf{base class} for other classes.
+		\item Abstract classes can have:
+		\begin{itemize}
+			\item \textbf{Abstract methods} (methods without implementation) that must be implemented by subclasses.
+			\item \textbf{Concrete methods} (methods with implementation).
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example of an Abstract Class}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Example of an Abstract Class: \texttt{Shape.java}}]
+		package edu.example;
+		
+		public abstract class Shape {
+			private String color;
+			
+			public Shape(String color) {
+				this.color = color;
+			}
+			
+			public String getColor() {
+				return color;
+			}
+			
+			public abstract double getArea();
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of the Abstract Class}
+	
+	\begin{itemize}
+		\item The class \texttt{Shape} is declared as \textbf{abstract}, meaning it cannot be instantiated.
+		\item It has:
+		\begin{itemize}
+			\item An \textbf{abstract method} \texttt{getArea()} that must be implemented by subclasses.
+			\item A \textbf{concrete method} \texttt{getColor()} that returns the color of the shape.
+		\end{itemize}
+		\item Any class that extends \texttt{Shape} must provide an implementation for \texttt{getArea()}.
+	\end{itemize}
+\end{frame}
+
+		
+\end{document}
