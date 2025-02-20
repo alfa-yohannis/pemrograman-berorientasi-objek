@@ -8,7 +8,7 @@
 % Define Java language style for listings
 \lstdefinestyle{JavaStyle}{
 	language=Java,
-	basicstyle=\ttfamily\footnotesize,
+	basicstyle=\ttfamily\tiny,
 	keywordstyle=\color{blue},
 	commentstyle=\color{gray},
 	stringstyle=\color{red},
@@ -85,7 +85,14 @@
 	
 \begin{frame}[fragile]
 	\frametitle{Contents}
-	\tableofcontents
+	
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\tableofcontents[sections={1-6}]
+		
+		\column{0.5\textwidth}
+		\tableofcontents[sections={7-12}]
+	\end{columns}
 \end{frame}
 
 
@@ -220,8 +227,9 @@
 	\end{itemize}
 \end{frame}
 
+
 \begin{frame}[fragile]
-	\frametitle{Class (\textbf{Kelas})}
+	\frametitle{Class}
 	
 	\begin{itemize}
 		\item All Java code must be defined inside a \textbf{class}.
@@ -238,7 +246,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Main Method (\textbf{Metode Utama})}
+	\frametitle{Main Method}
 	
 	\begin{itemize}
 		\item The \textbf{main method} is the entry point of a Java program.
@@ -255,7 +263,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Attributes and Variables (\textbf{Atribut dan Variabel})}
+	\frametitle{Attributes and Variables}
 	
 	\textbf{Attributes:}
 	\begin{itemize}
@@ -277,7 +285,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Attribute Declaration (\textbf{Deklarasi Atribut})}
+	\frametitle{Attribute Declaration}
 	
 	\begin{itemize}
 		\item Attributes are declared inside a class to represent object characteristics.
@@ -298,7 +306,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Variable Declaration (\textbf{Deklarasi Variabel})}
+	\frametitle{Variable Declaration }
 	
 	\begin{itemize}
 		\item Variables store data and must be declared with a data type before use.
@@ -317,7 +325,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Methods (\textbf{Metode})}
+	\frametitle{Methods }
 	
 	\begin{itemize}
 		\item A \textbf{method} is a block of code that performs a specific task.
@@ -334,7 +342,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Comments (\textbf{Komentar})}
+	\frametitle{Comments }
 	
 	\begin{itemize}
 		\item Comments are used to explain code and are not executed.
@@ -357,7 +365,7 @@
 \end{frame}
 
 \begin{frame}[fragile]
-	\frametitle{Import Statement (\textbf{Import})}
+	\frametitle{Import Statement }
 	
 	\begin{itemize}
 		\item The \textbf{import} statement is used to include classes from other packages into a program.
@@ -367,6 +375,7 @@
 	
 	\begin{lstlisting}[style=JavaStyle]
 		import java.util.Scanner;
+		import all.classes.in.this.package.*;
 	\end{lstlisting}
 \end{frame}
 
@@ -408,6 +417,7 @@
 	\end{lstlisting}
 \end{frame}
 
+\section{Object-oriented Concepts}
 
 \begin{frame}[fragile]
 	\frametitle{Java Code: \texttt{MyTest.java}}
@@ -426,6 +436,7 @@
 	\end{lstlisting}
 \end{frame}
 
+\subsection{Abstract Class}
 \begin{frame}[fragile]
 	\frametitle{Abstract Class (\texttt{Kelas Abstrak})}
 	
@@ -476,5 +487,508 @@
 	\end{itemize}
 \end{frame}
 
+\subsection{Inheritance}
+\begin{frame}[fragile]
+	\frametitle{Inheritance}
+	
+	\begin{itemize}
+		\item \textbf{Inheritance} allows a class (subclass) to inherit attributes and methods from another class (superclass).
+		\item Enables \textbf{code reuse} and supports a \textbf{hierarchical class structure}.
+		\item A subclass can:
+		\begin{itemize}
+			\item Access methods and attributes of the superclass.
+			\item Add new functionality.
+			\item Modify inherited behavior.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{Example of Inheritance}
+
+\begin{lstlisting}[style=JavaStyle, caption={Example of Inheritance: \texttt{Rectangle.java}}]
+package edu.example;
+
+public class Rectangle extends Shape {
+	private double width;
+	private double height;
+	
+	public Rectangle(String color, double width, double height) {
+		super(color);
+		this.width = width;
+		this.height = height;
+	}
+	@Override
+	public double getArea() {
+		return width * height;
+	}
+	public double getWidth() {
+		return width;
+	}
+	public double getHeight() {
+		return height;
+	}
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of Inheritance Example}
+	
+	\begin{itemize}
+		\item The class \texttt{Rectangle} \textbf{extends} the abstract class \texttt{Shape}.
+		\item The \texttt{super()} keyword is used to call the constructor of the superclass.
+		\item The subclass \texttt{Rectangle} adds:
+		\begin{itemize}
+			\item Two new attributes: \texttt{width} and \texttt{height}.
+			\item A constructor to initialize the color, width, and height.
+			\item The implementation of the \texttt{getArea()} method from \texttt{Shape}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Overriding}
+\begin{frame}[fragile]
+	\frametitle{Method Overriding (\textbf{Override})}
+	
+	\begin{itemize}
+		\item \textbf{Overriding} allows a subclass to \textbf{replace or modify} a method from its superclass.
+		\item The \texttt{@Override} annotation is used to:
+		\begin{itemize}
+			\item Indicate that a method is intentionally overriding a superclass method.
+			\item Prevent errors by ensuring the method signature matches the overridden method.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example of Method Overriding}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Example of Overriding: \texttt{Rectangle.java}}]
+		@Override
+		public double getArea() {
+			return width * height;
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of Overriding Example}
+	
+	\begin{itemize}
+		\item The method \texttt{getArea()} in \texttt{Rectangle} \textbf{overrides} the abstract method from \texttt{Shape}.
+		\item The \texttt{@Override} annotation ensures that:
+		\begin{itemize}
+			\item The method correctly replaces the superclass method.
+			\item Potential errors (e.g., mismatched method names or parameters) are avoided.
+		\end{itemize}
+		\item Overriding allows subclasses to provide \textbf{specific implementations} for inherited methods.
+	\end{itemize}
+\end{frame}
+
+\subsection{Interface}
+\begin{frame}[fragile]
+	\frametitle{Interface }
+	
+	\begin{itemize}
+		\item An \textbf{interface} is a contract in object-oriented programming that defines methods without providing implementations.
+		\item Interfaces allow multiple classes to share common behaviors without requiring direct inheritance.
+		\item Any class that implements an interface \textbf{must} provide an implementation for all its methods.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example of an Interface}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Example of an Interface: \texttt{Drawable.java}}]
+		package edu.example;
 		
+		public interface Drawable {
+			void draw();
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of the Interface Example}
+	
+	\begin{itemize}
+		\item The \texttt{Drawable} interface defines the method \texttt{draw()}.
+		\item Any class that implements \texttt{Drawable} must provide its own implementation of \texttt{draw()}.
+		\item This allows different classes to implement \texttt{draw()} in a way that suits their behavior.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Implementing an Interface in a Class}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Implementing an Interface: \texttt{Rectangle.java}}]
+		package edu.example;
+		
+		public class Rectangle extends Shape implements Drawable {
+			private double width;
+			private double height;
+			
+			public Rectangle(String color, double width, double height) {
+				super(color);
+				this.width = width;
+				this.height = height;
+			}
+			
+			@Override
+			public double getArea() {
+				return width * height;
+			}
+			
+			@Override
+			public void draw() {
+				System.out.println("Drawing a rectangle with width " + width + " and height " + height);
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Explanation of \texttt{Rectangle} Class Implementation}}
+	
+	\begin{itemize}
+		\item The class \texttt{Rectangle} extends \texttt{Shape} and implements \texttt{Drawable}.
+		\item It overrides:
+		\begin{itemize}
+			\item \texttt{getArea()} from \texttt{Shape} to calculate the rectangle's area.
+			\item \texttt{draw()} from \texttt{Drawable} to define how a rectangle should be drawn.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Implementing an Interface in Another Class}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Implementing an Interface: \texttt{Triangle.java}}]
+		package edu.example;
+		
+		public class Triangle extends Shape implements Drawable {
+			private double base;
+			private double height;
+			
+			public Triangle(String color, double base, double height) {
+				super(color);
+				this.base = base;
+				this.height = height;
+			}
+			
+			@Override
+			public double getArea() {
+				return 0.5 * base * height;
+			}
+			
+			@Override
+			public void draw() {
+				System.out.println("Drawing a triangle with base " + base + " and height " + height);
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+
+
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Explanation of \texttt{Triangle} Class Implementation}}
+	
+	\begin{itemize}
+		\item The class \texttt{Triangle} extends \texttt{Shape} and implements \texttt{Drawable}.
+		\item It overrides:
+		\begin{itemize}
+			\item \texttt{getArea()} to calculate the triangle's area.
+			\item \texttt{draw()} to define how a triangle should be drawn.
+		\end{itemize}
+		\item Just like \texttt{Rectangle}, \texttt{Triangle} provides its own unique implementation for both methods.
+	\end{itemize}
+\end{frame}
+
+\subsection{Polymorphism}
+\begin{frame}[fragile]
+	\frametitle{Demonstrating Polymorphism with}
+	\framesubtitle{\texttt{Rectangle} and \texttt{Triangle}}
+	
+	\begin{itemize}
+		\item \textbf{Polymorphism} allows objects of \texttt{Rectangle} and \texttt{Triangle} to be used uniformly through references to the abstract class \texttt{Shape} or the interface \texttt{Drawable}.
+		\item This enables writing flexible and reusable code where different shapes can be processed without needing to know their exact type.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example: Using Polymorphism in Java}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Example of Polymorphism: \texttt{ShapeDemo.java}}]
+		package edu.example;
+		
+		public class ShapeDemo {
+			public static void main(String[] args) {
+				Shape[] shapes = {
+					new Rectangle("blue", 4, 5),
+					new Triangle("green", 3, 6)
+				};
+				
+				for (Shape shape : shapes) {
+					System.out.println("Color: " + shape.getColor());
+					System.out.println("Area: " + shape.getArea());
+					
+					if (shape instanceof Drawable) {
+						((Drawable) shape).draw();
+					}
+					
+					System.out.println();
+				}
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of the Code}
+	
+	\begin{itemize}
+		\item The array \texttt{shapes} contains objects of \texttt{Rectangle} and \texttt{Triangle}.
+		\item Using a reference to \texttt{Shape}, we can call:
+		\begin{itemize}
+			\item \texttt{getColor()} to retrieve the color of the shape.
+			\item \texttt{getArea()} to compute the area without needing to check the shape's type.
+		\end{itemize}
+		\item The \texttt{instanceof} operator is used to check if an object implements the \texttt{Drawable} interface.
+		\item If the object implements \texttt{Drawable}, we cast it to \texttt{Drawable} and call \texttt{draw()}.
+	\end{itemize}
+\end{frame}
+
+\section{Exception and Unit Test}
+
+\subsection{Unit Test}
+\begin{frame}[fragile]
+	\frametitle{Unit Testing with JUnit}
+	
+	\begin{itemize}
+		\item \textbf{Unit testing} is a software testing method that verifies small parts of code, such as methods or classes, to ensure they function as expected.
+		\item In Java, unit testing is commonly performed using the \textbf{JUnit} framework.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example of Unit Testing with JUnit}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Unit Testing Example: \texttt{RectangleTest.java}}]
+		package edu.example.test;
+		
+		import edu.example.Rectangle;
+		import org.junit.jupiter.api.Test;
+		import static org.junit.jupiter.api.Assertions.*;
+		
+		class RectangleTest {
+			
+			@Test
+			void testGetArea() {
+				Rectangle rect = new Rectangle("Red", 4, 5);
+				assertEquals(20, rect.getArea(), 0.001);
+			}
+			
+			@Test
+			void testGetColor() {
+				Rectangle rect = new Rectangle("Blue", 4, 5);
+				assertEquals("Blue", rect.getColor());
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of Unit Testing Example}
+	
+	\begin{itemize}
+		\item \texttt{@Test} is used to declare a test method.
+		\item \texttt{assertEquals(expected, actual, delta)} verifies the expected output matches the actual result.
+		\item The test ensures that:
+		\begin{itemize}
+			\item The \texttt{getArea()} method correctly calculates the area.
+			\item The \texttt{getColor()} method returns the correct color.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Exception}
+\begin{frame}[fragile]
+	\frametitle{Exception Handling in Java}
+	
+	\begin{itemize}
+		\item \textbf{Exception handling} is a mechanism in Java for handling errors or unexpected events during program execution.
+		\item Exceptions can be handled using the \textbf{\texttt{try-catch}} block.
+		\item Custom exceptions can also be created if needed.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example of Exception Handling}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Exception Handling Example: \texttt{ExceptionExample.java}}]
+		package edu.example;
+		
+		public class ExceptionExample {
+			public static void main(String[] args) {
+				try {
+					int result = divide(10, 0);
+					System.out.println("Result: " + result);
+				} catch (ArithmeticException e) {
+					System.out.println("Error: Cannot divide by zero.");
+				}
+			}
+			
+			public static int divide(int a, int b) {
+				return a / b; // Throws ArithmeticException if b = 0
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of Exception Handling Example}
+	
+	\begin{itemize}
+		\item The \textbf{\texttt{try-catch}} block handles the \textbf{\texttt{ArithmeticException}} that occurs when dividing by zero.
+		\item If an error occurs:
+		\begin{itemize}
+			\item The program does not crash.
+			\item Instead, the message inside the \texttt{catch} block is displayed.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Creating a Custom Exception in Java}
+	
+	\begin{itemize}
+		\item In Java, custom exceptions can be created by extending the \texttt{Exception} or \texttt{RuntimeException} class.
+		\item Custom exceptions allow developers to handle specific error conditions in a structured way.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example of a Custom Exception}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Custom Exception: \texttt{InvalidDimensionException.java}}]
+		package edu.example;
+		
+		class InvalidDimensionException extends Exception {
+			public InvalidDimensionException(String message) {
+				super(message);
+			}
+		}
+		
+		public class CustomExceptionExample {
+			public static void main(String[] args) {
+				try {
+					Rectangle rect = new Rectangle("Red", -5, 10);
+				} catch (InvalidDimensionException e) {
+					System.out.println("Error: " + e.getMessage());
+				}
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Throwing a Custom Exception in a Class}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Throwing a Custom Exception: \texttt{Rectangle.java}}]
+		package edu.example;
+		
+		class Rectangle {
+			private double width, height;
+			
+			public Rectangle(String color, double width, double height) throws InvalidDimensionException {
+				if (width <= 0 || height <= 0) {
+					throw new InvalidDimensionException("Dimensions must be greater than zero.");
+				}
+				this.width = width;
+				this.height = height;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Explanation of Custom Exception Example}
+	
+	\begin{itemize}
+		\item The \texttt{InvalidDimensionException} class extends \texttt{Exception} and defines a constructor that takes an error message.
+		\item The \texttt{Rectangle} constructor checks if the width or height is zero or negative.
+		\item If invalid values are detected, an \texttt{InvalidDimensionException} is thrown.
+		\item The exception is caught in the \texttt{try-catch} block to prevent the program from crashing.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Unit Testing a Custom Exception with JUnit}
+	
+	\begin{itemize}
+		\item JUnit can be used to verify if a method correctly throws an exception.
+		\item The \texttt{assertThrows} method ensures that an exception is thrown when invalid input is provided.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Example: Testing Exception with JUnit}
+	
+	\begin{lstlisting}[style=JavaStyle, caption={Testing Exception with JUnit: \texttt{RectangleExceptionTest.java}}]
+		package edu.example.test;
+		
+		import edu.example.Rectangle;
+		import edu.example.InvalidDimensionException;
+		import org.junit.jupiter.api.Test;
+		import static org.junit.jupiter.api.Assertions.*;
+		
+		class RectangleExceptionTest {
+			
+			@Test
+			void testInvalidRectangle() {
+				Exception exception = assertThrows(InvalidDimensionException.class, () -> {
+					new Rectangle("Red", -5, 10);
+				});
+				assertEquals("Dimensions must be greater than zero.", exception.getMessage());
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Explanation of JUnit Test for Exception Handling}}
+	
+	\begin{itemize}
+		\item \texttt{assertThrows} is used to check that an \texttt{InvalidDimensionException} is thrown when invalid dimensions are provided.
+		\item \texttt{assertEquals} verifies that the error message matches the expected output.
+		\item Unit testing with JUnit helps detect issues early by ensuring exceptions are handled correctly.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Importance of Exception Handling and Unit Testing}}
+	
+	\begin{itemize}
+		\item \textbf{Unit Testing:}
+		\begin{itemize}
+			\item Ensures that code functions as expected.
+			\item Automates testing and helps detect bugs early.
+		\end{itemize}
+		\item \textbf{Exception Handling:}
+		\begin{itemize}
+			\item Prevents programs from crashing unexpectedly.
+			\item Provides meaningful error messages to users and developers.
+		\end{itemize}
+		\item Proper implementation of these techniques improves:
+		\begin{itemize}
+			\item Reliability
+			\item Scalability
+			\item Maintainability
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
 \end{document}

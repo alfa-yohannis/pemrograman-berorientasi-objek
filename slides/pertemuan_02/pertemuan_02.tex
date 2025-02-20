@@ -1,0 +1,1141 @@
+\documentclass[aspectratio=169, table]{beamer}
+
+%\usepackage[beamertheme=./praditatheme]{Pradita}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor} % for color
+\usepackage{colortbl} % for table color
+\usepackage{listings}
+
+% Define Java language style for listings
+\lstdefinestyle{JavaStyle}{
+	language=Java,
+	basicstyle=\ttfamily\tiny,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinestyle{sql}{
+	language=sql,
+	keywords={use, insert, into, values, select, from,
+		update, set, delete, create, where, join, left, right, inner, order, by, primary, key},
+	ndkeywords={max, min, varchar, int},
+	ndkeywordstyle=\color{purple}\bfseries,
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinelanguage{bash} {
+	keywords={},
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={iex},
+	ndkeywordstyle=\color{purple}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	tabsize=2,
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{purple}\ttfamily,
+	showstringspaces=false
+}
+
+\lstdefinestyle{XmlStyle} {
+	language=xml,
+	keywords={},
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={iex},
+	ndkeywordstyle=\color{purple}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	tabsize=2,
+	comment=[l]{\#},
+	morecomment=[s]{<!--}{-->},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{purple}\ttfamily,
+	showstringspaces=false
+}
+
+\usetheme{Pradita}
+
+\subtitle{IF220303 - Object-oriented Programming}
+
+\title{\LARGE Build Tools and\\Dependency Manager\vspace{10pt}}
+\date[Serial]{\scriptsize {PRU/SPMI/FR-BM-18/0222}}
+\author[Pradita]{\small {\textbf{Alfa Yohannis}}}
+
+\begin{document}
+	
+	\frame{\titlepage}
+	
+
+\section{Introduction}
+\begin{frame}
+	\frametitle{Introduction}
+	\begin{itemize}
+		\item In software development, the processes of compilation, testing, and dependency management are critical tasks that must be efficiently managed.
+		\item Build tools and dependency managers play an important role in automating these tasks, enabling developers to build, manage, and distribute software more easily.
+		\item Some common tools used in the Java ecosystem include Ant, Maven, and Gradle.
+	\end{itemize}
+\end{frame}
+
+	
+\section{Compiling Java Code Manually and Creating a JAR}
+
+\begin{frame}
+	\frametitle{Manual Java Compilation and JAR Creation}
+	\begin{itemize}
+		\item Before using build tools like Apache Ant, developers can manually compile Java code and create a JAR file directly through the terminal or command prompt.
+		\item Below are the steps to perform this process.
+	\end{itemize}
+\end{frame}
+
+\subsection{Writing Java Source Code}
+
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Writing Java Source Code}
+	\begin{itemize}
+		\item Create a file \texttt{Main.java} in the directory \texttt{src/com/example/} with the following content:
+	\end{itemize}
+	\begin{lstlisting}[style=JavaStyle]
+		package com.example;
+		
+		public class Main {
+			public static void main(String[] args) {
+				System.out.println("Hello, World!");
+				Util.sayHello("Java Developer");
+			}
+		}
+	\end{lstlisting}
+	\begin{itemize}
+		\item Additionally, create a file \texttt{Util.java} in the same directory to provide additional functionality:
+	\end{itemize}
+	\begin{lstlisting}[style=JavaStyle]
+		package com.example;
+		
+		public class Util {
+			public static void sayHello(String name) {
+				System.out.println("Hello, " + name + "!");
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Manual Compilation}
+
+\begin{frame}[fragile]
+	\frametitle{Manual Compilation}
+	\begin{itemize}
+		\item Use the following command to manually compile the Java code without using a build tool:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		mkdir -p bin
+		javac -d bin src/com/example/*.java
+	\end{lstlisting}
+	\begin{itemize}
+		\item This command will compile all \texttt{.java} files in the \texttt{src/com/example/} directory and save them in the \texttt{bin/} directory.
+	\end{itemize}
+\end{frame}
+
+\subsection{Running the Program Manually}
+
+\begin{frame}[fragile]
+	\frametitle{Running the Program Manually}
+	\begin{itemize}
+		\item After successful compilation, run the program with the following command:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		java -cp bin com.example.Main
+	\end{lstlisting}
+	\begin{itemize}
+		\item The output will be:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		Hello, World!
+		Hello, Java Developer!
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Creating the JAR File}
+
+\begin{frame}[fragile]
+	\frametitle{Creating the JAR File}
+	\begin{itemize}
+		\item To create a JAR file from the compiled code, use the following command:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		jar cf bin/app.jar -C bin .
+	\end{lstlisting}
+	\begin{itemize}
+		\item This command will create a file \texttt{app.jar} in the \texttt{bin/} directory.
+	\end{itemize}
+\end{frame}
+
+\subsection{Compiling a New Program Using a JAR File}
+
+\begin{frame}
+	\frametitle{Compiling a New Program Using a JAR File}
+	\begin{itemize}
+		\item After creating \texttt{app.jar}, it can be used in other projects or new programs that require functions from \texttt{Util.java}.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Writing Java Source Code}
+
+\begin{frame}[fragile]
+	\frametitle{Writing Java Source Code}
+	\begin{itemize}
+		\item Create a new file \texttt{NewMain.java} in the directory \texttt{src/com/example/} with the following content:
+	\end{itemize}
+	\begin{lstlisting}[style=JavaStyle]
+		package com.example;
+		
+		import com.example.Util;
+		
+		public class NewMain {
+			public static void main(String[] args) {
+				System.out.println("This is a new program using app.jar!");
+				Util.sayHello("JAR User");
+			}
+		}
+	\end{lstlisting}
+	\begin{itemize}
+		\item This code reuses the \texttt{sayHello} function from \texttt{Util.java}, which is already included in \texttt{app.jar}.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Compiling the New Program with the JAR File}
+
+\begin{frame}[fragile]
+	\frametitle{Compiling the New Program with the JAR File}
+	\begin{itemize}
+		\item Use the following command to compile \texttt{NewMain.java} with the \texttt{app.jar}:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		mkdir -p bin
+		javac -cp bin/app.jar -d bin src/com/example/NewMain.java
+	\end{lstlisting}
+	\begin{itemize}
+		\item This command instructs the Java compiler to use \texttt{app.jar} as part of the classpath to access \texttt{Util.java}.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Running the New Program with the JAR File}
+
+\begin{frame}[fragile]
+	\frametitle{Running the New Program with the JAR File}
+	\begin{itemize}
+		\item After successful compilation, run the program with the following command:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		java -cp bin:bin/app.jar com.example.NewMain
+	\end{lstlisting}
+	\begin{itemize}
+		\item The output will be:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		This is a new program using app.jar!
+		Hello, JAR User!
+	\end{lstlisting}
+	\begin{itemize}
+		\item This demonstrates how we successfully reused the function from \texttt{app.jar} in a new program without rewriting \texttt{Util.java}.
+	\end{itemize}
+\end{frame}
+
+\subsection{Creating a JAR File for the New Program}
+
+\begin{frame}
+	\frametitle{Creating a JAR File for the New Program}
+	\begin{itemize}
+		\item After compiling \texttt{NewMain.java} and using \texttt{app.jar} as a dependency, the next step is to create a new JAR file that includes the program.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Creating the New JAR File}
+
+\begin{frame}[fragile]
+	\frametitle{Creating the New JAR File}
+	\begin{itemize}
+		\item Use the following command to create a new JAR file \texttt{newapp.jar} that includes \texttt{NewMain.class} and still uses \texttt{app.jar} as a dependency:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		jar cf bin/newapp.jar -C bin .
+	\end{lstlisting}
+	\begin{itemize}
+		\item This command will create the file \texttt{newapp.jar} in the \texttt{bin/} directory, containing all the compiled class files.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Running the Program from the New JAR}
+
+\begin{frame}[fragile]
+	\frametitle{Running the Program from the New JAR}
+	\begin{itemize}
+		\item Run the program from \texttt{newapp.jar} using the following command:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		java -cp bin/newapp.jar:bin/app.jar com.example.NewMain
+	\end{lstlisting}
+	\begin{itemize}
+		\item If using Windows, use a semicolon (\texttt{;}) as the classpath separator:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		java -cp bin/newapp.jar;bin/app.jar com.example.NewMain
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running the New JAR with the \texttt{-jar} Option}
+
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Running the New JAR with the \texttt{-jar} Option (Part 1)}}
+	\begin{itemize}
+		\item To run \texttt{newapp.jar} directly with the \texttt{-jar} option, add a \texttt{MANIFEST.MF} file to define the entry point:
+		\item First, create the \texttt{META-INF} directory and the manifest file:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		mkdir -p bin/META-INF
+		echo "Main-Class: com.example.NewMain" > bin/META-INF/MANIFEST.MF
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Running the New JAR with the \texttt{-jar} Option (Part 2)}}
+	\begin{itemize}
+		\item Then, recreate the \texttt{newapp.jar} file including the manifest:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		jar cfm bin/newapp.jar bin/META-INF/MANIFEST.MF -C bin .
+	\end{lstlisting}
+	\begin{itemize}
+		\item Now, run the program with the following command:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		java -jar bin/newapp.jar
+	\end{lstlisting}
+	\begin{itemize}
+		\item If an error occurs due to external dependencies, use the \texttt{-cp} option to include \texttt{app.jar}:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		java -cp bin/newapp.jar:bin/app.jar com.example.NewMain
+	\end{lstlisting}
+\end{frame}
+
+
+\subsubsection{Conclusion}
+
+\begin{frame}
+	\frametitle{Conclusion}
+	\begin{itemize}
+		\item Successfully used \texttt{app.jar} in a new program.
+		\item Compiled and ran the new program with a classpath containing \texttt{app.jar}.
+		\item Created an executable \texttt{newapp.jar}.
+		\item Ran \texttt{newapp.jar} using both the \texttt{-cp} and \texttt{-jar} options.
+	\end{itemize}
+\end{frame}
+
+
+%%% ANT
+\section{Apache Ant}
+
+\begin{frame}
+	\frametitle{Apache Ant}
+	Apache Ant is one of the oldest build tools used in the Java ecosystem. Ant uses an XML file as a script to define build tasks such as compiling source code, running unit tests, and generating JAR or WAR files.
+\end{frame}
+
+\subsection{Main Features of Ant}
+
+\begin{frame}
+	\frametitle{Main Features of Ant}
+	\begin{itemize}
+		\item Uses XML for configuration.
+		\item Provides high flexibility through customizable targets and tasks.
+		\item Does not have built-in dependency management.
+	\end{itemize}
+\end{frame}
+
+\subsection{Installing Apache Ant}
+
+\begin{frame}
+	\frametitle{Installing Apache Ant}
+	To use Apache Ant, follow these steps:
+	\begin{enumerate}
+		\item Download Apache Ant from the official website: \url{https://ant.apache.org/}.
+		\item Extract the downloaded archive to a preferred directory.
+		\item Add environment variables:
+		\begin{itemize}
+			\item Add the \texttt{bin} directory of Ant to the \texttt{PATH} variable.
+			\item Set the \texttt{ANT\_HOME} variable to the Ant installation directory.
+			\item Ensure that the \texttt{JAVA\_HOME} is configured correctly.
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+\subsubsection{Verifying Installation}
+
+\begin{frame}[fragile]
+	\frametitle{Verifying Installation}
+	After installation, run the following command in the terminal or command prompt to verify the installation:
+	\begin{lstlisting}[language=bash]
+		ant -version
+	\end{lstlisting}
+	\begin{itemize}
+		\item If installation is successful, the output will display the installed version of Ant.
+	\end{itemize}
+\end{frame}
+
+\subsection{Basic Usage of Apache Ant}
+
+\subsubsection{Project Structure}
+
+\begin{frame}[fragile]
+	\frametitle{Project Structure}
+	Before using Ant, ensure that the project structure is as follows:
+	\begin{lstlisting}[language=bash]
+		ProjectRoot/
+		|-- lib/
+		|   |-- app.jar
+		|-- src/
+		|   |-- com/
+		|   |   |-- example/
+		|   |   |   |-- Main.java
+		|-- build.xml
+	\end{lstlisting}
+	\begin{itemize}
+		\item The \texttt{lib/} directory contains the \texttt{app.jar} file created earlier, which will be used in this project.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Source Code \texttt{Main.java}}
+
+\begin{frame}[fragile]
+	\frametitle{Source Code \texttt{Main.java}}
+	Create the \texttt{Main.java} file inside the \texttt{src/com/example/} directory with the following content:
+	\begin{lstlisting}[style=JavaStyle]
+		package com.example;
+		
+		import com.example.Util;
+		
+		public class Main {
+			public static void main(String[] args) {
+				System.out.println("Running with Ant and External JAR!");
+				Util.sayHello("Ant User");
+			}
+		}
+	\end{lstlisting}
+	\begin{itemize}
+		\item This code uses the \texttt{Util} class, which has already been compiled and packaged in the \texttt{app.jar}.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Writing the \texttt{build.xml} File}
+
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Writing the \texttt{build.xml} File}
+	Create the \texttt{build.xml} file in the root directory of the project with the following content:
+	\begin{lstlisting}[style=XmlStyle]
+<project name="HelloWorld" default="run">
+<property name="src.dir" value="src" />
+<property name="bin.dir" value="bin" />
+<property name="lib.dir" value="lib" />
+<property name="jarfile" value="${lib.dir}/app.jar" />
+
+<target name="init"><mkdir dir="${bin.dir}" /></target>
+
+<target name="compile" depends="init">
+<javac srcdir="${src.dir}" destdir="${bin.dir}">
+<classpath>
+<fileset dir="${lib.dir}" includes="**/*.jar" />
+<!-- Add additional classpaths if needed -->
+</classpath>
+</javac>
+</target>
+
+<target name="run" depends="compile">
+<java classname="com.example.Main" classpath="${bin.dir}:${lib.dir}/app.jar" fork="true" />
+</target>
+</project>
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running the Build with Ant}
+
+\begin{frame}[fragile]
+	\frametitle{Running the Build with Ant}
+	Run the following commands to execute tasks in the \texttt{build.xml}:
+	\begin{itemize}
+		\item To compile the code with the external JAR:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		ant compile
+	\end{lstlisting}
+	\begin{itemize}
+		\item To run the application:
+	\end{itemize}
+	\begin{lstlisting}[language=bash]
+		ant run
+	\end{lstlisting}
+	\begin{itemize}
+		\item With this configuration, Ant will compile the Java code with the \textbf{external JAR} and then run the program using \textbf{functions from that JAR}.
+	\end{itemize}
+\end{frame}
+
+
+%%%% -- MAVEN
+
+\section{Apache Maven}
+\begin{frame}
+	\frametitle{Apache Maven}
+	Apache Maven is a build tool and dependency manager commonly used in the Java ecosystem. By using the \textbf{Project Object Model (POM)} concept, Maven simplifies project management, including compilation, testing, and creating artifacts such as JAR and WAR files.
+\end{frame}
+
+\subsection{Key Features of Maven}
+\begin{frame}
+	\frametitle{Key Features of Maven}
+	\begin{itemize}
+		\item Uses the \texttt{pom.xml} file for project configuration.
+		\item Provides a standard build lifecycle (\texttt{compile}, \texttt{test}, \texttt{package}, \texttt{install}, etc.).
+		\item Has an integrated dependency management system.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Download and Installation of Maven}
+\begin{frame}
+	\frametitle{Download and Installation of Maven}
+	\begin{enumerate}
+		\item Download Apache Maven from the official website: \url{https://maven.apache.org/download.cgi}
+		\item Extract the downloaded archive to your preferred directory.
+		\item Add environment variables:
+		\begin{itemize}
+			\item Add the \texttt{bin} directory of Maven to the \texttt{PATH} variable.
+			\item Set the \texttt{MAVEN\_HOME} variable to the Maven installation directory.
+			\item Ensure the \texttt{JAVA\_HOME} variable is correctly configured.
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+\subsubsection{Verifying Installation}
+\begin{frame}[fragile]
+	\frametitle{Verifying Installation}
+	After the installation is complete, run the following command in the terminal or command prompt to verify the installation:
+	\begin{lstlisting}[language=bash]
+		mvn -version
+	\end{lstlisting}
+	If the installation is successful, the output will display the installed version of Maven.
+\end{frame}
+
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Creating a Maven Project}
+	To create a new project using Maven, follow these steps:
+	\begin{enumerate}
+		\item Open the terminal or command prompt.
+		\item Use the following Maven command to create a new Maven project:
+		\begin{lstlisting}[language=bash]
+			mvn archetype:generate -DgroupId=com.example -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+		\end{lstlisting}
+		The above command will create a Maven project with \texttt{groupId} as \texttt{com.example} and \texttt{artifactId} as \texttt{my-app}.
+		\item After running the command, Maven will download the project template and create the required directory structure.
+		\item Navigate to the newly created project directory:
+		\begin{lstlisting}[language=bash]
+			cd my-app
+		\end{lstlisting}
+	\end{enumerate}
+\end{frame}
+
+\subsection{Maven Project Structure}
+\begin{frame}[fragile]
+	\frametitle{Maven Project Structure}
+	Before using Maven, ensure the project structure is as follows:
+	\begin{lstlisting}[language=bash]
+		ProjectRoot/
+		|-- src/
+		|   |-- main/
+		|   |   |-- java/
+		|   |   |   |-- com/
+		|   |   |   |   |-- example/
+		|   |   |   |   |   |-- Main.java
+		|   |-- test/
+		|       |-- java/
+		|-- pom.xml
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Writing the \texttt{pom.xml} File}
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Writing the \texttt{pom.xml} File}
+	The \texttt{pom.xml} file is the main configuration in a Maven project.
+	\begin{lstlisting}[style=XmlStyle]
+		<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+		http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		<modelVersion>4.0.0</modelVersion>
+		
+		<groupId>com.example</groupId>
+		<artifactId>helloworld</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		
+		<dependencies>
+		<!-- Using Google Guava from Maven Central -->
+		<dependency>
+		<groupId>com.google.guava</groupId>
+		<artifactId>guava</artifactId>
+		<version>33.4.0-jre</version>
+		</dependency>
+		</dependencies>
+		</project>
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Source Code for \texttt{Main.java}}
+\begin{frame}[fragile]
+	\frametitle{Source Code for \texttt{Main.java}}
+	Create the \texttt{Main.java} file in the directory \texttt{src/main/java/com/example/} with the following contents:
+	\begin{lstlisting}[style=JavaStyle]
+		package com.example;
+		
+		import com.google.common.base.Joiner;
+		
+		public class Main {
+			public static void main(String[] args) {
+				System.out.println("Hello, Maven!");
+				
+				// Using a function from the Guava library (downloaded from Maven Central)
+				String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
+				System.out.println("Joined String: " + result);
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Creating a JAR File with Maven}
+\begin{frame}[fragile]
+	\frametitle{Creating a JAR File with Maven}
+	To compile the code and create a JAR file, run the following command:
+	\begin{lstlisting}[language=bash]
+		mvn clean package
+	\end{lstlisting}
+	The output will be in the \texttt{target/} directory:
+	\begin{lstlisting}[language=bash]
+		target/
+		|-- helloworld-1.0-SNAPSHOT.jar
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running the Program from the JAR}
+\begin{frame}[fragile]
+	\frametitle{Running the Program from the JAR}
+	Use the following command to run the program from the generated JAR:
+	\begin{lstlisting}[language=bash]
+		java -cp target/helloworld-1.0-SNAPSHOT.jar:~/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar com.example.Main
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running with \texttt{-jar}}
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Running with \texttt{-jar}}
+	If you want to create a JAR that can be directly run with the \texttt{-jar} option, add the following plugin configuration to your \texttt{pom.xml}.
+\end{frame}
+
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Maven Assembly Plugin Configuration (Part 1)}
+	First, add the Maven Assembly Plugin to create a fat JAR that includes all dependencies. This ensures the resulting JAR can be run with the \texttt{-jar} option.
+	\begin{lstlisting}[style=XmlStyle]
+		<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-assembly-plugin</artifactId>
+		<version>3.3.0</version>
+		<executions>
+		<execution>
+		<phase>package</phase>
+		<goals>
+		<goal>single</goal>
+		</goals>
+		<configuration>
+		<descriptorRefs>
+		<descriptorRef>jar-with-dependencies</descriptorRef>
+		</descriptorRefs>
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Maven Assembly Plugin Configuration (Part 2)}
+	Continue by adding the rest of the configuration for the Maven Assembly Plugin in your \texttt{pom.xml} file. This includes specifying the main class in the manifest.
+	\begin{lstlisting}[style=XmlStyle]
+		<!-- Specify the Main-Class in the manifest -->
+		<archive>
+		<manifestEntries>
+		<Main-Class>com.example.Main</Main-Class>
+		</manifestEntries>
+		</archive>
+		</configuration>
+		</execution>
+		</executions>
+		</plugin>
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Maven Jar Plugin Configuration}
+	\vspace{20pt}
+	Next, add the Maven Jar Plugin to specify the main class that should be executed when the JAR is run with the \texttt{-jar} option.
+	\begin{lstlisting}[style=XmlStyle]
+		<plugin>
+		<groupId>org.apache.maven.plugins</groupId>
+		<artifactId>maven-jar-plugin</artifactId>
+		<version>3.2.0</version>
+		<configuration>
+		<archive>
+		<manifestEntries>
+		<!-- Specify the main class to be executed -->
+		<Main-Class>com.example.Main</Main-Class>
+		</manifestEntries>
+		</archive>
+		</configuration>
+		</plugin>
+	\end{lstlisting}
+\end{frame}
+
+
+\subsubsection{Build JAR and Run It}
+\begin{frame}[fragile]
+	\frametitle{Build JAR and Run It}
+	Then, run the following command:
+	\begin{lstlisting}[language=bash]
+		mvn clean package
+	\end{lstlisting}
+	After that, the program can be run directly with:
+	\begin{lstlisting}[language=bash]
+		java -jar target/helloworld-1.0-SNAPSHOT.jar
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running with \texttt{mvn exec:java}}
+\begin{frame}[fragile]
+	\frametitle{Running with \texttt{mvn exec:java}}
+	We can also run the program directly using Maven without creating the JAR first.
+	Use the following command to run the application:
+	\begin{lstlisting}[language=bash]
+		mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+	\end{lstlisting}
+	This command will:
+	\begin{itemize}
+		\item Clean up any previous builds (\texttt{clean}).
+		\item Compile the source code (\texttt{compile}).
+		\item Run the \texttt{Main} class using the \texttt{exec-maven-plugin}.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Running with \texttt{mvn package} and \texttt{mvn exec:java}}
+\begin{frame}[fragile]
+	\frametitle{\LARGE{Running with \texttt{mvn package} and \texttt{mvn exec:java}}}
+	If you want to ensure the code is compiled before running, use the following commands:
+	\begin{lstlisting}[language=bash]
+		mvn clean package
+		mvn exec:java -Dexec.mainClass="com.example.Main"
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Conclusion}
+\begin{frame}
+	\frametitle{Conclusion}
+	With these steps, we have successfully:
+	\begin{itemize}
+		\item Installed and verified Apache Maven.
+		\item Used external dependencies from Maven Central (Google Guava).
+		\item Managed dependencies without manually downloading and adding JAR files.
+		\item Compiled the code and generated an executable JAR file.
+		\item Run the program with dependencies from Maven.
+		\item Run the program directly using Maven without first creating a JAR.
+	\end{itemize}
+\end{frame}
+
+%%% GRADLE
+\section{Gradle}
+\begin{frame}[fragile]
+	\frametitle{Gradle}
+	Gradle is a modern, flexible, and fast build tool used for managing projects in Java, Kotlin, Groovy, and other languages. It offers a more concise declarative approach compared to Ant and Maven, supporting Groovy or Kotlin-based build scripts.
+\end{frame}
+
+\subsection{Key Features of Gradle}
+\begin{frame}[fragile]
+	\frametitle{Key Features of Gradle}
+	\begin{itemize}
+		\item Uses \texttt{build.gradle} or \texttt{build.gradle.kts} files for project configuration.
+		\item Has an integrated dependency management system, supporting Maven Central, JCenter, and local repositories.
+		\item Supports incremental builds to improve compilation speed.
+		\item Uses declarative tasks which are more concise compared to Ant and Maven.
+	\end{itemize}
+\end{frame}
+
+\subsubsection{Gralde Download and Installation}
+\begin{frame}[fragile]
+	\frametitle{Gradle Download and Installation}
+	\begin{enumerate}
+		\item Download Gradle from the official website: \url{https://gradle.org/install/}
+		\item Extract the downloaded archive to your preferred directory.
+		\item Add environment variables:
+		\begin{itemize}
+			\item Add the \texttt{bin} directory of Gradle to the \texttt{PATH} variable.
+			\item Set the \texttt{GRADLE\_HOME} variable to the Gradle installation directory.
+			\item Ensure that \texttt{JAVA\_HOME} is correctly configured.
+		\end{itemize}
+	\end{enumerate}
+\end{frame}
+
+\subsubsection{Verify Installation}
+\begin{frame}[fragile]
+	\frametitle{Verify Installation}
+	After installation, run the following command in your terminal or command prompt to verify the installation:
+	\begin{lstlisting}[language=bash]
+		gradle -version
+	\end{lstlisting}
+	If the installation is successful, the output will display the installed version of Gradle.
+\end{frame}
+
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Creating a Gradle Project}
+	To create a new project using Gradle, follow these steps:
+	\begin{enumerate}
+		\item Open the terminal or command prompt. Create a directory which is project folder:
+		\begin{lstlisting}[language=bash]
+			mkdir <project-name>
+		\end{lstlisting}
+		\item Navigate to the newly created project directory:
+		\begin{lstlisting}[language=bash]
+			cd <project-name>
+		\end{lstlisting}
+		\item Use the following Gradle command to create a new Gradle project:
+		\begin{lstlisting}[language=bash]
+			gradle init --type java-application
+		\end{lstlisting}
+		The above command will generate a new Java application project with the default structure. After running the command, Gradle will create the necessary files and directories.
+		
+	\end{enumerate}
+\end{frame}
+
+\subsection{Basic Usage of Gradle}
+\begin{frame}[fragile]
+	\frametitle{Basic Usage of Gradle}
+	\subsubsection{Project Structure}
+	Before using Gradle, ensure your project has the following structure:
+	\begin{lstlisting}[language=bash]
+		ProjectRoot/
+		|-- src/
+		|   |-- main/
+		|   |   |-- java/
+		|   |   |   |-- com/
+		|   |   |   |   |-- example/
+		|   |   |   |   |   |-- Main.java
+		|   |-- test/
+		|       |-- java/
+		|-- build.gradle
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Writing the \texttt{build.gradle} File}
+\begin{frame}[fragile]
+	\frametitle{Writing the \texttt{build.gradle} File - Part 1}
+	The \texttt{build.gradle} file is the main configuration file for Gradle projects. Here’s an example with the basic setup for the Gradle project:
+	\begin{lstlisting}[style=XmlStyle]
+		plugins {
+			id 'java'
+		}
+		
+		group 'com.example'
+		version '1.0-SNAPSHOT'
+		
+		repositories {
+			mavenCentral()
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Writing the \texttt{build.gradle} File - Part 2}
+	Continuing from the previous configuration, here’s the part where dependencies are added, including a local JAR file (\texttt{app.jar}) and an external dependency (Google Guava from Maven Central):
+	\begin{lstlisting}[style=XmlStyle]
+		dependencies {
+			// Using Google Guava from Maven Central
+			implementation 'com.google.guava:guava:31.1-jre'
+
+		}
+		
+		tasks.named('jar') {
+			manifest {
+				attributes 'Main-Class': 'com.example.Main'
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Source Code for \texttt{Main.java}}
+\begin{frame}[fragile]
+	\frametitle{Source Code for \texttt{Main.java}}
+	Create the \texttt{Main.java} file inside \texttt{src/main/java/com/example/} with the following content:
+	\begin{lstlisting}[style=JavaStyle]
+		package com.example;
+		
+		import com.google.common.base.Joiner;
+		
+		public class Main {
+			public static void main(String[] args) {
+				System.out.println("Hello, Gradle!");
+				
+				// Using function from Google Guava (Maven Central)
+				String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
+				System.out.println("Joined String: " + result);
+				
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Creating a JAR File with Gradle}
+\begin{frame}[fragile]
+	\frametitle{Creating a JAR File with Gradle}
+	To compile the code and create a JAR file, run the following command:
+	\begin{lstlisting}[language=bash]
+		gradle clean build
+	\end{lstlisting}
+	The output will be located in the \texttt{build/libs/} directory:
+	\begin{lstlisting}[language=bash]
+		build/libs/
+		|-- helloworld-1.0-SNAPSHOT.jar
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running the Program from the JAR}
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Running the Program from the JAR}
+	Use the following command to run the program from the generated JAR:
+	\begin{lstlisting}[language=bash]
+		java -cp build/libs/helloworld-1.0-SNAPSHOT.jar:lib/app.jar:~/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre com.example.Main
+	\end{lstlisting}
+	To make the JAR file executable with the \texttt{-jar} option, add the following configuration to your \texttt{build.gradle}:
+	\begin{lstlisting}[style=XmlStyle]
+		jar {
+			manifest {
+				attributes 'Main-Class': 'com.example.Main'
+			}
+			from {
+				configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Running the Program Using Gradle}
+\begin{frame}[fragile]
+	\vspace{20pt}
+	\frametitle{Running the Program Using Gradle}
+	In addition to running the program with the \texttt{java -cp} command, you can also run the application directly with Gradle.\\
+	\textbf{Running with \texttt{gradle run}}
+	Use the following command to run the application without creating the JAR first:
+	\begin{lstlisting}[language=bash]
+		gradle run
+	\end{lstlisting}
+	If the \texttt{run} task is not available, add the following plugin to your \texttt{build.gradle}:
+	\begin{lstlisting}[style=XmlStyle]
+		plugins {
+			id 'application'
+		}
+		
+		application {
+			mainClass = 'com.example.Main'
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{Conclusion}
+\begin{frame}[fragile]
+	\frametitle{Conclusion}
+	With these steps, we have successfully:
+	\begin{itemize}
+		\item Installed and verified Gradle.
+		\item Used external dependencies from Maven Central (Google Guava).
+		\item Used a local JAR file (\texttt{app.jar}) in the Gradle project.
+		\item Compiled the code and generated a runnable JAR file.
+		\item Run the program with Gradle dependencies.
+		\item Run the program directly with Gradle without creating a JAR first.
+	\end{itemize}
+\end{frame}
+
+\section{Comparison of Ant, Maven, and Gradle}
+\begin{frame}[fragile]
+	\frametitle{Comparison of Build Tools}
+	Each build tool has its own characteristics, with advantages and disadvantages that need to be considered based on the project's needs. Below is a comparison of Apache Ant, Apache Maven, and Gradle.
+\end{frame}
+
+
+\subsection{Apache Ant}
+
+\begin{frame}[fragile]
+	\frametitle{Advantages of Ant}
+	\textbf{Ant} is an XML-based build tool designed to automate the build process. Ant is more flexible than traditional Makefiles, but it lacks an integrated dependency management system.
+	\begin{itemize}
+		\item Highly flexible and can be used for various custom build tasks.
+		\item Does not enforce a specific project structure.
+		\item Supports extensions through additional libraries.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Disadvantages of Ant}
+	\begin{itemize}
+		\item Lacks built-in dependency management, requiring manual JAR management or use of Ivy.
+		\item Uses XML for configuration, which is often more verbose and harder to read compared to DSLs like Groovy or Kotlin.
+		\item Does not have a structured build lifecycle like Maven and Gradle, so developers need to define all steps explicitly.
+	\end{itemize}
+\end{frame}
+
+\subsection{Apache Maven}
+\begin{frame}[fragile]
+	\frametitle{Advantages of Maven}
+	\textbf{Maven} is a build tool based on the \textbf{Project Object Model (POM)} concept and has built-in dependency management. Maven uses XML for configuration and provides a clear build lifecycle.
+	\begin{itemize}
+		\item Has an automatic dependency management system with support for Maven Central repository.
+		\item Standard build lifecycle, including \texttt{compile}, \texttt{test}, \texttt{package}, and \texttt{install}.
+		\item More consistent and conventional project structure, making collaboration easier.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Disadvantages of Maven}
+	\begin{itemize}
+		\item XML-based configuration can become long and hard to read.
+		\item The build lifecycle can feel rigid if the project requires a lot of customization.
+		\item Performance is slower compared to Gradle due to the lack of efficient incremental build support.
+	\end{itemize}
+\end{frame}
+
+\subsection{Gradle}
+
+\begin{frame}[fragile]
+	\textbf{Gradle} is a modern build tool designed to improve efficiency and flexibility in building software projects. Gradle uses a declarative language based on Groovy or Kotlin DSL for configuration.
+	\frametitle{Advantages of Gradle}
+	\begin{itemize}
+		\item Uses Groovy/Kotlin-based DSL, which is more concise than XML in Ant and Maven.
+		\item Supports incremental builds, making it faster than Maven.
+		\item High flexibility for customization, allowing developers to easily tailor the build process.
+		\item Strong dependency management, similar to Maven but with simpler syntax.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Disadvantages of Gradle}
+	\begin{itemize}
+		\item Higher learning curve due to the use of Groovy/Kotlin DSL.
+		\item Documentation is not as comprehensive as Maven, especially for more complex features.
+		\item Not all Maven plugins are available for Gradle, so migrating from Maven may require extra effort.
+	\end{itemize}
+\end{frame}
+
+\subsection{Comparison Table}
+
+\begin{frame}[fragile]
+	\frametitle{Comparison Table}
+	The table below summarizes the main differences between Ant, Maven, and Gradle:
+	
+	\begin{table}[h]
+		\centering
+		\scriptsize
+		% Set line thickness and color
+		\setlength{\arrayrulewidth}{0.01mm}  % Line thickness
+		\arrayrulecolor[HTML]{000000} % Line color (orange in this case)
+		
+		\begin{tabular}{p{0.2\textwidth} p{0.22\textwidth} p{0.22\textwidth} p{0.22\textwidth}}
+			\hline
+			\textbf{Feature} & \textbf{Ant} & \textbf{Maven} & \textbf{Gradle} \\
+			\hline
+			Dependency Management & None (requires Ivy) & Built-in (Maven Central) & Built-in (Maven Central, Gradle Plugin) \\
+			\hline
+			Project Structure & Flexible & Conventional & Conventional \\
+			\hline
+			Configuration Format & XML & XML & Groovy/Kotlin DSL \\
+			\hline
+			Build Lifecycle & None (manual) & Present & Present \\
+			\hline
+			Build Speed & Slow & Moderate & Fast (Incremental Build) \\
+			\hline
+			Flexibility & High & Moderate & High \\
+			\hline
+			Learning Curve & Low & Moderate & High \\
+			\hline
+		\end{tabular}
+		\caption{Comparison of Ant, Maven, and Gradle}
+		\label{tab:comparison}
+	\end{table}
+\end{frame}
+
+
+
+
+\subsection{Conclusion}
+\begin{frame}[fragile]
+	\frametitle{Conclusion}
+	The choice of build tool depends on the project's needs:
+	\begin{itemize}
+		\item \textbf{Use Ant} if full control over the build process is required and built-in dependency management is not needed.
+		\item \textbf{Use Maven} if you want a clear project structure, automatic build lifecycle, and strong dependency management.
+		\item \textbf{Use Gradle} if you need faster builds, flexibility, and more concise configuration compared to Maven.
+	\end{itemize}
+	Gradle is increasingly popular for modern projects due to its speed and customization capabilities. However, Maven remains a solid choice for enterprise projects that prioritize stability and mature documentation. Ant is better suited for legacy projects or highly customized build systems.
+\end{frame}
+
+\end{document}

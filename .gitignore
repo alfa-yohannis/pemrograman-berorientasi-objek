@@ -307,3 +307,8 @@ TSWLatexianTemp*
 #*Notes.bib
 /module/pemrograman_berorientasi-objek.pdf
 /slides/pertemuan_01/pertemuan_01.pdf
+/slides/pertemuan_02/pertemuan_02.pdf
+
+
+*.jar
+*.class

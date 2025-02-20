@@ -1,0 +1,26 @@
+<project name="HelloWorld" default="run">
+  <property name="src.dir" value="src" />
+  <property name="bin.dir" value="bin" />
+  <property name="lib.dir" value="lib" />
+  <property name="jarfile" value="${lib.dir}/app.jar" />
+
+  <!-- Create directories for output -->
+  <target name="init">
+    <mkdir dir="${bin.dir}" />
+  </target>
+
+  <!-- Compile the Java source code -->
+  <target name="compile" depends="init">
+    <javac srcdir="${src.dir}" destdir="${bin.dir}">
+      <classpath>
+        <fileset dir="${lib.dir}" includes="**/*.jar" />
+        <!-- Add additional classpaths if needed -->
+      </classpath>
+    </javac>
+  </target>
+
+  <!-- Run the Java program -->
+  <target name="run" depends="compile">
+    <java classname="com.example.Main" classpath="${bin.dir}:${lib.dir}/app.jar" fork="true" />
+  </target>
+</project>

@@ -1,0 +1,1089 @@
+\chapter{Build Tools dan Dependency Manager}
+
+\section{Pendahuluan}
+Dalam pengembangan perangkat lunak, proses kompilasi, pengujian, dan manajemen dependensi menjadi bagian penting yang harus dikelola dengan efisien. Build tools dan dependency manager berperan dalam mengotomatiskan tugas-tugas ini, memungkinkan pengembang untuk membangun, mengelola, dan mendistribusikan perangkat lunak dengan lebih mudah. Beberapa alat yang umum digunakan dalam ekosistem Java adalah Ant, Maven, dan Gradle.
+
+
+\section{Kompilasi Kode Java Secara Manual dan Pembuatan JAR}
+Sebelum menggunakan build tool seperti Apache Ant, pengembang dapat mengompilasi kode Java secara manual dan membuat file \texttt{JAR} secara langsung melalui terminal atau command prompt. Berikut adalah langkah-langkah untuk melakukan proses tersebut.
+
+\subsection{Menulis Kode Sumber Java}
+Buat file \texttt{Main.java} dalam direktori \texttt{src/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	public class Main {
+		public static void main(String[] args) {
+			System.out.println("Hello, World!");
+			Util.sayHello("Java Developer");
+		}
+	}
+\end{lstlisting}
+
+Selain itu, buat file \texttt{Util.java} dalam direktori yang sama untuk menyediakan fungsi tambahan:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	public class Util {
+		public static void sayHello(String name) {
+			System.out.println("Hello, " + name + "!");
+		}
+	}
+\end{lstlisting}
+
+\subsection{Kompilasi Secara Manual}
+Gunakan perintah berikut untuk mengompilasi kode Java tanpa menggunakan build tool:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p bin
+	javac -d bin src/com/example/*.java
+\end{lstlisting}
+
+Perintah ini akan mengompilasi semua file \texttt{.java} yang ada di dalam direktori \texttt{src/com/example/} dan menyimpannya ke dalam direktori \texttt{bin/}.
+
+\subsection{Menjalankan Program Secara Manual}
+Setelah kompilasi berhasil, jalankan program dengan perintah:
+
+\begin{lstlisting}[language=bash]
+	java -cp bin com.example.Main
+\end{lstlisting}
+
+Output yang dihasilkan:
+
+\begin{lstlisting}[language=bash]
+	Hello, World!
+	Hello, Java Developer!
+\end{lstlisting}
+
+\subsection{Membuat File JAR}
+Untuk membuat file \texttt{JAR} dari hasil kompilasi, gunakan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	jar cf bin/app.jar -C bin .
+\end{lstlisting}
+
+Perintah ini akan membuat file \texttt{app.jar} di dalam direktori \texttt{bin/}. 
+
+\subsection{Mengompilasi Program Baru yang Menggunakan File JAR}
+Setelah membuat \texttt{app.jar}, kita dapat menggunakan file JAR tersebut dalam proyek lain atau program baru yang membutuhkan fungsi dari \texttt{Util.java}.
+
+\subsubsection{Menulis Kode Sumber Java}
+Buat file baru \texttt{NewMain.java} dalam direktori \texttt{src/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	import com.example.Util;
+	
+	public class NewMain {
+		public static void main(String[] args) {
+			System.out.println("This is a new program using app.jar!");
+			Util.sayHello("JAR User");
+		}
+	}
+\end{lstlisting}
+
+Kode ini menggunakan kembali fungsi \texttt{sayHello} dari \texttt{Util.java} yang sudah ada dalam \texttt{app.jar}.
+
+\subsubsection{Kompilasi Program Baru dengan JAR}
+Gunakan perintah berikut untuk mengompilasi \texttt{NewMain.java} dengan menggunakan \texttt{app.jar}:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p bin
+	javac-cp bin/app.jar -d bin src/com/example/NewMain.java
+\end{lstlisting}
+
+Perintah ini menginstruksikan kompiler Java untuk menggunakan \texttt{app.jar} sebagai bagian dari classpath agar bisa mengakses \texttt{Util.java}.
+
+\subsubsection{Menjalankan Program Baru dengan JAR}
+Setelah kompilasi berhasil, jalankan program dengan perintah:
+
+\begin{lstlisting}[language=bash]
+	java -cp bin:bin/app.jar com.example.NewMain
+\end{lstlisting}
+
+Output yang dihasilkan:
+
+\begin{lstlisting}[language=bash]
+	This is a new program using app.jar!
+	Hello, JAR User!
+\end{lstlisting}
+
+Dengan demikian, kita telah berhasil menggunakan kembali fungsi yang telah dikompilasi dalam file \texttt{app.jar} untuk program baru tanpa harus menulis ulang kode dari \texttt{Util.java}.
+
+
+\subsection{Membuat File JAR untuk Program Baru}
+Setelah mengompilasi \texttt{NewMain.java} dan menggunakan \texttt{app.jar} sebagai dependensi, langkah berikutnya adalah membuat file JAR baru yang mencakup program ini.
+
+\subsubsection{Membuat File JAR Baru}
+Gunakan perintah berikut untuk membuat file \texttt{newapp.jar} yang mencakup \texttt{NewMain.class} dan tetap menggunakan \texttt{app.jar} sebagai dependensi:
+
+\begin{lstlisting}[language=bash]
+	jar cf bin/newapp.jar -C bin .
+\end{lstlisting}
+
+Perintah ini akan membuat file \texttt{newapp.jar} di dalam direktori \texttt{bin/}, yang berisi semua file class yang telah dikompilasi.
+
+\subsubsection{Menjalankan Program dari JAR Baru}
+Jalankan program dari \texttt{newapp.jar} menggunakan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	java -cp bin/newapp.jar:bin/app.jar com.example.NewMain
+\end{lstlisting}
+
+Jika sistem operasi Windows digunakan, gunakan tanda titik koma (\texttt{;}) sebagai pemisah classpath:
+
+\begin{lstlisting}[language=bash]
+	java -cp bin/newapp.jar;bin/app.jar com.example.NewMain
+\end{lstlisting}
+
+\subsubsection{Menjalankan JAR Baru dengan Opsi \texttt{-jar}}
+Agar file \texttt{newapp.jar} dapat dijalankan langsung dengan opsi \texttt{-jar}, tambahkan file \texttt{MANIFEST.MF} untuk mendefinisikan entry point:
+
+Buat direktori \texttt{META-INF} dan file manifest:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p bin/META-INF
+	echo "Main-Class: com.example.NewMain" > bin/META-INF/MANIFEST.MF
+\end{lstlisting}
+
+Lalu buat ulang file \texttt{newapp.jar} dengan menyertakan file manifest:
+
+\begin{lstlisting}[language=bash]
+	jar cfm bin/newapp.jar bin/META-INF/MANIFEST.MF -C bin .
+\end{lstlisting}
+
+Setelah itu, jalankan program dengan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	java -jar bin/newapp.jar
+\end{lstlisting}
+
+Jika terjadi error karena dependensi eksternal, gunakan opsi \texttt{-cp} untuk menyertakan \texttt{app.jar}:
+
+\begin{lstlisting}[language=bash]
+	java -cp bin/newapp.jar:bin/app.jar com.example.NewMain
+\end{lstlisting}
+
+\subsubsection{Kesimpulan}
+Dengan langkah-langkah ini, kita telah berhasil:
+\begin{itemize}
+	\item Menggunakan file \texttt{app.jar} dalam program baru.
+	\item Mengompilasi dan menjalankan program baru dengan classpath yang berisi \texttt{app.jar}.
+	\item Membuat \texttt{newapp.jar} yang dapat dieksekusi.
+	\item Menjalankan \texttt{newapp.jar} baik menggunakan opsi \texttt{-cp} maupun \texttt{-jar}.
+\end{itemize}
+
+Bagian selanjutnya akan membahas bagaimana mengotomatiskan proses ini menggunakan Apache Ant.
+
+
+\section{Apache Ant}
+Apache Ant adalah salah satu build tool tertua yang digunakan dalam ekosistem Java. Ant menggunakan file XML sebagai skrip untuk mendefinisikan tugas-tugas build seperti kompilasi kode sumber, menjalankan unit test, dan menghasilkan file JAR atau WAR.
+
+\subsection{Fitur Utama Ant}
+\begin{itemize}
+	\item Menggunakan XML sebagai konfigurasi.
+	\item Memberikan fleksibilitas tinggi melalui target dan tugas yang dapat dikustomisasi.
+	\item Tidak memiliki manajemen dependensi bawaan.
+\end{itemize}
+
+\subsection{Instalasi Apache Ant}
+Untuk menggunakan Apache Ant, ikuti langkah-langkah berikut:
+
+\subsubsection{Unduh dan Instalasi}
+\begin{enumerate}
+	\item Unduh Apache Ant dari situs resmi: \url{https://ant.apache.org/}
+	\item Ekstrak arsip yang telah diunduh ke dalam direktori pilihan.
+	\item Tambahkan variabel lingkungan:
+	\begin{itemize}
+		\item Tambahkan direktori \texttt{bin} dari Ant ke dalam variabel \texttt{PATH}.
+		\item Atur variabel \texttt{ANT\_HOME} menuju direktori instalasi Ant.
+		\item Pastikan \texttt{JAVA\_HOME} telah terkonfigurasi dengan benar.
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Verifikasi Instalasi}
+Setelah instalasi selesai, jalankan perintah berikut di terminal atau command prompt untuk memverifikasi instalasi:
+
+\begin{lstlisting}[language=bash]
+	ant -version
+\end{lstlisting}
+
+Jika instalasi berhasil, output yang muncul akan menampilkan versi Ant yang terinstal.
+
+\subsection{Penggunaan Dasar Apache Ant}
+\subsubsection{Struktur Proyek}
+Sebelum menggunakan Ant, pastikan struktur proyek memiliki susunan seperti berikut:
+
+\begin{lstlisting}[language=bash]
+	ProjectRoot/
+	|-- lib/
+	|   |-- app.jar
+	|-- src/
+	|   |-- com/
+	|   |   |-- example/
+	|   |   |   |-- Main.java
+	|-- build.xml
+\end{lstlisting}
+
+Direktori \texttt{lib/} berisi file \texttt{app.jar} yang telah dibuat sebelumnya, yang akan digunakan dalam proyek ini.
+
+\subsubsection{Kode Sumber \texttt{Main.java}}
+Buat file \texttt{Main.java} di dalam direktori \texttt{src/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	import com.example.Util;
+	
+	public class Main {
+		public static void main(String[] args) {
+			System.out.println("Running with Ant and External JAR!");
+			Util.sayHello("Ant User");
+		}
+	}
+\end{lstlisting}
+
+Kode ini menggunakan kelas \texttt{Util} yang sebelumnya telah dikompilasi dan dikemas dalam file \texttt{app.jar}.
+
+\subsubsection{Menulis File \texttt{build.xml}}
+Buat file \texttt{build.xml} di dalam direktori root proyek dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=XmlStyle]
+<project name="HelloWorld" default="run">
+<property name="src.dir" value="src" />
+<property name="bin.dir" value="bin" />
+<property name="lib.dir" value="lib" />
+<property name="jarfile" value="${lib.dir}/app.jar" />
+
+<!-- Create directories for output -->
+<target name="init">
+<mkdir dir="${bin.dir}" />
+</target>
+
+<!-- Compile the Java source code -->
+<target name="compile" depends="init">
+<javac srcdir="${src.dir}" destdir="${bin.dir}">
+<classpath>
+<fileset dir="${lib.dir}" includes="**/*.jar" />
+<!-- Add additional classpaths if needed -->
+</classpath>
+</javac>
+</target>
+
+<!-- Run the Java program -->
+<target name="run" depends="compile">
+<java classname="com.example.Main" classpath="${bin.dir}:${lib.dir}/app.jar" fork="true" />
+</target>
+</project>
+
+\end{lstlisting}
+
+\subsubsection{Menjalankan Build dengan Ant}
+Jalankan perintah berikut untuk mengeksekusi tugas-tugas dalam \texttt{build.xml}:
+
+\begin{itemize}
+	\item Untuk mengompilasi kode dengan JAR eksternal:
+	\begin{lstlisting}[language=bash]
+		ant compile
+	\end{lstlisting}
+	\item Untuk menjalankan aplikasi:
+	\begin{lstlisting}[language=bash]
+		ant run
+	\end{lstlisting}
+\end{itemize}
+
+Dengan konfigurasi di atas, Ant akan mengompilasi kode Java dengan \textbf{JAR eksternal} dan kemudian menjalankan program yang menggunakan \textbf{fungsi dari JAR tersebut}.
+
+
+\section{Apache Maven}
+Apache Maven adalah build tool dan dependency manager yang banyak digunakan dalam ekosistem Java. Dengan menggunakan konsep \textbf{Project Object Model (POM)}, Maven mempermudah pengelolaan proyek, termasuk kompilasi, pengujian, dan pembuatan artefak seperti JAR dan WAR.
+
+\subsection{Fitur Utama Maven}
+\begin{itemize}
+	\item Menggunakan file \texttt{pom.xml} untuk konfigurasi proyek.
+	\item Menyediakan lifecycle build standar (\texttt{compile}, \texttt{test}, \texttt{package}, \texttt{install}, dll.).
+	\item Memiliki sistem manajemen dependensi terintegrasi.
+\end{itemize}
+
+\subsection{Instalasi Apache Maven}
+Untuk menggunakan Apache Maven, ikuti langkah-langkah berikut:
+
+\subsubsection{Unduh dan Instalasi}
+\begin{enumerate}
+	\item Unduh Apache Maven dari situs resmi: \url{https://maven.apache.org/download.cgi}
+	\item Ekstrak arsip yang telah diunduh ke dalam direktori pilihan.
+	\item Tambahkan variabel lingkungan:
+	\begin{itemize}
+		\item Tambahkan direktori \texttt{bin} dari Maven ke dalam variabel \texttt{PATH}.
+		\item Atur variabel \texttt{MAVEN\_HOME} menuju direktori instalasi Maven.
+		\item Pastikan \texttt{JAVA\_HOME} telah terkonfigurasi dengan benar.
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Verifikasi Instalasi}
+Setelah instalasi selesai, jalankan perintah berikut di terminal atau command prompt untuk memverifikasi instalasi:
+
+\begin{lstlisting}[language=bash]
+	mvn -version
+\end{lstlisting}
+
+Jika instalasi berhasil, output yang muncul akan menampilkan versi Maven yang telah diinstal.
+
+\subsubsection{Membuat Proyek Maven}
+Untuk membuat proyek baru menggunakan Maven, ikuti langkah-langkah berikut:
+
+\begin{enumerate}
+	\item Buka terminal atau command prompt.
+	\item Gunakan perintah Maven berikut untuk membuat proyek Maven baru:
+	\begin{lstlisting}[language=bash]
+		mvn archetype:generate -DgroupId=com.example -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+	\end{lstlisting}
+	Perintah di atas akan membuat proyek Maven dengan \texttt{groupId} sebagai \texttt{com.example} dan \texttt{artifactId} sebagai \texttt{my-app}.
+	\item Setelah perintah dijalankan, Maven akan mengunduh template proyek dan membuat struktur direktori yang diperlukan.
+	\item Masuk ke dalam direktori proyek yang baru dibuat:
+	\begin{lstlisting}[language=bash]
+		cd my-app
+	\end{lstlisting}
+\end{enumerate}
+
+\subsection{Penggunaan Dasar Apache Maven}
+\subsubsection{Struktur Proyek}
+Sebelum menggunakan Maven, pastikan struktur proyek memiliki susunan seperti berikut:
+
+\begin{lstlisting}[language=bash]
+	ProjectRoot/
+	|-- src/
+	|   |-- main/
+	|   |   |-- java/
+	|   |   |   |-- com/
+	|   |   |   |   |-- example/
+	|   |   |   |   |   |-- Main.java
+	|   |-- test/
+	|       |-- java/
+	|-- pom.xml
+\end{lstlisting}
+
+\subsubsection{Menulis File \texttt{pom.xml}}
+File \texttt{pom.xml} adalah konfigurasi utama dalam proyek Maven. Berikut adalah contoh konfigurasi dengan dependensi dari Maven Central:
+
+\begin{lstlisting}[style=XmlStyle]
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.example</groupId>
+	<artifactId>helloworld</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	
+	<dependencies>
+	<!-- Menggunakan Google Guava dari Maven Central -->
+	<dependency>
+	<groupId>com.google.guava</groupId>
+	<artifactId>guava</artifactId>
+	<version>33.4.0-jre</version>
+	</dependency>
+	</dependencies>
+	</project>
+\end{lstlisting}
+
+\subsubsection{Kode Sumber \texttt{Main.java}}
+Buat file \texttt{Main.java} di dalam direktori \texttt{src/main/java/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	import com.google.common.base.Joiner;
+	
+	public class Main {
+		public static void main(String[] args) {
+			System.out.println("Hello, Maven!");
+			
+			// Menggunakan fungsi dari library Guava (yang diambil dari Maven Central)
+			String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
+			System.out.println("Joined String: " + result);
+		}
+	}
+\end{lstlisting}
+
+Dalam kode di atas, kita menggunakan fungsi \texttt{Joiner.on()} dari Google Guava untuk menggabungkan string.
+
+\subsubsection{Membuat File JAR dengan Maven}
+Untuk mengompilasi kode dan menghasilkan file JAR, jalankan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	mvn clean package
+\end{lstlisting}
+
+Hasilnya akan berada di dalam direktori \texttt{target/}:
+
+\begin{lstlisting}[language=bash]
+	target/
+	|-- helloworld-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program dari JAR}
+Gunakan perintah berikut untuk menjalankan program dari JAR yang dihasilkan:
+
+\begin{lstlisting}[language=bash]
+	java -cp target/helloworld-1.0-SNAPSHOT.jar:~/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar com.example.Main
+\end{lstlisting}
+
+Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi \texttt{-jar}, tambahkan \texttt{plugin} berikut ke dalam \texttt{pom.xml}:
+
+\begin{lstlisting}[style=XmlStyle]
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<modelVersion>4.0.0</modelVersion>
+<groupId>com.example</groupId>
+<artifactId>maven</artifactId>
+<packaging>jar</packaging>
+<version>1.0-SNAPSHOT</version>
+<name>maven</name>
+<url>http://maven.apache.org</url>
+
+<build>
+<plugins>
+<!-- Maven Assembly Plugin to create fat JAR -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-assembly-plugin</artifactId>
+<version>3.3.0</version>
+<executions>
+<execution>
+<phase>package</phase>
+<goals>
+<goal>single</goal>
+</goals>
+<configuration>
+<descriptorRefs>
+<descriptorRef>jar-with-dependencies</descriptorRef>
+</descriptorRefs>
+<!-- Specify the Main-Class in the manifest -->
+<archive>
+<manifestEntries>
+<Main-Class>com.example.Main</Main-Class>
+</manifestEntries>
+</archive>
+</configuration>
+</execution>
+</executions>
+</plugin>
+
+<!-- Maven Jar Plugin to create executable JAR -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-jar-plugin</artifactId>
+<version>3.2.0</version>
+<configuration>
+<archive>
+<manifestEntries>
+<!-- Specify the main class to be executed -->
+<Main-Class>com.example.Main</Main-Class>
+</manifestEntries>
+</archive>
+</configuration>
+</plugin>
+
+<!-- Maven Compiler Plugin to compile the code -->
+<plugin>
+<groupId>org.apache.maven.plugins</groupId>
+<artifactId>maven-compiler-plugin</artifactId>
+<version>3.1</version>
+<configuration>
+<source>17</source>
+<target>17</target>
+</configuration>
+</plugin>
+</plugins>
+</build>
+
+<dependencies>
+<!-- Google Guava Dependency from Maven Central -->
+<dependency>
+<groupId>com.google.guava</groupId>
+<artifactId>guava</artifactId>
+<version>33.4.0-jre</version>
+</dependency>
+
+<!-- JUnit for testing -->
+<dependency>
+<groupId>junit</groupId>
+<artifactId>junit</artifactId>
+<version>3.8.1</version>
+<scope>test</scope>
+</dependency>
+</dependencies>
+</project>
+
+\end{lstlisting}
+
+Kemudian jalankan kembali perintah:
+
+\begin{lstlisting}[language=bash]
+	mvn clean package
+\end{lstlisting}
+
+Setelah itu, program dapat dijalankan langsung dengan:
+
+\begin{lstlisting}[language=bash]
+	java -jar target/helloworld-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+
+\subsubsection{Menjalankan Program Menggunakan Maven}
+Selain menjalankan program menggunakan perintah \texttt{java -cp}, kita juga dapat menjalankan aplikasi langsung melalui Maven.
+
+\paragraph{Menjalankan dengan \texttt{mvn exec:java}}
+Gunakan perintah berikut untuk menjalankan aplikasi tanpa membuat JAR terlebih dahulu:
+
+\begin{lstlisting}[language=bash]
+	mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+\end{lstlisting}
+
+Perintah ini akan:
+\begin{itemize}
+	\item Membersihkan (\texttt{clean}) build sebelumnya.
+	\item Mengompilasi (\texttt{compile}) kode sumber.
+	\item Menjalankan kelas \texttt{Main} menggunakan plugin \texttt{exec-maven-plugin}.
+\end{itemize}
+
+\paragraph{Menjalankan dengan \texttt{mvn package} dan \texttt{mvn exec:java}}
+Jika ingin memastikan kode dikompilasi terlebih dahulu sebelum dijalankan, gunakan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	mvn clean package
+	mvn exec:java -Dexec.mainClass="com.example.Main"
+\end{lstlisting}
+
+\subsubsection{Kesimpulan}
+Dengan langkah-langkah ini, kita telah berhasil:
+\begin{itemize}
+	\item Menginstal dan memverifikasi Apache Maven.
+	\item Menggunakan dependensi eksternal dari Maven Central (Google Guava).
+	\item Mengelola dependensi tanpa perlu mengunduh dan menambahkan file JAR secara manual.
+	\item Menggunakan file JAR lokal (\texttt{app.jar}) dalam proyek Maven.
+	\item Mengompilasi kode dan menghasilkan file JAR yang dapat dijalankan.
+	\item Menjalankan program dengan dependensi dari Maven.
+	\item Menjalankan program langsung menggunakan Maven tanpa membuat JAR terlebih dahulu.
+\end{itemize}
+
+Hal ini sangat berguna saat proses pengembangan karena kita dapat langsung mengeksekusi kode tanpa perlu mengatur classpath secara manual. Bagian selanjutnya akan membahas bagaimana Maven dapat digunakan dalam proyek yang lebih kompleks.
+
+
+\section{Gradle}
+Gradle adalah build tool modern yang fleksibel dan cepat, digunakan untuk mengelola proyek Java, Kotlin, Groovy, dan berbagai bahasa lainnya. Gradle menawarkan pendekatan deklaratif yang lebih singkat dibandingkan Ant dan Maven serta mendukung build berbasis skrip Groovy atau Kotlin.
+
+\subsection{Fitur Utama Gradle}
+\begin{itemize}
+	\item Menggunakan file \texttt{build.gradle} atau \texttt{build.gradle.kts} untuk konfigurasi proyek.
+	\item Memiliki sistem manajemen dependensi yang terintegrasi, mendukung Maven Central, JCenter, dan repositori lokal.
+	\item Mendukung incremental build untuk meningkatkan kecepatan kompilasi.
+	\item Menggunakan task berbasis deklaratif yang lebih ringkas dibandingkan Ant dan Maven.
+\end{itemize}
+
+\subsection{Instalasi Gradle}
+Untuk menggunakan Gradle, ikuti langkah-langkah berikut:
+
+\subsubsection{Unduh dan Instalasi}
+\begin{enumerate}
+	\item Unduh Gradle dari situs resmi: \url{https://gradle.org/install/}
+	\item Ekstrak arsip yang telah diunduh ke dalam direktori pilihan.
+	\item Tambahkan variabel lingkungan:
+	\begin{itemize}
+		\item Tambahkan direktori \texttt{bin} dari Gradle ke dalam variabel \texttt{PATH}.
+		\item Atur variabel \texttt{GRADLE\_HOME} menuju direktori instalasi Gradle.
+		\item Pastikan \texttt{JAVA\_HOME} telah terkonfigurasi dengan benar.
+	\end{itemize}
+\end{enumerate}
+
+\subsubsection{Verifikasi Instalasi}
+Setelah instalasi selesai, jalankan perintah berikut di terminal atau command prompt untuk memverifikasi instalasi:
+
+\begin{lstlisting}[language=bash]
+	gradle -version
+\end{lstlisting}
+
+Jika instalasi berhasil, output yang muncul akan menampilkan versi Gradle yang telah diinstal.
+
+
+\subsection{Membuat Proyek Gradle}
+Untuk membuat proyek baru menggunakan Gradle, ikuti langkah-langkah berikut:
+\begin{enumerate}
+	\item Buka terminal atau command prompt.
+	\item Gunakan perintah Gradle berikut untuk membuat proyek Gradle baru:
+	\begin{lstlisting}[language=bash]
+		gradle init --type java-application
+	\end{lstlisting}
+	Perintah di atas akan menghasilkan proyek aplikasi Java baru dengan struktur default.
+	\item Setelah menjalankan perintah, Gradle akan membuat file dan direktori yang diperlukan.
+	\item Masuk ke dalam direktori proyek yang baru dibuat:
+	\begin{lstlisting}[language=bash]
+		cd <project-name>
+	\end{lstlisting}
+\end{enumerate}
+
+
+\subsection{Penggunaan Dasar Gradle}
+\subsubsection{Struktur Proyek}
+Sebelum menggunakan Gradle, pastikan struktur proyek memiliki susunan seperti berikut:
+
+\begin{lstlisting}[language=bash]
+	ProjectRoot/
+	|-- src/
+	|   |-- main/
+	|   |   |-- java/
+	|   |   |   |-- com/
+	|   |   |   |   |-- example/
+	|   |   |   |   |   |-- Main.java
+	|   |-- test/
+	|       |-- java/
+	|-- build.gradle
+\end{lstlisting}
+
+\subsubsection{Menulis File \texttt{build.gradle}}
+File \texttt{build.gradle} adalah konfigurasi utama dalam proyek Gradle. Berikut adalah contoh konfigurasi dengan **dependensi dari Maven Central** serta **file JAR lokal (`app.jar`)**:
+
+\begin{lstlisting}[style=XmlStyle]
+	plugins {
+		id 'java'
+	}
+	
+	group 'com.example'
+	version '1.0-SNAPSHOT'
+	
+	repositories {
+		mavenCentral()
+	}
+	
+	dependencies {
+		// Menggunakan Google Guava dari Maven Central
+		implementation 'com.google.guava:guava:31.1-jre'
+		
+		// Menggunakan file JAR lokal (app.jar)
+		implementation files('lib/app.jar')
+	}
+	
+	tasks.named('jar') {
+		manifest {
+			attributes 'Main-Class': 'com.example.Main'
+		}
+	}
+\end{lstlisting}
+
+\subsubsection{Kode Sumber \texttt{Main.java}}
+Buat file \texttt{Main.java} di dalam direktori \texttt{src/main/java/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	import com.google.common.base.Joiner;
+	import com.example.Util; // Menggunakan kelas dari app.jar
+	
+	public class Main {
+		public static void main(String[] args) {
+			System.out.println("Hello, Gradle!");
+			
+			// Menggunakan fungsi dari Google Guava (Maven Central)
+			String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
+			System.out.println("Joined String: " + result);
+			
+			// Menggunakan fungsi dari app.jar (File JAR lokal)
+			Util.sayHello("Gradle User");
+		}
+	}
+\end{lstlisting}
+
+Dalam kode di atas, kita menggunakan **Google Guava** dari Maven Central serta **kelas `Util` dari `app.jar`**.
+
+\subsubsection{Membuat File JAR dengan Gradle}
+Untuk mengompilasi kode dan menghasilkan file JAR, jalankan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	gradle clean build
+\end{lstlisting}
+
+Hasilnya akan berada di dalam direktori \texttt{build/libs/}:
+
+\begin{lstlisting}[language=bash]
+	build/libs/
+	|-- helloworld-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program dari JAR}
+Gunakan perintah berikut untuk menjalankan program dari JAR yang dihasilkan:
+
+\begin{lstlisting}[language=bash]
+	java -cp build/libs/helloworld-1.0-SNAPSHOT.jar:lib/app.jar:~/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre com.example.Main
+\end{lstlisting}
+
+Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi \texttt{-jar}, tambahkan konfigurasi berikut ke dalam \texttt{build.gradle}:
+
+\begin{lstlisting}[style=XmlStyle]
+	jar {
+		manifest {
+			attributes 'Main-Class': 'com.example.Main'
+		}
+		from {
+			configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+		}
+	}
+\end{lstlisting}
+
+Kemudian jalankan kembali perintah:
+
+\begin{lstlisting}[language=bash]
+	gradle clean build
+\end{lstlisting}
+
+Setelah itu, program dapat dijalankan langsung dengan:
+
+\begin{lstlisting}[language=bash]
+	java -jar build/libs/helloworld-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program Menggunakan Gradle}
+Selain menjalankan program menggunakan perintah \texttt{java -cp}, kita juga dapat menjalankan aplikasi langsung melalui Gradle.
+
+\paragraph{Menjalankan dengan \texttt{gradle run}}
+Gunakan perintah berikut untuk menjalankan aplikasi tanpa membuat JAR terlebih dahulu:
+
+\begin{lstlisting}[language=bash]
+	gradle run
+\end{lstlisting}
+
+Jika task \texttt{run} belum tersedia, tambahkan plugin berikut ke dalam \texttt{build.gradle}:
+
+\begin{lstlisting}[style=XmlStyle]
+	plugins {
+		id 'application'
+	}
+	
+	application {
+		mainClass = 'com.example.Main'
+	}
+\end{lstlisting}
+
+\subsubsection{Kesimpulan}
+Dengan langkah-langkah ini, kita telah berhasil:
+\begin{itemize}
+	\item Menginstal dan memverifikasi Gradle.
+	\item Menggunakan dependensi eksternal dari Maven Central (Google Guava).
+	\item Menggunakan file JAR lokal (\texttt{app.jar}) dalam proyek Gradle.
+	\item Mengompilasi kode dan menghasilkan file JAR yang dapat dijalankan.
+	\item Menjalankan program dengan dependensi dari Gradle.
+	\item Menjalankan program langsung menggunakan Gradle tanpa membuat JAR terlebih dahulu.
+\end{itemize}
+
+Hal ini sangat berguna saat proses pengembangan karena kita dapat langsung mengeksekusi kode tanpa perlu mengatur classpath secara manual. Bagian selanjutnya akan membahas bagaimana Gradle dapat digunakan dalam proyek yang lebih kompleks.
+
+
+\section{Perbandingan Ant, Maven, dan Gradle}
+Setiap build tool memiliki karakteristik tersendiri, dengan kelebihan dan kekurangan yang perlu dipertimbangkan sesuai dengan kebutuhan proyek. Berikut adalah perbandingan antara Apache Ant, Apache Maven, dan Gradle.
+
+\subsection{Apache Ant}
+\textbf{Ant} adalah build tool berbasis XML yang dirancang untuk mengotomatisasi proses build. Ant merupakan alat yang lebih fleksibel dibandingkan Makefile tradisional tetapi tidak memiliki sistem manajemen dependensi bawaan.
+
+\paragraph{Kelebihan Ant}
+\begin{itemize}
+	\item Sangat fleksibel dan dapat digunakan untuk berbagai tugas build kustom.
+	\item Tidak memaksakan struktur proyek tertentu.
+	\item Mendukung ekstensi melalui berbagai library tambahan.
+\end{itemize}
+
+\paragraph{Kekurangan Ant}
+\begin{itemize}
+	\item Tidak memiliki manajemen dependensi bawaan sehingga memerlukan pengelolaan JAR secara manual atau dengan Ivy.
+	\item Menggunakan XML sebagai konfigurasi, yang sering kali lebih verbose dan sulit dibaca dibandingkan DSL seperti Groovy atau Kotlin.
+	\item Tidak memiliki lifecycle build yang terstruktur seperti Maven dan Gradle, sehingga developer perlu mendefinisikan semua langkah secara eksplisit.
+\end{itemize}
+
+\subsection{Apache Maven}
+\textbf{Maven} adalah build tool yang berbasis konsep \textbf{Project Object Model (POM)} dan memiliki sistem manajemen dependensi bawaan. Maven menggunakan XML untuk konfigurasi dan menyediakan lifecycle build yang jelas.
+
+\paragraph{Kelebihan Maven}
+\begin{itemize}
+	\item Memiliki sistem manajemen dependensi yang otomatis dengan dukungan repository Maven Central.
+	\item Lifecycle build yang standar, seperti \texttt{compile}, \texttt{test}, \texttt{package}, dan \texttt{install}.
+	\item Struktur proyek yang lebih konsisten dan konvensional, sehingga memudahkan kolaborasi.
+\end{itemize}
+
+\paragraph{Kekurangan Maven}
+\begin{itemize}
+	\item Konfigurasi berbasis XML dapat menjadi panjang dan sulit dibaca.
+	\item Lifecycle build terkadang terasa kaku jika proyek memerlukan banyak kustomisasi.
+	\item Performa lebih lambat dibandingkan Gradle karena tidak mendukung incremental build secara efisien.
+\end{itemize}
+
+\subsection{Gradle}
+\textbf{Gradle} adalah build tool modern yang dirancang untuk meningkatkan efisiensi dan fleksibilitas dalam membangun proyek perangkat lunak. Gradle menggunakan bahasa deklaratif berbasis Groovy atau Kotlin DSL untuk konfigurasi.
+
+\paragraph{Kelebihan Gradle}
+\begin{itemize}
+	\item Menggunakan DSL berbasis Groovy/Kotlin yang lebih ringkas dibandingkan XML di Ant dan Maven.
+	\item Mendukung incremental build, sehingga lebih cepat dibandingkan Maven.
+	\item Fleksibilitas tinggi dalam kustomisasi, memungkinkan developer untuk menyesuaikan build dengan mudah.
+	\item Manajemen dependensi yang kuat, sama seperti Maven tetapi dengan sintaks yang lebih sederhana.
+\end{itemize}
+
+\paragraph{Kekurangan Gradle}
+\begin{itemize}
+	\item Kurva belajar lebih tinggi karena menggunakan Groovy/Kotlin DSL.
+	\item Dokumentasi tidak sekomprehensif Maven, terutama untuk fitur yang lebih kompleks.
+	\item Tidak semua plugin Maven tersedia untuk Gradle, sehingga migrasi dari Maven dapat memerlukan usaha tambahan.
+\end{itemize}
+
+\subsection{Tabel Perbandingan}
+Tabel berikut merangkum perbedaan utama antara Ant, Maven, dan Gradle:
+
+\begin{table}[h]
+	\centering
+	\scriptsize
+	\begin{tabular}{|p{0.2\textwidth}|p{0.22\textwidth}|p{0.22\textwidth}|p{0.22\textwidth}|}
+		\hline
+		\textbf{Fitur} & \textbf{Ant} & \textbf{Maven} & \textbf{Gradle} \\
+		\hline
+		Manajemen Dependensi & Tidak ada (memerlukan Ivy) & Ada (Maven Central) & Ada (Maven Central, Gradle Plugin) \\
+		\hline
+		Struktur Proyek & Bebas & Konvensional & Konvensional \\
+		\hline
+		Format Konfigurasi & XML & XML & Groovy/Kotlin DSL \\
+		\hline
+		Lifecycle Build & Tidak ada (manual) & Ada & Ada \\
+		\hline
+		Kecepatan Build & Lambat & Sedang & Cepat (Incremental Build) \\
+		\hline
+		Fleksibilitas & Tinggi & Sedang & Tinggi \\
+		\hline
+		Kurva Pembelajaran & Rendah & Sedang & Tinggi \\
+		\hline
+	\end{tabular}
+	\caption{Perbandingan Ant, Maven, dan Gradle}
+	\label{tab:comparison}
+\end{table}
+
+\subsection{Kesimpulan}
+Pemilihan build tool tergantung pada kebutuhan proyek:
+\begin{itemize}
+	\item \textbf{Gunakan Ant} jika memerlukan kontrol penuh atas proses build dan tidak membutuhkan manajemen dependensi bawaan.
+	\item \textbf{Gunakan Maven} jika ingin struktur proyek yang jelas, lifecycle build otomatis, dan sistem manajemen dependensi yang kuat.
+	\item \textbf{Gunakan Gradle} jika menginginkan build yang lebih cepat, fleksibel, dan konfigurasi yang lebih ringkas dibandingkan Maven.
+\end{itemize}
+
+Gradle semakin populer untuk proyek modern karena kecepatannya dan kemampuannya dalam kustomisasi. Namun, Maven masih menjadi pilihan yang solid bagi proyek enterprise yang menginginkan kestabilan dan dokumentasi yang lebih matang. Ant lebih cocok digunakan dalam proyek-proyek legacy atau build system yang sangat dikustomisasi.
+
+
+
+
+\section{Tugas: Menggunakan JAR Lokal dengan Fungsi Penjumlahan}
+Pada tugas ini, Anda diminta untuk membuat fungsi penjumlahan dalam file \texttt{Util.java}, mengompilasinya, mengemasnya ke dalam file JAR, lalu menggunakan JAR tersebut dalam program utama yang juga menggunakan \textbf{Apache Commons Lang} dari Maven Central.
+
+\subsection{Langkah 1: Menulis Kode Sumber untuk JAR}
+Buat file \texttt{Util.java} di dalam direktori \texttt{src/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	public class Util {
+		public static int add(int a, int b) {
+			return a + b;
+		}
+	}
+\end{lstlisting}
+
+\subsection{Langkah 2: Mengompilasi dan Membuat JAR}
+Kompilasi \texttt{Util.java} dan buat file \texttt{app.jar} dengan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p bin
+	javac -d bin src/com/example/Util.java
+	jar cf lib/app.jar -C bin .
+\end{lstlisting}
+
+File \texttt{app.jar} akan dibuat di dalam direktori \texttt{lib/} dan akan digunakan dalam proyek utama.
+
+\subsection{Langkah 3: Menulis Program Utama}
+Buat file \texttt{Main.java} di dalam direktori \texttt{src/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+	package com.example;
+	
+	import org.apache.commons.lang3.StringUtils;
+	
+	public class Main {
+		public static void main(String[] args) {
+			System.out.println("Hello, Tugas!");
+			
+			// Menggunakan fungsi dari Apache Commons Lang
+			String reversed = StringUtils.reverse("Build Tools");
+			System.out.println("Reversed String: " + reversed);
+			
+			// Menggunakan fungsi penjumlahan dari app.jar
+			int sum = Util.add(15, 30);
+			System.out.println("Hasil Penjumlahan: " + sum);
+		}
+	}
+\end{lstlisting}
+
+\subsection{Menggunakan Maven}
+\subsubsection{Inisialisasi Proyek Maven}
+Buat proyek Maven dengan menjalankan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	mvn archetype:generate -DgroupId=com.example -DartifactId=tugas-jar -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+	cd tugas-jar
+	mkdir -p lib
+\end{lstlisting}
+
+\subsubsection{Konfigurasi Maven}
+Buat file \texttt{pom.xml} dengan konfigurasi berikut:
+
+\begin{lstlisting}[style=XmlStyle]
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+	http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<groupId>com.example</groupId>
+	<artifactId>tugas-jar</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	
+	<dependencies>
+	<!-- Apache Commons Lang dari Maven Central -->
+	<dependency>
+	<groupId>org.apache.commons</groupId>
+	<artifactId>commons-lang3</artifactId>
+	<version>3.12.0</version>
+	</dependency>
+	
+	<!-- JAR lokal -->
+	<dependency>
+	<groupId>com.example</groupId>
+	<artifactId>app</artifactId>
+	<version>1.0</version>
+	<scope>system</scope>
+	<systemPath>${project.basedir}/lib/app.jar</systemPath>
+	</dependency>
+	</dependencies>
+	</project>
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program Menggunakan Maven}
+Jalankan perintah berikut untuk membangun dan menjalankan program:
+
+\begin{lstlisting}[language=bash]
+	mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+\end{lstlisting}
+
+\subsection{Menggunakan Gradle}
+\subsubsection{Inisialisasi Proyek Gradle}
+Buat proyek Gradle dengan menjalankan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	gradle init --type java-application
+	cd tugas-jar
+	mkdir -p lib
+\end{lstlisting}
+
+\subsubsection{Konfigurasi Gradle}
+Buat file \texttt{build.gradle} dengan konfigurasi berikut:
+
+\begin{lstlisting}[style=XmlStyle]
+	plugins {
+		id 'java'
+	}
+	
+	group 'com.example'
+	version '1.0-SNAPSHOT'
+	
+	repositories {
+		mavenCentral()
+	}
+	
+	dependencies {
+		// Apache Commons Lang dari Maven Central
+		implementation 'org.apache.commons:commons-lang3:3.12.0'
+		
+		// JAR lokal
+		implementation files('lib/app.jar')
+	}
+	
+	tasks.named('jar') {
+		manifest {
+			attributes 'Main-Class': 'com.example.Main'
+		}
+	}
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program Menggunakan Gradle}
+Jalankan perintah berikut untuk membangun dan menjalankan program:
+
+\begin{lstlisting}[language=bash]
+	gradle clean build
+	gradle run
+\end{lstlisting}
+
+\subsection{Menggunakan Ant}
+\subsubsection{Inisialisasi Proyek Ant}
+Buat proyek Ant dengan menjalankan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p tugas-ant/src tugas-ant/lib tugas-ant/bin
+	cd tugas-ant
+\end{lstlisting}
+
+\subsubsection{Konfigurasi Ant}
+Buat file \texttt{build.xml} dengan konfigurasi berikut:
+
+\begin{lstlisting}[style=XmlStyle]
+	<project name="TugasAnt" default="run">
+	<property name="src" value="src"/>
+	<property name="bin" value="bin"/>
+	<property name="lib" value="lib"/>
+	<property name="jarfile" value="lib/app.jar"/>
+	
+	<target name="init">
+	<mkdir dir="${bin}"/>
+	<mkdir dir="lib"/>
+	</target>
+	
+	<target name="resolve" depends="init">
+	<mkdir dir="lib"/>
+	<get dest="lib/commons-lang3-3.12.0.jar"
+	src="https://repo1.maven.org/maven2/org/apache/commons/commons-lang3/3.12.0/commons-lang3-3.12.0.jar"/>
+	</target>
+	
+	<target name="compile" depends="resolve">
+	<javac srcdir="${src}" destdir="${bin}" classpath="${jarfile}:lib/commons-lang3-3.12.0.jar"/>
+	</target>
+	
+	<target name="run" depends="compile">
+	<java classname="com.example.Main" classpath="${bin}:${jarfile}:lib/commons-lang3-3.12.0.jar"/>
+	</target>
+	</project>
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program Menggunakan Ant}
+Jalankan perintah berikut untuk mengunduh dependensi dan menjalankan program:
+
+\begin{lstlisting}[language=bash]
+	ant resolve
+	ant run
+\end{lstlisting}
+
+\subsection{Kesimpulan}
+Pada tugas ini, Anda telah berhasil:
+\begin{itemize}
+	\item Membuat fungsi penjumlahan dalam file JAR (\texttt{app.jar}).
+	\item Menggunakan \textbf{Apache Commons Lang} sebagai dependensi dari Maven Central.
+	\item Menggunakan \textbf{Maven, Gradle, dan Ant} untuk mengelola dependensi dan proses build.
+	\item Mengompilasi dan menjalankan program menggunakan berbagai build tool.
+\end{itemize}
+
+Tugas ini mengajarkan bagaimana menggunakan \textbf{JAR lokal bersama library dari Maven Central dalam proyek berbasis Maven, Gradle, dan Ant}.
