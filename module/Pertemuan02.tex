@@ -370,75 +370,9 @@ Sebelum menggunakan Maven, pastikan struktur proyek memiliki susunan seperti ber
 File \texttt{pom.xml} adalah konfigurasi utama dalam proyek Maven. Berikut adalah contoh konfigurasi dengan dependensi dari Maven Central:
 
 \begin{lstlisting}[style=XmlStyle]
-	<project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-	http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	
-	<groupId>com.example</groupId>
-	<artifactId>helloworld</artifactId>
-	<version>1.0-SNAPSHOT</version>
-	
-	<dependencies>
-	<!-- Menggunakan Google Guava dari Maven Central -->
-	<dependency>
-	<groupId>com.google.guava</groupId>
-	<artifactId>guava</artifactId>
-	<version>33.4.0-jre</version>
-	</dependency>
-	</dependencies>
-	</project>
-\end{lstlisting}
-
-\subsubsection{Kode Sumber \texttt{Main.java}}
-Buat file \texttt{Main.java} di dalam direktori \texttt{src/main/java/com/example/} dengan isi sebagai berikut:
-
-\begin{lstlisting}[style=JavaStyle]
-	package com.example;
-	
-	import com.google.common.base.Joiner;
-	
-	public class Main {
-		public static void main(String[] args) {
-			System.out.println("Hello, Maven!");
-			
-			// Menggunakan fungsi dari library Guava (yang diambil dari Maven Central)
-			String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
-			System.out.println("Joined String: " + result);
-		}
-	}
-\end{lstlisting}
-
-Dalam kode di atas, kita menggunakan fungsi \texttt{Joiner.on()} dari Google Guava untuk menggabungkan string.
-
-\subsubsection{Membuat File JAR dengan Maven}
-Untuk mengompilasi kode dan menghasilkan file JAR, jalankan perintah berikut:
-
-\begin{lstlisting}[language=bash]
-	mvn clean package
-\end{lstlisting}
-
-Hasilnya akan berada di dalam direktori \texttt{target/}:
-
-\begin{lstlisting}[language=bash]
-	target/
-	|-- helloworld-1.0-SNAPSHOT.jar
-\end{lstlisting}
-
-\subsubsection{Menjalankan Program dari JAR}
-Gunakan perintah berikut untuk menjalankan program dari JAR yang dihasilkan:
-
-\begin{lstlisting}[language=bash]
-	java -cp target/helloworld-1.0-SNAPSHOT.jar:~/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar com.example.Main
-\end{lstlisting}
-
-Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi \texttt{-jar}, tambahkan \texttt{plugin} berikut ke dalam \texttt{pom.xml}:
-
-\begin{lstlisting}[style=XmlStyle]
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns=``http://maven.apache.org/POM/4.0.0''
+xmlns:xsi=``http://www.w3.org/2001/XMLSchema-instance''
+xsi:schemaLocation=``http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd''>
 <modelVersion>4.0.0</modelVersion>
 <groupId>com.example</groupId>
 <artifactId>maven</artifactId>
@@ -490,6 +424,23 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 </configuration>
 </plugin>
 
+<!-- Maven Jar Plugin execute 'mvn execute:java' -->
+<plugin>
+<groupId>org.codehaus.mojo</groupId>
+<artifactId>exec-maven-plugin</artifactId>
+<version>3.1.0</version>
+<executions>
+<execution>
+<goals>
+<goal>java</goal>
+</goals>
+</execution>
+</executions>
+<configuration>
+<mainClass>com.example.Main</mainClass> <!-- replace with your class -->
+</configuration>
+</plugin>
+
 <!-- Maven Compiler Plugin to compile the code -->
 <plugin>
 <groupId>org.apache.maven.plugins</groupId>
@@ -518,9 +469,178 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 <version>3.8.1</version>
 <scope>test</scope>
 </dependency>
+
+<!-- External JAR app.jar from the lib folder -->
+<dependency>
+<groupId>com.example</groupId>
+<artifactId>app</artifactId>
+<version>1.0-SNAPSHOT</version>
+<scope>system</scope>
+<systemPath>\$\{project.basedir\}/lib/app.jar</systemPath>
+</dependency>
 </dependencies>
 </project>
+\end{lstlisting}
 
+\subsubsection{Kode Sumber \texttt{Main.java}}
+Buat file \texttt{Main.java} di dalam direktori \texttt{src/main/java/com/example/} dengan isi sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle]
+package com.example;
+
+import com.google.common.base.Joiner;
+
+import com.example.Util;
+
+public class Main {
+	public static void main(String[] args) {
+		System.out.println("Hello, Maven!");
+		
+		// Menggunakan fungsi dari library Guava (yang diambil dari Maven Central)
+		String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
+		System.out.println("Joined String: " + result);
+		
+		Util.sayHello("Ant User");
+	}
+}
+\end{lstlisting}
+
+Dalam kode di atas, kita menggunakan fungsi \texttt{Joiner.on()} dari Google Guava untuk menggabungkan string.
+
+\subsubsection{Membuat File JAR dengan Maven}
+Untuk mengompilasi kode dan menghasilkan file JAR, jalankan perintah berikut:
+
+\begin{lstlisting}[language=bash]
+	mvn clean package
+\end{lstlisting}
+
+Hasilnya akan berada di dalam direktori \texttt{target/}:
+
+\begin{lstlisting}[language=bash]
+	target/
+	|-- helloworld-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+\subsubsection{Menjalankan Program dari JAR}
+Gunakan perintah berikut untuk menjalankan program dari JAR yang dihasilkan:
+
+\begin{lstlisting}[language=bash]
+	java -cp target/helloworld-1.0-SNAPSHOT.jar:~/.m2/repository/com/google/guava/guava/33.4.0-jre/33.4.0-jre.jar com.example.Main
+\end{lstlisting}
+
+Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi \texttt{-jar}, tambahkan \texttt{plugin} berikut ke dalam \texttt{pom.xml}:
+
+\begin{lstlisting}[style=XmlStyle]
+	<project xmlns=``http://maven.apache.org/POM/4.0.0''
+	xmlns:xsi=``http://www.w3.org/2001/XMLSchema-instance''
+	xsi:schemaLocation=``http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd''>
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.example</groupId>
+	<artifactId>maven</artifactId>
+	<packaging>jar</packaging>
+	<version>1.0-SNAPSHOT</version>
+	<name>maven</name>
+	<url>http://maven.apache.org</url>
+	
+	<build>
+	<plugins>
+	<!-- Maven Assembly Plugin to create fat JAR -->
+	<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-assembly-plugin</artifactId>
+	<version>3.3.0</version>
+	<executions>
+	<execution>
+	<phase>package</phase>
+	<goals>
+	<goal>single</goal>
+	</goals>
+	<configuration>
+	<descriptorRefs>
+	<descriptorRef>jar-with-dependencies</descriptorRef>
+	</descriptorRefs>
+	<!-- Specify the Main-Class in the manifest -->
+	<archive>
+	<manifestEntries>
+	<Main-Class>com.example.Main</Main-Class>
+	</manifestEntries>
+	</archive>
+	</configuration>
+	</execution>
+	</executions>
+	</plugin>
+	
+	<!-- Maven Jar Plugin to create executable JAR -->
+	<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-jar-plugin</artifactId>
+	<version>3.2.0</version>
+	<configuration>
+	<archive>
+	<manifestEntries>
+	<!-- Specify the main class to be executed -->
+	<Main-Class>com.example.Main</Main-Class>
+	</manifestEntries>
+	</archive>
+	</configuration>
+	</plugin>
+	
+	<!-- Maven Jar Plugin execute 'mvn execute:java' -->
+	<plugin>
+	<groupId>org.codehaus.mojo</groupId>
+	<artifactId>exec-maven-plugin</artifactId>
+	<version>3.1.0</version>
+	<executions>
+	<execution>
+	<goals>
+	<goal>java</goal>
+	</goals>
+	</execution>
+	</executions>
+	<configuration>
+	<mainClass>com.example.Main</mainClass> <!-- replace with your class -->
+	</configuration>
+	</plugin>
+	
+	<!-- Maven Compiler Plugin to compile the code -->
+	<plugin>
+	<groupId>org.apache.maven.plugins</groupId>
+	<artifactId>maven-compiler-plugin</artifactId>
+	<version>3.1</version>
+	<configuration>
+	<source>17</source>
+	<target>17</target>
+	</configuration>
+	</plugin>
+	</plugins>
+	</build>
+	
+	<dependencies>
+	<!-- Google Guava Dependency from Maven Central -->
+	<dependency>
+	<groupId>com.google.guava</groupId>
+	<artifactId>guava</artifactId>
+	<version>33.4.0-jre</version>
+	</dependency>
+	
+	<!-- JUnit for testing -->
+	<dependency>
+	<groupId>junit</groupId>
+	<artifactId>junit</artifactId>
+	<version>3.8.1</version>
+	<scope>test</scope>
+	</dependency>
+	
+	<!-- External JAR app.jar from the lib folder -->
+	<dependency>
+	<groupId>com.example</groupId>
+	<artifactId>app</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<scope>system</scope>
+	<systemPath>\$\{project.basedir\}/lib/app.jar</systemPath>
+	</dependency>
+	</dependencies>
+	</project>
 \end{lstlisting}
 
 Kemudian jalankan kembali perintah:
