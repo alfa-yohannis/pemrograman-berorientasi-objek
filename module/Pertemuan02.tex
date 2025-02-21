@@ -349,191 +349,63 @@ Untuk membuat proyek baru menggunakan Maven, ikuti langkah-langkah berikut:
 	\end{lstlisting}
 \end{enumerate}
 
-\subsection{Penggunaan Dasar Apache Maven}
-\subsubsection{Struktur Proyek}
-Sebelum menggunakan Maven, pastikan struktur proyek memiliki susunan seperti berikut:
+
+\subsubsection{Struktur Proyek Maven}
+
+Setelah proyek berhasil dibuat, struktur direktori yang dihasilkan adalah sebagai berikut:
 
 \begin{lstlisting}[language=bash]
-	ProjectRoot/
+	maven-app/
+	|-- pom.xml
 	|-- src/
 	|   |-- main/
 	|   |   |-- java/
-	|   |   |   |-- com/
-	|   |   |   |   |-- example/
-	|   |   |   |   |   |-- Main.java
+	|   |   |   |-- com/example/Main.java
 	|   |-- test/
 	|       |-- java/
-	|-- pom.xml
+	|       |   |-- com/example/AppTest.java
 \end{lstlisting}
 
-\subsubsection{Menulis File \texttt{pom.xml}}
-File \texttt{pom.xml} adalah konfigurasi utama dalam proyek Maven. Berikut adalah contoh konfigurasi dengan dependensi dari Maven Central:
+Masuk ke dalam direktori proyek sebelum melakukan konfigurasi:
 
-\begin{lstlisting}[style=XmlStyle]
-<project xmlns=``http://maven.apache.org/POM/4.0.0''
-xmlns:xsi=``http://www.w3.org/2001/XMLSchema-instance''
-xsi:schemaLocation=``http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd''>
-<modelVersion>4.0.0</modelVersion>
-<groupId>com.example</groupId>
-<artifactId>maven</artifactId>
-<packaging>jar</packaging>
-<version>1.0-SNAPSHOT</version>
-<name>maven</name>
-<url>http://maven.apache.org</url>
-
-<build>
-<plugins>
-<!-- Maven Assembly Plugin to create fat JAR -->
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-assembly-plugin</artifactId>
-<version>3.3.0</version>
-<executions>
-<execution>
-<phase>package</phase>
-<goals>
-<goal>single</goal>
-</goals>
-<configuration>
-<descriptorRefs>
-<descriptorRef>jar-with-dependencies</descriptorRef>
-</descriptorRefs>
-<!-- Specify the Main-Class in the manifest -->
-<archive>
-<manifestEntries>
-<Main-Class>com.example.Main</Main-Class>
-</manifestEntries>
-</archive>
-</configuration>
-</execution>
-</executions>
-</plugin>
-
-<!-- Maven Jar Plugin to create executable JAR -->
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-jar-plugin</artifactId>
-<version>3.2.0</version>
-<configuration>
-<archive>
-<manifestEntries>
-<!-- Specify the main class to be executed -->
-<Main-Class>com.example.Main</Main-Class>
-</manifestEntries>
-</archive>
-</configuration>
-</plugin>
-
-<!-- Maven Jar Plugin execute 'mvn execute:java' -->
-<plugin>
-<groupId>org.codehaus.mojo</groupId>
-<artifactId>exec-maven-plugin</artifactId>
-<version>3.1.0</version>
-<executions>
-<execution>
-<goals>
-<goal>java</goal>
-</goals>
-</execution>
-</executions>
-<configuration>
-<mainClass>com.example.Main</mainClass> <!-- replace with your class -->
-</configuration>
-</plugin>
-
-<!-- Maven Compiler Plugin to compile the code -->
-<plugin>
-<groupId>org.apache.maven.plugins</groupId>
-<artifactId>maven-compiler-plugin</artifactId>
-<version>3.1</version>
-<configuration>
-<source>17</source>
-<target>17</target>
-</configuration>
-</plugin>
-</plugins>
-</build>
-
-<dependencies>
-<!-- Google Guava Dependency from Maven Central -->
-<dependency>
-<groupId>com.google.guava</groupId>
-<artifactId>guava</artifactId>
-<version>33.4.0-jre</version>
-</dependency>
-
-<!-- JUnit for testing -->
-<dependency>
-<groupId>junit</groupId>
-<artifactId>junit</artifactId>
-<version>3.8.1</version>
-<scope>test</scope>
-</dependency>
-
-<!-- External JAR app.jar from the lib folder -->
-<dependency>
-<groupId>com.example</groupId>
-<artifactId>app</artifactId>
-<version>1.0-SNAPSHOT</version>
-<scope>system</scope>
-<systemPath>\$\{project.basedir\}/lib/app.jar</systemPath>
-</dependency>
-</dependencies>
-</project>
+\begin{lstlisting}[language=bash]
+	cd maven-app
 \end{lstlisting}
 
-\subsubsection{Kode Sumber \texttt{Main.java}}
-Buat file \texttt{Main.java} di dalam direktori \texttt{src/main/java/com/example/} dengan isi sebagai berikut:
+\subsubsection{Menulis Kode Java}
+
+Buka file \texttt{src/main/java/com/example/Main.java} dan ubah isinya seperti berikut:
 
 \begin{lstlisting}[style=JavaStyle]
-package com.example;
-
-import com.google.common.base.Joiner;
-
-import com.example.Util;
-
-public class Main {
-	public static void main(String[] args) {
-		System.out.println("Hello, Maven!");
-		
-		// Menggunakan fungsi dari library Guava (yang diambil dari Maven Central)
-		String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
-		System.out.println("Joined String: " + result);
-		
-		Util.sayHello("Ant User");
+	package com.example;
+	
+	import com.google.common.base.Joiner;
+	import com.example.Util;
+	
+	public class Main {
+		public static void main(String[] args) {
+			System.out.println("Hello, Maven!");
+			
+			// Menggunakan fungsi dari library Guava (yang diambil dari Maven Central)
+			String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
+			System.out.println("Joined String: " + result);
+			
+			Util.sayHello("Maven User");
+		}
 	}
-}
 \end{lstlisting}
 
-Dalam kode di atas, kita menggunakan fungsi \texttt{Joiner.on()} dari Google Guava untuk menggabungkan string.
+Kode ini menggunakan \textbf{Google Guava} sebagai dependensi eksternal dan \textbf{Util} dari file JAR lokal.
 
-\subsubsection{Membuat File JAR dengan Maven}
-Untuk mengompilasi kode dan menghasilkan file JAR, jalankan perintah berikut:
+\subsubsection{Konfigurasi \texttt{pom.xml}}
 
-\begin{lstlisting}[language=bash]
-	mvn clean package
-\end{lstlisting}
-
-Hasilnya akan berada di dalam direktori \texttt{target/}:
-
-\begin{lstlisting}[language=bash]
-	target/
-	|-- helloworld-1.0-SNAPSHOT.jar
-\end{lstlisting}
-
-\subsubsection{Menjalankan Program dari JAR}
-Gunakan perintah berikut untuk menjalankan program dari JAR yang dihasilkan:
-
-\begin{lstlisting}[language=bash]
-	java -cp target/helloworld-1.0-SNAPSHOT.jar:~/.m2/repository/com/google/guava/guava/33.4.0-jre/33.4.0-jre.jar com.example.Main
-\end{lstlisting}
-
-Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi \texttt{-jar}, tambahkan \texttt{plugin} berikut ke dalam \texttt{pom.xml}:
+File \texttt{pom.xml} merupakan konfigurasi utama proyek Maven yang menentukan struktur proyek, dependensi, serta pengaturan build. Berikut adalah konfigurasi lengkap yang digunakan dalam proyek ini:
 
 \begin{lstlisting}[style=XmlStyle]
-	<project xmlns=``http://maven.apache.org/POM/4.0.0''
-	xmlns:xsi=``http://www.w3.org/2001/XMLSchema-instance''
-	xsi:schemaLocation=``http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4\_0\_0.xsd''>
+	<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+	http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.example</groupId>
 	<artifactId>maven</artifactId>
@@ -544,7 +416,7 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	
 	<build>
 	<plugins>
-	<!-- Maven Assembly Plugin to create fat JAR -->
+	<!-- Plugin Maven Assembly untuk membuat Fat JAR -->
 	<plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-assembly-plugin</artifactId>
@@ -559,7 +431,7 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	<descriptorRefs>
 	<descriptorRef>jar-with-dependencies</descriptorRef>
 	</descriptorRefs>
-	<!-- Specify the Main-Class in the manifest -->
+	<!-- Menentukan kelas utama dalam manifest -->
 	<archive>
 	<manifestEntries>
 	<Main-Class>com.example.Main</Main-Class>
@@ -570,7 +442,7 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	</executions>
 	</plugin>
 	
-	<!-- Maven Jar Plugin to create executable JAR -->
+	<!-- Plugin Maven Jar untuk membuat JAR yang dapat dieksekusi -->
 	<plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-jar-plugin</artifactId>
@@ -578,14 +450,14 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	<configuration>
 	<archive>
 	<manifestEntries>
-	<!-- Specify the main class to be executed -->
+	<!-- Menentukan kelas utama untuk eksekusi -->
 	<Main-Class>com.example.Main</Main-Class>
 	</manifestEntries>
 	</archive>
 	</configuration>
 	</plugin>
 	
-	<!-- Maven Jar Plugin execute 'mvn execute:java' -->
+	<!-- Plugin untuk menjalankan aplikasi secara langsung -->
 	<plugin>
 	<groupId>org.codehaus.mojo</groupId>
 	<artifactId>exec-maven-plugin</artifactId>
@@ -598,11 +470,11 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	</execution>
 	</executions>
 	<configuration>
-	<mainClass>com.example.Main</mainClass> <!-- replace with your class -->
+	<mainClass>com.example.Main</mainClass>
 	</configuration>
 	</plugin>
 	
-	<!-- Maven Compiler Plugin to compile the code -->
+	<!-- Plugin Maven Compiler untuk mengompilasi kode -->
 	<plugin>
 	<groupId>org.apache.maven.plugins</groupId>
 	<artifactId>maven-compiler-plugin</artifactId>
@@ -616,14 +488,14 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	</build>
 	
 	<dependencies>
-	<!-- Google Guava Dependency from Maven Central -->
+	<!-- Dependensi Google Guava dari Maven Central -->
 	<dependency>
 	<groupId>com.google.guava</groupId>
 	<artifactId>guava</artifactId>
 	<version>33.4.0-jre</version>
 	</dependency>
 	
-	<!-- JUnit for testing -->
+	<!-- Dependensi JUnit untuk pengujian -->
 	<dependency>
 	<groupId>junit</groupId>
 	<artifactId>junit</artifactId>
@@ -631,71 +503,130 @@ Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi 
 	<scope>test</scope>
 	</dependency>
 	
-	<!-- External JAR app.jar from the lib folder -->
+	<!-- JAR eksternal (app.jar) dari direktori lib -->
 	<dependency>
 	<groupId>com.example</groupId>
 	<artifactId>app</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<scope>system</scope>
-	<systemPath>\$\{project.basedir\}/lib/app.jar</systemPath>
+	<systemPath>${project.basedir}/lib/app.jar</systemPath>
 	</dependency>
 	</dependencies>
 	</project>
 \end{lstlisting}
 
-Kemudian jalankan kembali perintah:
+\subsubsection{Penjelasan Konfigurasi \texttt{pom.xml}}
+
+\subsubsection{Penjelasan Konfigurasi \texttt{pom.xml}}
+
+\begin{itemize}
+	\item \textbf{Deklarasi proyek.}  
+	\begin{itemize}
+		\item Mendefinisikan namespace XML yang digunakan Maven dan skema yang sesuai.
+		\item Elemen \texttt{groupId}, \texttt{artifactId}, dan \texttt{version} mengidentifikasi proyek secara unik dalam ekosistem Maven.
+		\item Elemen \texttt{packaging} menentukan jenis output yang dihasilkan, dalam hal ini JAR.
+	\end{itemize}
+	
+	\item \textbf{Manajemen dependensi.}  
+	Bagian ini mendeklarasikan pustaka eksternal yang digunakan dalam proyek:
+	\begin{itemize}
+		\item \textbf{Google Guava}: Dependensi ini diambil dari Maven Central dan digunakan untuk berbagai utilitas dalam pengelolaan koleksi dan string.
+		\item \textbf{JUnit}: Library ini digunakan untuk pengujian unit proyek.
+		\item \textbf{File JAR eksternal}: \texttt{app.jar} disertakan secara manual melalui atribut \texttt{systemPath} yang menunjuk ke lokasi file di dalam proyek.
+	\end{itemize}
+	
+	\item \textbf{Konfigurasi build dan plugin.}  
+	Bagian ini mengonfigurasi berbagai plugin Maven yang membantu dalam proses build:
+	\begin{itemize}
+		\item \textbf{Maven Assembly Plugin.}  
+		Plugin ini digunakan untuk membuat \textbf{Fat JAR}, yaitu JAR yang mencakup semua dependensi yang diperlukan. Konfigurasi ini menentukan bahwa file JAR yang dibuat akan memiliki semua dependensi yang dibutuhkan sehingga dapat dijalankan secara mandiri tanpa konfigurasi tambahan.
+		
+		\item \textbf{Maven JAR Plugin.}  
+		Digunakan untuk membuat JAR standar yang dapat dieksekusi dengan menentukan kelas utama (\texttt{Main-Class}) dalam file manifest.
+		
+		\item \textbf{Exec Maven Plugin.}  
+		Plugin ini memungkinkan eksekusi langsung kelas utama tanpa perlu membangun JAR terlebih dahulu.
+		
+		\item \textbf{Maven Compiler Plugin.}  
+		Digunakan untuk menentukan versi sumber dan target Java yang digunakan dalam proyek. Dalam konfigurasi ini, proyek menggunakan Java 17.
+	\end{itemize}
+\end{itemize}
+
+
+
+\subsubsection{Menyalin File \texttt{app.jar}}
+
+Sebelum menjalankan aplikasi, pastikan file \texttt{app.jar} tersedia dalam direktori \texttt{lib/}. Jika belum ada, buat direktori dan salin file tersebut:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p lib
+	cp /path/to/external/app.jar lib/
+\end{lstlisting}
+
+\subsubsection{Membangun dan Menjalankan Aplikasi}
+
+Untuk mengompilasi proyek, gunakan perintah:
+\begin{lstlisting}[language=bash]
+	mvn clean compile
+\end{lstlisting}
+
+Untuk menjalankan aplikasi menggunakan Maven, gunakan:
+\begin{lstlisting}[language=bash]
+	mvn exec:java
+\end{lstlisting}
+
+Jika konfigurasi benar, output akan menampilkan:
+\begin{lstlisting}[language=bash]
+	Hello, Maven!
+	Joined String: Apple, Banana, Cherry
+	Hello, Maven User!
+\end{lstlisting}
+
+\subsubsection{Membuat File JAR}
+
+Maven secara otomatis membuat file JAR dalam direktori \texttt{target/}. Gunakan perintah berikut untuk membangunnya:
+\begin{lstlisting}[language=bash]
+	mvn clean package
+\end{lstlisting}
+
+File JAR yang dihasilkan dapat ditemukan di:
+\begin{lstlisting}[language=bash]
+	target/maven-app-1.0-SNAPSHOT.jar
+\end{lstlisting}
+
+\subsubsection{Menjalankan JAR dengan Dependensi}
+
+File JAR standar tidak menyertakan dependensi eksternal, sehingga untuk menjalankannya perlu menggunakan perintah:
+\begin{lstlisting}[language=bash]
+	java -cp target/maven-app-1.0-SNAPSHOT.jar:lib/app.jar \
+	com.example.Main
+\end{lstlisting}
+
+\subsubsection{Membuat Fat JAR (Uber JAR)}
+
+Untuk membuat fat JAR yang menyertakan semua dependensi dalam satu file, gunakan perintah:
 
 \begin{lstlisting}[language=bash]
 	mvn clean package
 \end{lstlisting}
 
-Setelah itu, program dapat dijalankan langsung dengan:
-
+Hasil fat JAR yang dihasilkan memiliki nama:
 \begin{lstlisting}[language=bash]
-	java -jar target/helloworld-1.0-SNAPSHOT.jar
+	target/maven-app-1.0-SNAPSHOT-jar-with-dependencies.jar
 \end{lstlisting}
 
-
-\subsubsection{Menjalankan Program Menggunakan Maven}
-Selain menjalankan program menggunakan perintah \texttt{java -cp}, kita juga dapat menjalankan aplikasi langsung melalui Maven.
-
-\paragraph{Menjalankan dengan \texttt{mvn exec:java}}
-Gunakan perintah berikut untuk menjalankan aplikasi tanpa membuat JAR terlebih dahulu:
-
+Fat JAR ini dapat dijalankan langsung dengan perintah:
 \begin{lstlisting}[language=bash]
-	mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+	java -jar target/maven-app-1.0-SNAPSHOT-jar-with-dependencies.jar
 \end{lstlisting}
 
-Perintah ini akan:
-\begin{itemize}
-	\item Membersihkan (\texttt{clean}) build sebelumnya.
-	\item Mengompilasi (\texttt{compile}) kode sumber.
-	\item Menjalankan kelas \texttt{Main} menggunakan plugin \texttt{exec-maven-plugin}.
-\end{itemize}
+\subsection{Kesimpulan}
 
-\paragraph{Menjalankan dengan \texttt{mvn package} dan \texttt{mvn exec:java}}
-Jika ingin memastikan kode dikompilasi terlebih dahulu sebelum dijalankan, gunakan perintah berikut:
-
-\begin{lstlisting}[language=bash]
-	mvn clean package
-	mvn exec:java -Dexec.mainClass="com.example.Main"
-\end{lstlisting}
-
-\subsubsection{Kesimpulan}
-Dengan langkah-langkah ini, kita telah berhasil:
-\begin{itemize}
-	\item Menginstal dan memverifikasi Apache Maven.
-	\item Menggunakan dependensi eksternal dari Maven Central (Google Guava).
-	\item Mengelola dependensi tanpa perlu mengunduh dan menambahkan file JAR secara manual.
-	\item Menggunakan file JAR lokal (\texttt{app.jar}) dalam proyek Maven.
-	\item Mengompilasi kode dan menghasilkan file JAR yang dapat dijalankan.
-	\item Menjalankan program dengan dependensi dari Maven.
-	\item Menjalankan program langsung menggunakan Maven tanpa membuat JAR terlebih dahulu.
-\end{itemize}
-
-Hal ini sangat berguna saat proses pengembangan karena kita dapat langsung mengeksekusi kode tanpa perlu mengatur classpath secara manual. Bagian selanjutnya akan membahas bagaimana Maven dapat digunakan dalam proyek yang lebih kompleks.
+Dengan menggunakan Maven, pengelolaan proyek menjadi lebih efisien melalui manajemen dependensi otomatis dan struktur proyek yang terorganisir. Pembuatan JAR standar maupun fat JAR juga dapat dilakukan dengan mudah menggunakan plugin Maven. Implementasi ini mempermudah proses pengembangan, pengujian, serta distribusi aplikasi Java.
 
 
+
+%%% GRADLE
 \section{Gradle}
 Gradle adalah build tool modern yang fleksibel dan cepat, digunakan untuk mengelola proyek Java, Kotlin, Groovy, dan berbagai bahasa lainnya. Gradle menawarkan pendekatan deklaratif yang lebih singkat dibandingkan Ant dan Maven serta mendukung build berbasis skrip Groovy atau Kotlin.
 
@@ -732,175 +663,249 @@ Setelah instalasi selesai, jalankan perintah berikut di terminal atau command pr
 Jika instalasi berhasil, output yang muncul akan menampilkan versi Gradle yang telah diinstal.
 
 
-\subsection{Membuat Proyek Gradle}
-Untuk membuat proyek baru menggunakan Gradle, ikuti langkah-langkah berikut:
-\begin{enumerate}
-	\item Buka terminal atau command prompt.
-	\item Gunakan perintah Gradle berikut untuk membuat proyek Gradle baru:
-	\begin{lstlisting}[language=bash]
-		gradle init --type java-application
-	\end{lstlisting}
-	Perintah di atas akan menghasilkan proyek aplikasi Java baru dengan struktur default.
-	\item Setelah menjalankan perintah, Gradle akan membuat file dan direktori yang diperlukan.
-	\item Masuk ke dalam direktori proyek yang baru dibuat:
-	\begin{lstlisting}[language=bash]
-		cd <project-name>
-	\end{lstlisting}
-\end{enumerate}
+\subsection{Membuat Struktur Proyek}
+Untuk memulai proyek Java dengan Gradle, ikuti langkah-langkah berikut:
 
-
-\subsection{Penggunaan Dasar Gradle}
-\subsubsection{Struktur Proyek}
-Sebelum menggunakan Gradle, pastikan struktur proyek memiliki susunan seperti berikut:
-
+\subsubsection{Membuat Direktori Proyek}
+Buat direktori proyek dan masuk ke dalamnya dengan perintah:
 \begin{lstlisting}[language=bash]
-	ProjectRoot/
-	|-- src/
+	mkdir app && cd app
+\end{lstlisting}
+
+\subsubsection{Inisialisasi Proyek dengan Gradle}
+Gunakan perintah berikut untuk menginisialisasi proyek Gradle dengan struktur default untuk aplikasi Java:
+\begin{lstlisting}[language=bash]
+	gradle init --type java-application
+\end{lstlisting}
+
+Perintah ini akan menghasilkan struktur direktori seperti berikut:
+\begin{lstlisting}[language=bash]
+	app/
+	|-- build.gradle
+	|	|-- src/
 	|   |-- main/
 	|   |   |-- java/
-	|   |   |   |-- com/
-	|   |   |   |   |-- example/
-	|   |   |   |   |   |-- Main.java
+	|   |   |   |-- com/example/Main.java
 	|   |-- test/
-	|       |-- java/
-	|-- build.gradle
+	|   |   |-- java/
+	|   |   |   |-- com/example/MainTest.java
+	|-- gradlew
+	|-- gradlew.bat
+	|-- settings.gradle
+	
 \end{lstlisting}
 
-\subsubsection{Menulis File \texttt{build.gradle}}
-File \texttt{build.gradle} adalah konfigurasi utama dalam proyek Gradle. Berikut adalah contoh konfigurasi dengan **dependensi dari Maven Central** serta **file JAR lokal (`app.jar`)**:
-
-\begin{lstlisting}[style=XmlStyle]
-	plugins {
-		id 'java'
-	}
-	
-	group 'com.example'
-	version '1.0-SNAPSHOT'
-	
-	repositories {
-		mavenCentral()
-	}
-	
-	dependencies {
-		// Menggunakan Google Guava dari Maven Central
-		implementation 'com.google.guava:guava:31.1-jre'
-		
-		// Menggunakan file JAR lokal (app.jar)
-		implementation files('lib/app.jar')
-	}
-	
-	tasks.named('jar') {
-		manifest {
-			attributes 'Main-Class': 'com.example.Main'
-		}
-	}
-\end{lstlisting}
-
-\subsubsection{Kode Sumber \texttt{Main.java}}
-Buat file \texttt{Main.java} di dalam direktori \texttt{src/main/java/com/example/} dengan isi sebagai berikut:
-
+\subsection{Menulis Kode Java}
+Buka file \texttt{src/main/java/com/example/Main.java} dan ubah isinya menjadi seperti berikut:
 \begin{lstlisting}[style=JavaStyle]
 	package com.example;
 	
 	import com.google.common.base.Joiner;
-	import com.example.Util; // Menggunakan kelas dari app.jar
 	
 	public class Main {
+		public String getGreeting() {
+			return "Hello, Gradle!";
+		}
+		
 		public static void main(String[] args) {
 			System.out.println("Hello, Gradle!");
 			
 			// Menggunakan fungsi dari Google Guava (Maven Central)
-			String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
-			System.out.println("Joined String: " + result);
+			String result = Joiner.on(", ").join("Apel", "Pisang", "Ceri");
+			System.out.println("Hasil Gabungan: " + result);
 			
 			// Menggunakan fungsi dari app.jar (File JAR lokal)
-			Util.sayHello("Gradle User");
+			Util.sayHello("Pengguna Gradle");
 		}
 	}
 \end{lstlisting}
 
-Dalam kode di atas, kita menggunakan **Google Guava** dari Maven Central serta **kelas `Util` dari `app.jar`**.
+Kode di atas menggunakan:
+\begin{itemize}
+	\item \textbf{Google Guava} sebagai library eksternal untuk menggabungkan string.
+	\item \textbf{Util} sebagai fungsi dari file JAR eksternal (\texttt{app.jar}).
+\end{itemize}
 
-\subsubsection{Membuat File JAR dengan Gradle}
-Untuk mengompilasi kode dan menghasilkan file JAR, jalankan perintah berikut:
+\subsection{Konfigurasi Gradle}
+File \texttt{build.gradle} merupakan file utama dalam proyek Gradle yang mendefinisikan dependensi, pengaturan build, dan konfigurasi aplikasi. Berikut adalah isi lengkap dari \texttt{build.gradle} yang digunakan dalam proyek ini:
 
-\begin{lstlisting}[language=bash]
-	gradle clean build
-\end{lstlisting}
-
-Hasilnya akan berada di dalam direktori \texttt{build/libs/}:
-
-\begin{lstlisting}[language=bash]
-	build/libs/
-	|-- helloworld-1.0-SNAPSHOT.jar
-\end{lstlisting}
-
-\subsubsection{Menjalankan Program dari JAR}
-Gunakan perintah berikut untuk menjalankan program dari JAR yang dihasilkan:
-
-\begin{lstlisting}[language=bash]
-	java -cp build/libs/helloworld-1.0-SNAPSHOT.jar:lib/app.jar:~/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/31.1-jre com.example.Main
-\end{lstlisting}
-
-Jika ingin membuat file \texttt{JAR} yang dapat langsung dijalankan dengan opsi \texttt{-jar}, tambahkan konfigurasi berikut ke dalam \texttt{build.gradle}:
-
-\begin{lstlisting}[style=XmlStyle]
-	jar {
-		manifest {
-			attributes 'Main-Class': 'com.example.Main'
-		}
-		from {
-			configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
-		}
-	}
-\end{lstlisting}
-
-Kemudian jalankan kembali perintah:
-
-\begin{lstlisting}[language=bash]
-	gradle clean build
-\end{lstlisting}
-
-Setelah itu, program dapat dijalankan langsung dengan:
-
-\begin{lstlisting}[language=bash]
-	java -jar build/libs/helloworld-1.0-SNAPSHOT.jar
-\end{lstlisting}
-
-\subsubsection{Menjalankan Program Menggunakan Gradle}
-Selain menjalankan program menggunakan perintah \texttt{java -cp}, kita juga dapat menjalankan aplikasi langsung melalui Gradle.
-
-\paragraph{Menjalankan dengan \texttt{gradle run}}
-Gunakan perintah berikut untuk menjalankan aplikasi tanpa membuat JAR terlebih dahulu:
-
-\begin{lstlisting}[language=bash]
-	gradle run
-\end{lstlisting}
-
-Jika task \texttt{run} belum tersedia, tambahkan plugin berikut ke dalam \texttt{build.gradle}:
-
-\begin{lstlisting}[style=XmlStyle]
+\begin{lstlisting}[style=JavaStyle]
 	plugins {
+		// Mengaktifkan plugin untuk aplikasi Java
 		id 'application'
+		id 'java'
+		
+		// Plugin tambahan untuk membuat fat JAR
+		id 'com.github.johnrengelman.shadow' version '8.1.0'
+	}
+	
+	repositories {
+		// Menggunakan repository Maven Central untuk mendapatkan dependensi eksternal
+		mavenCentral()
+	}
+	
+	dependencies {
+		// Menggunakan library Google Guava dari Maven Central
+		implementation 'com.google.guava:guava:33.4.0-jre'
+		
+		// Menambahkan file JAR lokal sebagai dependensi
+		implementation files('lib/app.jar')
+	}
+	
+	java {
+		// Menentukan versi JDK yang digunakan dalam proyek
+		toolchain {
+			languageVersion = JavaLanguageVersion.of(21)
+		}
 	}
 	
 	application {
+		// Menentukan kelas utama yang akan dieksekusi saat aplikasi dijalankan
 		mainClass = 'com.example.Main'
+	}
+	
+	tasks.named('test') {
+		// Menggunakan platform JUnit untuk pengujian unit
+		useJUnitPlatform()
+	}
+	
+	jar {
+		// Menentukan nama dan versi file JAR yang akan dihasilkan
+		archiveBaseName = 'gradle'
+		archiveVersion = '1.0.0'
+		
+		// Menambahkan atribut ke dalam manifest untuk menentukan kelas utama
+		manifest {
+			attributes(
+			'Main-Class': 'com.example.Main'
+			)
+		}
+	}
+	
+	tasks.named('shadowJar') {
+		// Konfigurasi tambahan untuk pembuatan fat JAR
+		archiveClassifier.set('all')
 	}
 \end{lstlisting}
 
-\subsubsection{Kesimpulan}
-Dengan langkah-langkah ini, kita telah berhasil:
+\subsubsection{Penjelasan Konfigurasi}
+Berikut adalah penjelasan rinci dari setiap bagian dalam file \texttt{build.gradle}:
+
 \begin{itemize}
-	\item Menginstal dan memverifikasi Gradle.
-	\item Menggunakan dependensi eksternal dari Maven Central (Google Guava).
-	\item Menggunakan file JAR lokal (\texttt{app.jar}) dalam proyek Gradle.
-	\item Mengompilasi kode dan menghasilkan file JAR yang dapat dijalankan.
-	\item Menjalankan program dengan dependensi dari Gradle.
-	\item Menjalankan program langsung menggunakan Gradle tanpa membuat JAR terlebih dahulu.
+	\item \textbf{\texttt{plugins}} :
+	\begin{itemize}
+		\item \textbf{\texttt{application}} : Mengaktifkan plugin untuk menjalankan aplikasi Java.
+		\item \textbf{\texttt{java}} : Memungkinkan proyek menggunakan fitur Java standar.
+		\item \textbf{\texttt{com.github.johnrengelman.shadow}} : Plugin tambahan untuk membuat fat JAR (JAR yang berisi semua dependensi).
+	\end{itemize}
+	
+	\item \textbf{\texttt{repositories}} :
+	\begin{itemize}
+		\item Mendeklarasikan repository Maven Central sebagai sumber dependensi eksternal.
+		\item Semua library yang diperlukan akan diunduh dari repository ini.
+	\end{itemize}
+	
+	\item \textbf{\texttt{dependencies}} :
+	\begin{itemize}
+		\item \textbf{\texttt{implementation 'com.google.guava:guava:33.4.0-jre'}} : Menambahkan Google Guava sebagai dependensi eksternal.
+		\item \textbf{\texttt{implementation files('lib/app.jar')}} : Menambahkan file JAR lokal dari direktori \texttt{lib/}.
+	\end{itemize}
+	
+	\item \textbf{\texttt{java}} :
+	\begin{itemize}
+		\item Menentukan versi JDK yang digunakan dalam proyek.
+		\item Dalam kasus ini, JDK 21 digunakan untuk kompilasi dan eksekusi.
+	\end{itemize}
+	
+	\item \textbf{\texttt{application}} :
+	\begin{itemize}
+		\item \textbf{\texttt{mainClass = 'com.example.Main'}} : Menentukan kelas utama yang dieksekusi saat program dijalankan.
+	\end{itemize}
+	
+	\item \textbf{\texttt{tasks.named('test')}} :
+	\begin{itemize}
+		\item Mengaktifkan fitur pengujian menggunakan platform JUnit.
+		\item Digunakan untuk menjalankan pengujian otomatis pada kode.
+	\end{itemize}
+	
+	\item \textbf{\texttt{jar}} :
+	\begin{itemize}
+		\item \textbf{\texttt{archiveBaseName = 'gradle'}} : Menentukan nama file JAR yang akan dibuat.
+		\item \textbf{\texttt{archiveVersion = '1.0.0'}} : Menentukan versi file JAR yang dihasilkan.
+		\item \textbf{\texttt{manifest}} :
+		\begin{itemize}
+			\item Menambahkan atribut \texttt{Main-Class} ke dalam file JAR.
+			\item Memungkinkan JAR dapat dijalankan langsung menggunakan perintah \texttt{java -jar}.
+		\end{itemize}
+	\end{itemize}
+	
+	\item \textbf{\texttt{tasks.named('shadowJar')}} :
+	\begin{itemize}
+		\item Digunakan untuk mengatur pembuatan fat JAR.
+		\item \textbf{\texttt{archiveClassifier.set('all')}} : Menandakan bahwa semua dependensi akan disertakan dalam satu JAR.
+	\end{itemize}
 \end{itemize}
 
-Hal ini sangat berguna saat proses pengembangan karena kita dapat langsung mengeksekusi kode tanpa perlu mengatur classpath secara manual. Bagian selanjutnya akan membahas bagaimana Gradle dapat digunakan dalam proyek yang lebih kompleks.
+
+\subsection{Menyalin File \texttt{app.jar}}
+Sebelum menjalankan proyek, pastikan file \texttt{app.jar} telah disalin ke dalam direktori \texttt{lib/}. Jika belum ada, buat direktori dan salin file tersebut:
+
+\begin{lstlisting}[language=bash]
+	mkdir -p lib
+	cp /path/to/external/app.jar lib/
+\end{lstlisting}
+
+Gantilah \texttt{/path/to/external/app.jar} dengan lokasi asli dari file JAR eksternal.
+
+\subsection{Membangun dan Menjalankan Aplikasi}
+\subsubsection{Kompilasi dan Eksekusi Program}
+Untuk mengompilasi proyek dan menjalankan aplikasi, gunakan perintah:
+\begin{lstlisting}[language=bash]
+	gradle build
+	gradle run
+\end{lstlisting}
+
+Jika berhasil, output yang dihasilkan akan menampilkan:
+\begin{lstlisting}[language=bash]
+	Hello, Gradle!
+	Hasil Gabungan: Apel, Pisang, Ceri
+	Halo, Pengguna Gradle!
+\end{lstlisting}
+
+\subsubsection{Membuat File JAR Biasa}
+Untuk membuat file JAR tanpa dependensi, jalankan:
+\begin{lstlisting}[language=bash]
+	gradle jar
+\end{lstlisting}
+
+File JAR yang dihasilkan akan berada di:
+\begin{lstlisting}[language=bash]
+	app/build/libs/gradle-1.0.0.jar
+\end{lstlisting}
+
+\subsection{Membuat dan Menjalankan Fat JAR}
+\subsubsection{Membangun Fat JAR}
+Fat JAR (atau Uber JAR) menggabungkan semua dependensi ke dalam satu file JAR. Jalankan perintah berikut untuk membuatnya:
+\begin{lstlisting}[language=bash]
+	gradle shadowJar
+\end{lstlisting}
+
+Setelah proses selesai, Fat JAR akan berada di:
+\begin{lstlisting}[language=bash]
+	app/build/libs/app-all.jar
+\end{lstlisting}
+
+\subsubsection{Menjalankan Fat JAR}
+Fat JAR dapat dijalankan secara langsung menggunakan:
+\begin{lstlisting}[language=bash]
+	java -jar app/build/libs/app-all.jar
+\end{lstlisting}
+
+\subsection{Kesimpulan}
+
+Bagian ini telah membahas proses membangun proyek Java menggunakan Gradle, mulai dari pembuatan proyek, penulisan kode dengan dependensi eksternal, hingga pengelolaan file JAR. Setelah proyek dibuat, dependensi seperti Google Guava dideklarasikan dalam \texttt{build.gradle} agar dapat diunduh dan digunakan secara otomatis. Selain itu, file \texttt{app.jar} disalin ke dalam direktori \texttt{lib/} untuk dimanfaatkan sebagai library lokal. Aplikasi kemudian dijalankan menggunakan Gradle dengan perintah \texttt{gradle run}, yang menangani proses kompilasi dan eksekusi dalam satu langkah. Untuk mendistribusikan aplikasi, file JAR dibuat menggunakan perintah \texttt{gradle jar}, namun karena file ini tidak menyertakan dependensi, dibuat juga Fat JAR menggunakan plugin Shadow agar aplikasi dapat berjalan secara independen. Dengan pendekatan ini, Gradle memberikan solusi yang efisien untuk mengelola proyek Java, mengotomatisasi proses build, dan memastikan aplikasi siap dijalankan dalam berbagai lingkungan.
+
+
 
 
 \section{Perbandingan Ant, Maven, dan Gradle}
