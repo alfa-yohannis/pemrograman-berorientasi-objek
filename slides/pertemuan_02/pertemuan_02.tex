@@ -114,6 +114,29 @@
 	
 	\frame{\titlepage}
 	
+\begin{frame}[fragile]
+	\frametitle{Contents}
+	
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\tableofcontents[sections={1-2}]
+		
+		\column{0.5\textwidth}
+		\tableofcontents[sections={3-4}]
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Contents}
+	
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\tableofcontents[sections={5-6}]
+		
+		\column{0.5\textwidth}
+		\tableofcontents[sections={7-8}]
+	\end{columns}
+\end{frame}
 
 \section{Introduction}
 \begin{frame}
@@ -126,7 +149,7 @@
 \end{frame}
 
 	
-\section{Compiling Java Code Manually and Creating a JAR}
+\section{Compiling Java Manually}
 
 \begin{frame}
 	\frametitle{Manual Java Compilation and JAR Creation}
@@ -227,8 +250,6 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Writing Java Source Code}
-
 \begin{frame}[fragile]
 	\frametitle{Writing Java Source Code}
 	\begin{itemize}
@@ -251,7 +272,6 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Compiling the New Program with the JAR File}
 
 \begin{frame}[fragile]
 	\frametitle{Compiling the New Program with the JAR File}
@@ -267,7 +287,7 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Running the New Program with the JAR File}
+
 
 \begin{frame}[fragile]
 	\frametitle{Running the New Program with the JAR File}
@@ -298,7 +318,6 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Creating the New JAR File}
 
 \begin{frame}[fragile]
 	\frametitle{Creating the New JAR File}
@@ -313,7 +332,6 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Running the Program from the New JAR}
 
 \begin{frame}[fragile]
 	\frametitle{Running the Program from the New JAR}
@@ -331,7 +349,6 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Running the New JAR with the \texttt{-jar} Option}
 
 \begin{frame}[fragile]
 	\frametitle{\LARGE{Running the New JAR with the \texttt{-jar} Option (Part 1)}}
@@ -367,8 +384,6 @@
 	\end{lstlisting}
 \end{frame}
 
-
-\subsubsection{Conclusion}
 
 \begin{frame}
 	\frametitle{Conclusion}
@@ -417,8 +432,6 @@
 	\end{enumerate}
 \end{frame}
 
-\subsubsection{Verifying Installation}
-
 \begin{frame}[fragile]
 	\frametitle{Verifying Installation}
 	After installation, run the following command in the terminal or command prompt to verify the installation:
@@ -431,8 +444,6 @@
 \end{frame}
 
 \subsection{Basic Usage of Apache Ant}
-
-\subsubsection{Project Structure}
 
 \begin{frame}[fragile]
 	\frametitle{Project Structure}
@@ -451,8 +462,6 @@
 		\item The \texttt{lib/} directory contains the \texttt{app.jar} file created earlier, which will be used in this project.
 	\end{itemize}
 \end{frame}
-
-\subsubsection{Source Code \texttt{Main.java}}
 
 \begin{frame}[fragile]
 	\frametitle{Source Code \texttt{Main.java}}
@@ -473,8 +482,6 @@
 		\item This code uses the \texttt{Util} class, which has already been compiled and packaged in the \texttt{app.jar}.
 	\end{itemize}
 \end{frame}
-
-\subsubsection{Writing the \texttt{build.xml} File}
 
 \begin{frame}[fragile]
 	\vspace{20pt}
@@ -504,8 +511,6 @@
 </project>
 	\end{lstlisting}
 \end{frame}
-
-\subsubsection{Running the Build with Ant}
 
 \begin{frame}[fragile]
 	\frametitle{Running the Build with Ant}
@@ -546,7 +551,7 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Download and Installation of Maven}
+\subsection{Maven Installation}
 \begin{frame}
 	\frametitle{Download and Installation of Maven}
 	\begin{enumerate}
@@ -561,7 +566,6 @@
 	\end{enumerate}
 \end{frame}
 
-\subsubsection{Verifying Installation}
 \begin{frame}[fragile]
 	\frametitle{Verifying Installation}
 	After the installation is complete, run the following command in the terminal or command prompt to verify the installation:
@@ -571,6 +575,7 @@
 	If the installation is successful, the output will display the installed version of Maven.
 \end{frame}
 
+\subsection{Basic Usage of Maven}
 \begin{frame}[fragile]
 	\vspace{20pt}
 	\frametitle{Creating a Maven Project}
@@ -590,134 +595,95 @@
 	\end{enumerate}
 \end{frame}
 
-\subsection{Maven Project Structure}
-\begin{frame}[fragile]
-	\frametitle{Maven Project Structure}
-	Before using Maven, ensure the project structure is as follows:
+\begin{frame}[fragile]{Maven Project Structure}
+	Once the project is successfully created, the resulting directory structure is as follows:
 	\begin{lstlisting}[language=bash]
-		ProjectRoot/
+		maven-app/
+		|-- pom.xml
 		|-- src/
 		|   |-- main/
 		|   |   |-- java/
-		|   |   |   |-- com/
-		|   |   |   |   |-- example/
-		|   |   |   |   |   |-- Main.java
+		|   |   |   |-- com/example/Main.java
 		|   |-- test/
 		|       |-- java/
-		|-- pom.xml
+		|       |   |-- com/example/AppTest.java
+	\end{lstlisting}
+	
+	Navigate into the project directory before proceeding with the configuration:
+	\begin{lstlisting}[language=bash]
+		cd maven-app
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Writing the \texttt{pom.xml} File}
-\begin{frame}[fragile]
-	\vspace{20pt}
-	\frametitle{Writing the \texttt{pom.xml} File}
-	The \texttt{pom.xml} file is the main configuration in a Maven project.
-	\begin{lstlisting}[style=XmlStyle]
-		<project xmlns="http://maven.apache.org/POM/4.0.0"
-		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-		http://maven.apache.org/xsd/maven-4.0.0.xsd">
-		<modelVersion>4.0.0</modelVersion>
-		
-		<groupId>com.example</groupId>
-		<artifactId>helloworld</artifactId>
-		<version>1.0-SNAPSHOT</version>
-		
-		<dependencies>
-		<!-- Using Google Guava from Maven Central -->
-		<dependency>
-		<groupId>com.google.guava</groupId>
-		<artifactId>guava</artifactId>
-		<version>33.4.0-jre</version>
-		</dependency>
-		</dependencies>
-		</project>
-	\end{lstlisting}
-\end{frame}
-
-\subsubsection{Source Code for \texttt{Main.java}}
-\begin{frame}[fragile]
-	\frametitle{Source Code for \texttt{Main.java}}
-	Create the \texttt{Main.java} file in the directory \texttt{src/main/java/com/example/} with the following contents:
+\begin{frame}[fragile]{Writing Java Code}
+	Open the file \texttt{src/main/java/com/example/Main.java} and modify its content as follows:
 	\begin{lstlisting}[style=JavaStyle]
 		package com.example;
 		
 		import com.google.common.base.Joiner;
+		import com.example.Util;
 		
 		public class Main {
 			public static void main(String[] args) {
 				System.out.println("Hello, Maven!");
 				
-				// Using a function from the Guava library (downloaded from Maven Central)
+				// Using a function from the Guava library (retrieved from Maven Central)
 				String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
 				System.out.println("Joined String: " + result);
+				
+				Util.sayHello("Maven User");
 			}
 		}
 	\end{lstlisting}
+	
+	This code uses \textbf{Google Guava} as an external dependency and \textbf{Util} from a local JAR file.
 \end{frame}
 
-\subsubsection{Creating a JAR File with Maven}
-\begin{frame}[fragile]
-	\frametitle{Creating a JAR File with Maven}
-	To compile the code and create a JAR file, run the following command:
-	\begin{lstlisting}[language=bash]
-		mvn clean package
-	\end{lstlisting}
-	The output will be in the \texttt{target/} directory:
-	\begin{lstlisting}[language=bash]
-		target/
-		|-- helloworld-1.0-SNAPSHOT.jar
-	\end{lstlisting}
-\end{frame}
-
-\subsubsection{Running the Program from the JAR}
-\begin{frame}[fragile]
-	\frametitle{Running the Program from the JAR}
-	Use the following command to run the program from the generated JAR:
-	\begin{lstlisting}[language=bash]
-		java -cp target/helloworld-1.0-SNAPSHOT.jar:~/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar com.example.Main
-	\end{lstlisting}
-\end{frame}
-
-\subsubsection{Running with \texttt{-jar}}
-\begin{frame}[fragile]
-	\vspace{20pt}
-	\frametitle{Running with \texttt{-jar}}
-	If you want to create a JAR that can be directly run with the \texttt{-jar} option, add the following plugin configuration to your \texttt{pom.xml}.
-\end{frame}
-
-\begin{frame}[fragile]
-	\vspace{20pt}
-	\frametitle{Maven Assembly Plugin Configuration (Part 1)}
-	First, add the Maven Assembly Plugin to create a fat JAR that includes all dependencies. This ensures the resulting JAR can be run with the \texttt{-jar} option.
+\begin{frame}[fragile]{Basic \texttt{pom.xml} Structure}
+		The \texttt{pom.xml} file is the main configuration for a Maven project, defining the project structure, dependencies, and build settings. Below is the basic structure of the \texttt{pom.xml} file in a Maven project:
 	\begin{lstlisting}[style=XmlStyle]
+		<project xmlns="http://maven.apache.org/POM/4.0.0"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+		http://maven.apache.org/maven-v4_0_0.xsd">
+		<modelVersion>4.0.0</modelVersion>
+		<groupId>com.example</groupId>
+		<artifactId>maven</artifactId>
+		<packaging>jar</packaging>
+		<version>1.0-SNAPSHOT</version>
+		<name>maven</name>
+		<url>http://maven.apache.org</url>
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Explanation: Project Declaration}
+	\textbf{Project declaration} defines the core metadata of the project:
+	\begin{itemize}
+		\item XML namespace and Maven schema.
+		\item The elements \texttt{groupId}, \texttt{artifactId}, and \texttt{version} provide a unique identity to the project.
+		\item The \texttt{packaging} element specifies the output type (JAR).
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Build Plugin Configuration}
+	\vspace{20pt}
+	\textbf{Maven Assembly Plugin} is used to create a \textbf{Fat JAR}.
+	\begin{lstlisting}[style=XmlStyle]
+		<build>
+		<plugins>
 		<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
 		<artifactId>maven-assembly-plugin</artifactId>
 		<version>3.3.0</version>
 		<executions>
 		<execution>
-		<phase>package</phase>
-		<goals>
-		<goal>single</goal>
-		</goals>
+		<phase>package</phase><goals><goal>single</goal></goals>
 		<configuration>
 		<descriptorRefs>
 		<descriptorRef>jar-with-dependencies</descriptorRef>
 		</descriptorRefs>
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Maven Assembly Plugin Configuration (Part 2)}
-	Continue by adding the rest of the configuration for the Maven Assembly Plugin in your \texttt{pom.xml} file. This includes specifying the main class in the manifest.
-	\begin{lstlisting}[style=XmlStyle]
-		<!-- Specify the Main-Class in the manifest -->
 		<archive>
-		<manifestEntries>
-		<Main-Class>com.example.Main</Main-Class>
-		</manifestEntries>
+		<manifestEntries><Main-Class>com.example.Main</Main-Class></manifestEntries>
 		</archive>
 		</configuration>
 		</execution>
@@ -726,11 +692,8 @@
 	\end{lstlisting}
 \end{frame}
 
-
-\begin{frame}[fragile]
-	\frametitle{Maven Jar Plugin Configuration}
-	\vspace{20pt}
-	Next, add the Maven Jar Plugin to specify the main class that should be executed when the JAR is run with the \texttt{-jar} option.
+\begin{frame}[fragile]{Maven JAR Plugin}
+	\textbf{Maven JAR Plugin} is used to create an executable JAR.
 	\begin{lstlisting}[style=XmlStyle]
 		<plugin>
 		<groupId>org.apache.maven.plugins</groupId>
@@ -739,7 +702,6 @@
 		<configuration>
 		<archive>
 		<manifestEntries>
-		<!-- Specify the main class to be executed -->
 		<Main-Class>com.example.Main</Main-Class>
 		</manifestEntries>
 		</archive>
@@ -748,59 +710,107 @@
 	\end{lstlisting}
 \end{frame}
 
+\begin{frame}[fragile]{Exec Maven Plugin}
+	\textbf{Exec Maven Plugin} is used to execute the application directly from Maven without building the JAR first.
+	\begin{lstlisting}[style=XmlStyle]
+		<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>exec-maven-plugin</artifactId>
+		<version>3.1.0</version>
+		<executions>
+		<execution>
+		<goals>
+		<goal>java</goal>
+		</goals>
+		</execution>
+		</executions>
+		<configuration>
+		<mainClass>com.example.Main</mainClass>
+		</configuration>
+		</plugin>
+	\end{lstlisting}
+\end{frame}
 
-\subsubsection{Build JAR and Run It}
-\begin{frame}[fragile]
-	\frametitle{Build JAR and Run It}
-	Then, run the following command:
+\begin{frame}[fragile]{External JAR Dependency}
+	Below is the configuration to add an external JAR (\texttt{app.jar}) from the \texttt{lib} folder in a Maven project:
+	\begin{lstlisting}[style=XmlStyle]
+		<!-- External JAR app.jar from the lib folder -->
+		<dependency>
+		<groupId>com.example</groupId>
+		<artifactId>app</artifactId>
+		<version>1.0-SNAPSHOT</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/lib/app.jar</systemPath>
+		</dependency>
+		</dependencies>
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Copying \texttt{app.jar} File}
+	Before running the application, ensure that the \texttt{app.jar} file is available in the \texttt{lib/} directory.
+	\begin{lstlisting}[language=bash]
+		mkdir -p lib
+		cp /path/to/external/app.jar lib/
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Building and Running the Application}
+	To compile the project, use:
+	\begin{lstlisting}[language=bash]
+		mvn clean compile
+	\end{lstlisting}
+	
+	To run the application using Maven:
+	\begin{lstlisting}[language=bash]
+		mvn exec:java
+	\end{lstlisting}
+	
+	If configured correctly, the output will be:
+	\begin{lstlisting}[language=bash]
+		Hello, Maven!
+		Joined String: Apple, Banana, Cherry
+		Hello, Maven User!
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Creating a JAR File}
+	Maven automatically generates a JAR file in the \texttt{target/} directory.
 	\begin{lstlisting}[language=bash]
 		mvn clean package
 	\end{lstlisting}
-	After that, the program can be run directly with:
+	
+	The generated JAR file can be found at:
 	\begin{lstlisting}[language=bash]
-		java -jar target/helloworld-1.0-SNAPSHOT.jar
+		target/maven-app-1.0-SNAPSHOT.jar
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Running with \texttt{mvn exec:java}}
-\begin{frame}[fragile]
-	\frametitle{Running with \texttt{mvn exec:java}}
-	We can also run the program directly using Maven without creating the JAR first.
-	Use the following command to run the application:
+\begin{frame}[fragile]{Running the JAR with Dependencies}
+	The standard JAR file does not include external dependencies, so use:
 	\begin{lstlisting}[language=bash]
-		mvn clean compile exec:java -Dexec.mainClass="com.example.Main"
+		java -cp target/maven-app-1.0-SNAPSHOT.jar:lib/app.jar \
+		com.example.Main
 	\end{lstlisting}
-	This command will:
-	\begin{itemize}
-		\item Clean up any previous builds (\texttt{clean}).
-		\item Compile the source code (\texttt{compile}).
-		\item Run the \texttt{Main} class using the \texttt{exec-maven-plugin}.
-	\end{itemize}
 \end{frame}
 
-\subsubsection{Running with \texttt{mvn package} and \texttt{mvn exec:java}}
-\begin{frame}[fragile]
-	\frametitle{\LARGE{Running with \texttt{mvn package} and \texttt{mvn exec:java}}}
-	If you want to ensure the code is compiled before running, use the following commands:
+\begin{frame}[fragile]{Creating a Fat JAR (Uber JAR)}
+	To create a Fat JAR that includes all dependencies in a single file, use:
 	\begin{lstlisting}[language=bash]
 		mvn clean package
-		mvn exec:java -Dexec.mainClass="com.example.Main"
+	\end{lstlisting}
+	
+	The resulting Fat JAR:
+	\begin{lstlisting}[language=bash]
+		target/maven-app-1.0-SNAPSHOT-jar-with-dependencies.jar
+	\end{lstlisting}
+	
+	This Fat JAR can be executed directly with:
+	\begin{lstlisting}[language=bash]
+		java -jar target/maven-app-1.0-SNAPSHOT-jar-with-dependencies.jar
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Conclusion}
-\begin{frame}
-	\frametitle{Conclusion}
-	With these steps, we have successfully:
-	\begin{itemize}
-		\item Installed and verified Apache Maven.
-		\item Used external dependencies from Maven Central (Google Guava).
-		\item Managed dependencies without manually downloading and adding JAR files.
-		\item Compiled the code and generated an executable JAR file.
-		\item Run the program with dependencies from Maven.
-		\item Run the program directly using Maven without first creating a JAR.
-	\end{itemize}
-\end{frame}
+
 
 %%% GRADLE
 \section{Gradle}
@@ -820,7 +830,7 @@
 	\end{itemize}
 \end{frame}
 
-\subsubsection{Gralde Download and Installation}
+\subsection{Gradle Installation}
 \begin{frame}[fragile]
 	\frametitle{Gradle Download and Installation}
 	\begin{enumerate}
@@ -835,7 +845,7 @@
 	\end{enumerate}
 \end{frame}
 
-\subsubsection{Verify Installation}
+
 \begin{frame}[fragile]
 	\frametitle{Verify Installation}
 	After installation, run the following command in your terminal or command prompt to verify the installation:
@@ -870,7 +880,7 @@
 \subsection{Basic Usage of Gradle}
 \begin{frame}[fragile]
 	\frametitle{Basic Usage of Gradle}
-	\subsubsection{Project Structure}
+
 	Before using Gradle, ensure your project has the following structure:
 	\begin{lstlisting}[language=bash]
 		ProjectRoot/
@@ -886,7 +896,7 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Writing the \texttt{build.gradle} File}
+
 \begin{frame}[fragile]
 	\frametitle{Writing the \texttt{build.gradle} File - Part 1}
 	The \texttt{build.gradle} file is the main configuration file for Gradle projects. Here’s an example with the basic setup for the Gradle project:
@@ -923,7 +933,6 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Source Code for \texttt{Main.java}}
 \begin{frame}[fragile]
 	\frametitle{Source Code for \texttt{Main.java}}
 	Create the \texttt{Main.java} file inside \texttt{src/main/java/com/example/} with the following content:
@@ -945,7 +954,6 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Creating a JAR File with Gradle}
 \begin{frame}[fragile]
 	\frametitle{Creating a JAR File with Gradle}
 	To compile the code and create a JAR file, run the following command:
@@ -959,7 +967,6 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Running the Program from the JAR}
 \begin{frame}[fragile]
 	\vspace{20pt}
 	\frametitle{Running the Program from the JAR}
@@ -980,7 +987,6 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Running the Program Using Gradle}
 \begin{frame}[fragile]
 	\vspace{20pt}
 	\frametitle{Running the Program Using Gradle}
@@ -1002,7 +1008,6 @@
 	\end{lstlisting}
 \end{frame}
 
-\subsubsection{Conclusion}
 \begin{frame}[fragile]
 	\frametitle{Conclusion}
 	With these steps, we have successfully:
