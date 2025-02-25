@@ -1,0 +1,1800 @@
+\chapter{Object-relational Mapping (ORM)}
+
+\section{Pendahuluan}
+
+ORM merupakan paradigma pemrograman yang menjembatani perbedaan antara paradigma berorientasi objek pada Java dan paradigma relasional pada basis data. Pemetaan kelas-kelas Java ke tabel basis data serta objek-objek Java ke baris tabel memungkinkan interaksi dengan basis data melalui konsep pemrograman berorientasi objek, sehingga mengurangi kebutuhan penulisan query SQL yang kompleks.
+
+Hibernate merupakan salah satu framework ORM terkemuka dalam ekosistem Java. Framework ini mengabstraksi detail interaksi dengan basis data, meliputi manajemen koneksi, penanganan transaksi, dan mekanisme caching. Abstraksi yang diberikan menghasilkan operasi basis data yang lebih sederhana serta kode yang lebih bersih dan mudah dipelihara.
+
+Aplikasi enterprise sering membutuhkan dukungan untuk berbagai sistem basis data relasional guna memenuhi kebutuhan kinerja, skalabilitas, dan penyebaran yang beragam. Hibernate menyediakan integrasi yang mulus dengan berbagai sistem basis data. Konfigurasi dan penggunaan Hibernate ditunjukkan pada sistem basis data berikut:
+\begin{itemize}
+	\item \textbf{MySQL} --- basis data relasional open-source yang banyak digunakan, terkenal karena kecepatan dan keandalannya.
+	\item \textbf{PostgreSQL} --- basis data open-source yang canggih, terkenal karena fitur lengkap serta kepatuhan terhadap standar SQL.
+	\item \textbf{SQLite} --- basis data ringan berbasis file, cocok untuk pengembangan, pengujian, dan aplikasi dengan tingkat konkurensi serta volume data yang terbatas.
+\end{itemize}
+
+
+
+\section{Keuntungan dan Kerugian ORM}
+
+\subsection{Keuntungan}
+\begin{itemize}
+	\item \textbf{Pengurangan Kompleksitas:} ORM menghilangkan kebutuhan penulisan query SQL secara eksplisit dengan menyediakan lapisan abstraksi yang menghubungkan kelas-kelas Java dengan tabel basis data.
+	\item \textbf{Peningkatan Produktivitas:} Penggunaan ORM memungkinkan pengembang fokus pada logika bisnis, sehingga pengembangan aplikasi dapat dilakukan dengan lebih cepat dan efisien.
+	\item \textbf{Abstraksi Basis Data:} ORM menyediakan kemampuan untuk mendukung berbagai sistem basis data melalui konfigurasi yang fleksibel, tanpa memerlukan perubahan besar pada kode.
+	\item \textbf{Manajemen Transaksi dan Caching:} Framework ORM umumnya menyertakan mekanisme manajemen transaksi dan caching, yang dapat meningkatkan kinerja dan konsistensi data.
+	\item \textbf{Integrasi dengan Framework Lain:} ORM mudah diintegrasikan dengan framework lain seperti Spring, sehingga mendukung pengembangan aplikasi enterprise yang kompleks.
+\end{itemize}
+
+\subsection{Kerugian}
+\begin{itemize}
+	\item \textbf{Overhead Performa:} Abstraksi yang disediakan ORM dapat menimbulkan overhead dibandingkan dengan query SQL yang ditulis dan dioptimalkan secara manual.
+	\item \textbf{Kompleksitas Konfigurasi:} Pengaturan dan konfigurasi ORM dapat menjadi rumit, terutama untuk aplikasi dengan skema basis data yang besar atau hubungan antar tabel yang kompleks.
+	\item \textbf{Kurva Pembelajaran:} Pemahaman mendalam tentang konsep dan konfigurasi ORM memerlukan waktu dan usaha, terutama bagi pengembang yang belum berpengalaman.
+	\item \textbf{Abstraksi Berlebih:} Penggunaan ORM secara berlebihan dapat mengurangi fleksibilitas dalam mengoptimalkan query atau mengelola basis data secara langsung.
+	\item \textbf{Isu Kompatibilitas:} Beberapa fitur khusus dari basis data mungkin tidak didukung secara optimal oleh ORM, sehingga kadang-kadang memerlukan penulisan query native atau penyesuaian tambahan.
+\end{itemize}
+
+
+\section{Tutorial}
+
+\subsection{Buat MVN Project}
+Jalankan perintah berikut untuk membuat proyek Maven:
+\begin{lstlisting}[language=bash]
+	mvn archetype:generate -DgroupId=com.example -DartifactId=orm -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+\end{lstlisting}
+
+Perintah di atas menggunakan plugin Maven Archetype untuk menghasilkan struktur proyek dasar dengan pengaturan berikut:
+\begin{itemize}
+	\item \textbf{-DgroupId=com.example:} Menentukan group ID proyek yang biasanya mewakili nama organisasi atau domain.
+	\item \textbf{-DartifactId=orm:} Menentukan artifact ID yang merupakan nama proyek. Hasil akhirnya adalah direktori \texttt{orm} yang berisi struktur proyek.
+	\item \textbf{-DarchetypeArtifactId=maven-archetype-quickstart:} Menggunakan archetype \texttt{maven-archetype-quickstart} sebagai template dasar untuk proyek Java.
+	\item \textbf{-DinteractiveMode=false:} Menonaktifkan mode interaktif sehingga parameter tidak diminta satu per satu, melainkan langsung menggunakan nilai yang telah ditentukan.
+\end{itemize}
+
+Hasil dari perintah ini adalah struktur proyek Maven yang siap untuk dikembangkan lebih lanjut dengan menambahkan konfigurasi Hibernate, dependensi, serta kode-kode aplikasi lainnya.
+
+
+\subsection{Konfigurasi Maven (pom.xml)}
+Edit file \texttt{pom.xml} untuk menambahkan dependensi yang diperlukan. Berikut adalah contoh konfigurasi dependensi yang digunakan dalam proyek ini:
+
+\begin{lstlisting}[style=XmlStyle]
+	<dependencies>
+	<!-- Hibernate Core untuk ORM -->
+	<dependency>
+	<groupId>org.hibernate</groupId>
+	<artifactId>hibernate-core</artifactId>
+	<version>6.6.9.Final</version>
+	</dependency>
+	
+	<!-- JPA API untuk anotasi JPA -->
+	<dependency>
+	<groupId>jakarta.persistence</groupId>
+	<artifactId>jakarta.persistence-api</artifactId>
+	<version>3.1.0</version>
+	</dependency>
+	
+	<!-- Driver JDBC untuk SQLite -->
+	<dependency>
+	<groupId>org.xerial</groupId>
+	<artifactId>sqlite-jdbc</artifactId>
+	<version>3.36.0.3</version>
+	</dependency>
+	
+	<!-- Driver JDBC untuk PostgreSQL -->
+	<dependency>
+	<groupId>org.postgresql</groupId>
+	<artifactId>postgresql</artifactId>
+	<version>42.3.1</version>
+	</dependency>
+	
+	<!-- Driver JDBC untuk MySQL -->
+	<dependency>
+	<groupId>mysql</groupId>
+	<artifactId>mysql-connector-java</artifactId>
+	<version>8.0.27</version>
+	</dependency>
+	
+	<!-- SLF4J dengan Simple Binding untuk Logging -->
+	<dependency>
+	<groupId>org.slf4j</groupId>
+	<artifactId>slf4j-simple</artifactId>
+	<version>1.7.32</version>
+	</dependency>
+	
+	<!-- JUnit 5 untuk Unit Testing -->
+	<dependency>
+	<groupId>org.junit.jupiter</groupId>
+	<artifactId>junit-jupiter-api</artifactId>
+	<version>5.9.2</version>
+	<scope>test</scope>
+	</dependency>
+	<dependency>
+	<groupId>org.junit.jupiter</groupId>
+	<artifactId>junit-jupiter-engine</artifactId>
+	<version>5.9.2</version>
+	<scope>test</scope>
+	</dependency>
+	</dependencies>
+\end{lstlisting}
+
+Pada konfigurasi di atas, setiap dependensi memiliki peran khusus:
+\begin{itemize}
+	\item \textbf{Hibernate Core:} Digunakan untuk mengimplementasikan ORM dan menyediakan fungsionalitas inti untuk manajemen entitas.
+	\item \textbf{JPA API:} Menyediakan anotasi dan antarmuka standar yang digunakan untuk mendefinisikan entitas dan operasi basis data.
+	\item \textbf{Driver JDBC (SQLite, PostgreSQL, MySQL):} Masing-masing driver digunakan untuk menghubungkan aplikasi dengan sistem basis data yang berbeda.
+	\item \textbf{SLF4J:} Digunakan untuk logging, sehingga informasi mengenai eksekusi aplikasi dapat dicatat dengan mudah.
+	\item \textbf{JUnit 5:} Digunakan untuk unit testing, memastikan fungsi-fungsi dalam aplikasi berjalan dengan benar.
+\end{itemize}
+
+\subsection{Konfigurasi Hibernate}
+Buat file konfigurasi Hibernate untuk masing-masing basis data di:
+\begin{itemize}
+	\item \texttt{src/main/resources/hibernate-mysql.cfg.xml}
+	\item \texttt{src/main/resources/hibernate-postgresql.cfg.xml}
+	\item \texttt{src/main/resources/hibernate-sqlite.cfg.xml}
+\end{itemize}
+
+Konfigurasi berikut merupakan contoh pengaturan untuk masing-masing basis data.
+
+\subsubsection*{Membuat Database/Schema}
+Sebelum menggunakan konfigurasi Hibernate, pastikan database atau schema telah dibuat pada masing-masing basis data.
+Dapat melalui \textit{command prompt} ataupun \textit{Graphical User interface} untuk masing-masing database.
+\begin{itemize}
+	\item \textbf{MySQL:} Buat database dengan nama yang sesuai (misalnya \texttt{orm}). Contoh perintah:
+	\begin{lstlisting}[language=bash, style=XmlStyle]
+		mysql -u alfa -p
+		CREATE DATABASE orm;
+	\end{lstlisting}
+	\item \textbf{PostgreSQL:} Buat database dengan nama yang sesuai (misalnya \texttt{orm}). Contoh perintah:
+	\begin{lstlisting}[language=bash, style=XmlStyle]
+		psql -U postgres
+		CREATE DATABASE orm;
+	\end{lstlisting}
+	\item \textbf{SQLite:} File basis data akan dibuat secara otomatis (misalnya \texttt{orm.sqlite}) jika belum ada, sehingga tidak perlu membuat schema secara eksplisit.
+\end{itemize}
+
+\subsubsection*{Konfigurasi MySQL}
+\begin{lstlisting}[style=XmlStyle]
+	<?xml version="1.0" encoding="utf-8"?>
+	<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	<hibernate-configuration>
+	<session-factory>
+	<!-- MySQL configuration -->
+	<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+	<property name="connection.url">
+	jdbc:mysql://localhost:3306/orm?useSSL=false&amp;serverTimezone=UTC
+	</property>
+	<property name="connection.username">alfa</property>
+	<property name="connection.password">1234</property>
+	<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+	<property name="hibernate.show_sql">true</property>
+	<property name="hibernate.hbm2ddl.auto">update</property>
+	
+	<!-- Mapping class -->
+	<mapping class="com.example.model.User"/>
+	</session-factory>
+	</hibernate-configuration>
+\end{lstlisting}
+
+\textbf{Penjelasan Konfigurasi MySQL:}
+\begin{itemize}
+	\item \texttt{connection.driver\_class}: Menentukan driver JDBC untuk MySQL, yaitu \texttt{com.mysql.cj.\-jdbc.Driver}.
+	\item \texttt{connection.url}: URL koneksi ke basis data MySQL dengan nama basis data \texttt{orm}. Parameter \texttt{useSSL=false} dan \texttt{serverTimezone=UTC} digunakan untuk konfigurasi koneksi.
+	\item \texttt{connection.username} dan \texttt{connection.password}: Kredensial untuk mengakses basis data.
+	\item \texttt{dialect}: Menunjuk pada kelas dialek Hibernate untuk MySQL, yaitu \texttt{org.hibernate.\-dialect.\-MySQLDialect}.
+	\item \texttt{hibernate.show\_sql}: Jika diset ke \texttt{true}, query SQL yang dijalankan akan ditampilkan.
+	\item \texttt{hibernate.hbm2ddl.auto}: Diset ke \texttt{update} agar skema basis data diperbarui secara otomatis sesuai perubahan entitas.
+	\item \texttt{mapping}: Mendefinisikan pemetaan entitas \texttt{User} ke tabel basis data.
+\end{itemize}
+
+\subsubsection*{Konfigurasi PostgreSQL}
+\begin{lstlisting}[style=XmlStyle]
+	<?xml version="1.0" encoding="utf-8"?>
+	<!DOCTYPE hibernate-configuration PUBLIC 
+	"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	<hibernate-configuration>
+	<session-factory>
+	<!-- PostgreSQL configuration -->
+	<property name="connection.driver_class">org.postgresql.Driver</property>
+	<property name="connection.url">jdbc:postgresql://localhost:5432/orm</property>
+	<property name="connection.username">postgres</property>
+	<property name="connection.password">1234</property>
+	<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+	<property name="hibernate.show_sql">true</property>
+	<property name="hibernate.hbm2ddl.auto">update</property>
+	
+	<!-- Mapping class -->
+	<mapping class="com.example.model.User"/>
+	</session-factory>
+	</hibernate-configuration>
+\end{lstlisting}
+
+\textbf{Penjelasan Konfigurasi PostgreSQL:}
+\begin{itemize}
+	\item \texttt{connection.driver\_class}: Menentukan driver JDBC untuk PostgreSQL, yaitu \texttt{org.\-postgresql.\-Driver}.
+	\item \texttt{connection.url}: URL koneksi ke basis data PostgreSQL pada port 5432 dengan nama basis data \texttt{orm}.
+	\item \texttt{connection.username} dan \texttt{connection.password}: Kredensial yang digunakan untuk mengakses basis data.
+	\item \texttt{dialect}: Mengacu pada kelas dialek Hibernate untuk PostgreSQL, yaitu \texttt{org.hibernate.\-dialect.\-PostgreSQLDialect}.
+	\item \texttt{hibernate.show\_sql}: Menampilkan query SQL yang dieksekusi jika diset ke \texttt{true}.
+	\item \texttt{hibernate.hbm2ddl.auto}: Mengatur agar skema basis data diperbarui secara otomatis sesuai dengan entitas.
+	\item \texttt{mapping}: Mendefinisikan pemetaan entitas \texttt{User}.
+\end{itemize}
+
+\subsubsection*{Konfigurasi SQLite}
+\begin{lstlisting}[style=XmlStyle]
+	<?xml version="1.0" encoding="utf-8"?>
+	<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+	"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+	<hibernate-configuration>
+	<session-factory>
+	<!-- SQLite configuration -->
+	<property name="connection.driver_class">org.sqlite.JDBC</property>
+	<property name="connection.url">jdbc:sqlite:orm.sqlite</property>
+	<property name="hibernate.show_sql">true</property>
+	<property name="hibernate.hbm2ddl.auto">update</property>
+	<property name="dialect">org.hibernate.community.dialect.SQLiteDialect</property>
+	
+	<!-- Mapping class -->
+	<mapping class="com.example.model.User" />
+	</session-factory>
+	</hibernate-configuration>
+\end{lstlisting}
+
+\textbf{Penjelasan Konfigurasi SQLite:}
+\begin{itemize}
+	\item \texttt{connection.driver\_class}: Menentukan driver JDBC untuk SQLite, yaitu \texttt{org.sqlite.JDBC}.
+	\item \texttt{connection.url}: Mengatur lokasi file basis data SQLite. File \texttt{orm.sqlite} akan dibuat di direktori kerja.
+	\item \texttt{hibernate.show\_sql}: Mengatur agar query SQL yang dijalankan ditampilkan pada konsol.
+	\item \texttt{hibernate.hbm2ddl.auto}: Diset ke \texttt{update} agar skema basis data diperbarui secara otomatis sesuai dengan entitas.
+	\item \texttt{dialect}: Menunjuk pada kelas dialek Hibernate untuk SQLite, yaitu \texttt{org.hibernate.\-community.\-dialect.SQLiteDialect}.
+	\item \texttt{mapping}: Mendefinisikan pemetaan entitas \texttt{User} ke dalam basis data.
+\end{itemize}
+
+
+\subsection{Model}
+Buat entitas \texttt{User} pada file:
+\begin{itemize}
+	\item \texttt{src/main/java/com/example/model/User.java}
+\end{itemize}
+
+Berikut adalah kode untuk entitas \texttt{User}:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	
+	@Entity
+	@Table(name = "users")
+	public class User {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		public User() {}
+		
+		public User(String name) {
+			this.name = name;
+		}
+		
+		// Getters and setters
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \texttt{package com.example.model;}: Menentukan package tempat kelas \texttt{User} berada.
+	\item \texttt{import jakarta.persistence.*;}: Mengimpor anotasi JPA yang diperlukan untuk pemetaan entitas.
+	\item \texttt{@Entity}: Menandai kelas \texttt{User} sebagai entitas yang akan dipetakan ke tabel basis data.
+	\item \texttt{@Table(name = "users")}: Mengatur nama tabel yang digunakan untuk entitas ini. Tabel akan diberi nama \texttt{users}.
+	\item \texttt{@Id}: Menandai atribut \texttt{id} sebagai primary key.
+	\item \texttt{@GeneratedValue(strategy = GenerationType.IDENTITY)}: Mengatur strategi generasi nilai untuk primary key, menggunakan auto-increment sesuai dengan basis data.
+	\item \texttt{private Long id;}: Deklarasi atribut \texttt{id} yang menyimpan nilai unik untuk setiap entitas.
+	\item \texttt{private String name;}: Deklarasi atribut \texttt{name} yang menyimpan nama user.
+	\item Konstruktor tanpa parameter dan konstruktor dengan parameter disediakan untuk memudahkan pembuatan objek.
+	\item Metode \texttt{getId}, \texttt{setId}, \texttt{getName}, dan \texttt{setName} merupakan accessor dan mutator untuk masing-masing atribut.
+\end{itemize}
+
+
+\subsection{Factory}
+Buat kelas \texttt{MultiDatabaseFactory} pada file:
+\begin{itemize}
+	\item \texttt{src/main/java/com/example/MultiDatabaseFactory.java}
+\end{itemize}
+
+Berikut adalah kode untuk kelas \texttt{MultiDatabaseFactory}:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.SessionFactory;
+	import org.hibernate.cfg.Configuration;
+	import org.slf4j.Logger;
+	import org.slf4j.LoggerFactory;
+	
+	public class MultiDatabaseFactory {
+		
+		private static final Logger logger = LoggerFactory.getLogger(MultiDatabaseFactory.class);
+		
+		private static final SessionFactory sqliteSessionFactory;
+		private static final SessionFactory postgresSessionFactory;
+		private static final SessionFactory mysqlSessionFactory;
+		
+		static {
+			try {
+				// Menentukan lokasi file konfigurasi menggunakan system properties,
+				// atau menggunakan nama file default jika property tidak disediakan.
+				String sqliteConfigFile = System.getProperty("hibernate.sqlite.config", "hibernate-sqlite.cfg.xml");
+				String postgresConfigFile = System.getProperty("hibernate.postgresql.config",
+				"hibernate-postgresql.cfg.xml");
+				String mysqlConfigFile = System.getProperty("hibernate.mysql.config", "hibernate-mysql.cfg.xml");
+				
+				System.out.println("Using SQLite config: " + sqliteConfigFile);
+				System.out.println("Using PostgreSQL config: " + postgresConfigFile);
+				System.out.println("Using MySQL config: " + mysqlConfigFile);
+				
+				// Membangun SessionFactory untuk PostgreSQL
+				postgresSessionFactory = new Configuration()
+				.configure(postgresConfigFile)
+				.buildSessionFactory();
+				
+				// Membangun SessionFactory untuk MySQL
+				mysqlSessionFactory = new Configuration()
+				.configure(mysqlConfigFile)
+				.buildSessionFactory();
+				
+				// Membangun SessionFactory untuk SQLite
+				sqliteSessionFactory = new Configuration()
+				.configure(sqliteConfigFile)
+				.buildSessionFactory();
+				
+				logger.info("End of database configuration");
+				
+			} catch (Throwable ex) {
+				System.err.println("Initial SessionFactory creation failed: " + ex);
+				throw new ExceptionInInitializerError(ex);
+			}
+		}
+		
+		public static SessionFactory getSqliteSessionFactory() {
+			return sqliteSessionFactory;
+		}
+		
+		public static SessionFactory getPostgresSessionFactory() {
+			return postgresSessionFactory;
+		}
+		
+		public static SessionFactory getMysqlSessionFactory() {
+			return mysqlSessionFactory;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Inisialisasi Static:} Pada blok \texttt{static}, kelas ini menginisialisasi tiga instance \texttt{SessionFactory} secara terpisah untuk masing-masing basis data (SQLite, PostgreSQL, dan MySQL). Lokasi file konfigurasi dapat diatur melalui \texttt{system properties} atau menggunakan nilai default.
+	\item \textbf{Penggunaan \texttt{Configuration}:} Kelas \texttt{Configuration} dari Hibernate digunakan untuk memuat konfigurasi yang tersimpan dalam file konfigurasi (misalnya, \texttt{hibernate-sqlite.cfg.xml}), kemudian membangun \texttt{SessionFactory} yang diperlukan untuk membuka sesi ke basis data.
+	\item \textbf{Logging:} Menggunakan SLF4J untuk mencatat informasi konfigurasi dan menandakan akhir dari konfigurasi basis data.
+	\item \textbf{Penanganan Error:} Apabila terjadi kesalahan selama inisialisasi, error dicetak ke konsol dan dilempar sebagai \texttt{ExceptionInInitializerError}, sehingga proses inisialisasi gagal secara cepat.
+	\item \textbf{Metode Getter:} Tiga metode statis, yaitu \texttt{getSqliteSessionFactory()}, \texttt{getPostgresSessionFactory()}, dan \texttt{getMysqlSessionFactory()}, disediakan untuk mengakses \texttt{SessionFactory} masing-masing basis data dari bagian lain aplikasi.
+\end{itemize}
+
+
+\subsection{Unit Test}
+Buat unit test untuk menguji koneksi ke semua basis data. Kode berikut merupakan contoh implementasi unit test menggunakan JUnit 5 untuk menguji koneksi ke SQLite, PostgreSQL, dan MySQL:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import org.hibernate.Transaction;
+	import static org.junit.jupiter.api.Assertions.assertNotNull;
+	import org.junit.jupiter.api.Test;
+	import org.slf4j.Logger;
+	import org.slf4j.LoggerFactory;
+	import com.example.model.User;
+	
+	public class MultiDatabaseTest {
+		
+		private static final Logger logger = LoggerFactory.getLogger(MultiDatabaseTest.class);
+		
+		@Test
+		public void testSqliteDatabase() {
+			// Membuka sesi untuk basis data SQLite
+			Session session = MultiDatabaseFactory.getSqliteSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			
+			// Membuat dan menyimpan objek User
+			User user = new User("SQLite Test User");
+			Long generatedId = (Long) session.save(user);
+			
+			transaction.commit();
+			session.close();
+			
+			// Mengambil kembali objek User menggunakan ID yang dihasilkan
+			Session newSession = MultiDatabaseFactory.getSqliteSessionFactory().openSession();
+			User savedUser = newSession.get(User.class, generatedId);
+			newSession.close();
+			
+			logger.info("SQLite - Retrieved User ID: " + savedUser.getId());
+			assertNotNull(savedUser.getId(), "User ID should be generated in SQLite");
+		}
+		
+		@Test
+		public void testPostgresqlDatabase() {
+			// Membuka sesi untuk basis data PostgreSQL
+			Session session = MultiDatabaseFactory.getPostgresSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			
+			// Membuat dan menyimpan objek User
+			User user = new User("PostgreSQL Test User");
+			Long generatedId = (Long) session.save(user);
+			
+			transaction.commit();
+			session.close();
+			
+			// Mengambil kembali objek User menggunakan ID yang dihasilkan
+			Session newSession = MultiDatabaseFactory.getPostgresSessionFactory().openSession();
+			User savedUser = newSession.get(User.class, generatedId);
+			newSession.close();
+			
+			logger.info("PostgreSQL - Retrieved User ID: " + savedUser.getId());
+			assertNotNull(savedUser.getId(), "User ID should be generated in PostgreSQL");
+		}
+		
+		@Test
+		public void testMysqlDatabase() {
+			// Membuka sesi untuk basis data MySQL
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			Transaction transaction = session.beginTransaction();
+			
+			// Membuat dan menyimpan objek User
+			User user = new User("MySQL Test User");
+			Long generatedId = (Long) session.save(user);
+			
+			transaction.commit();
+			session.close();
+			
+			// Mengambil kembali objek User menggunakan ID yang dihasilkan
+			Session newSession = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			User savedUser = newSession.get(User.class, generatedId);
+			newSession.close();
+			
+			logger.info("MySQL - Retrieved User ID: " + savedUser.getId());
+			assertNotNull(savedUser.getId(), "User ID should be generated in MySQL");
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Import dan Setup:} Kode ini mengimpor kelas-kelas yang diperlukan dari Hibernate, JUnit 5, dan SLF4J. Kelas \texttt{MultiDatabaseTest} menggunakan anotasi \texttt{@Test} untuk menandai masing-masing metode pengujian.
+	\item \textbf{Test untuk Setiap Basis Data:} 
+	\begin{itemize}
+		\item Metode \texttt{testSqliteDatabase()} membuka sesi ke basis data SQLite, membuat objek \texttt{User}, menyimpannya, dan kemudian mengambil kembali objek tersebut menggunakan ID yang dihasilkan.
+		\item Metode \texttt{testPostgresqlDatabase()} melakukan proses serupa untuk PostgreSQL.
+		\item Metode \texttt{testMysqlDatabase()} melakukan proses yang sama untuk MySQL.
+	\end{itemize}
+	\item \textbf{Transaksi dan Validasi:} Setiap metode memulai transaksi, menyimpan entitas, dan kemudian melakukan commit transaksi. Setelah itu, sesi ditutup dan objek \texttt{User} diambil kembali untuk memastikan bahwa ID telah berhasil dihasilkan dan disimpan. Validasi dilakukan menggunakan \texttt{assertNotNull()}.
+	\item \textbf{Logging:} Informasi mengenai ID yang diambil kembali dari masing-masing basis data dicatat menggunakan SLF4J.
+\end{itemize}
+
+Setelah unit test dibuat, jalankan perintah berikut untuk menjalankan test:
+
+\begin{lstlisting}[language=bash, style=XmlStyle]
+	mvn clean test
+\end{lstlisting}
+
+
+\section{Operasi-operasi Database}
+
+\section{Create Table}
+
+Hibernate memungkinkan pembuatan tabel secara otomatis berdasarkan definisi entitas. Cukup definisikan entitas dengan anotasi JPA dan atur properti \texttt{hibernate.hbm2ddl.auto} (misalnya ke \texttt{create} atau \texttt{update}) pada konfigurasi Hibernate. Dengan demikian, Hibernate akan menghasilkan tabel sesuai dengan definisi entitas.
+
+\subsection*{Lokasi Properti \texttt{hibernate.hbm2ddl.auto}}
+Properti \texttt{hibernate.hbm2ddl.auto} diletakkan di dalam file konfigurasi Hibernate, misalnya \texttt{hibernate.cfg.xml} atau file konfigurasi khusus (seperti \texttt{hibernate-mysql.cfg.xml}, \texttt{hibernate-postgresql.cfg.xml}, atau \texttt{hibernate-sqlite.cfg.xml}). File-file konfigurasi ini biasanya berada di direktori \texttt{src/main/resources}. Contoh potongan konfigurasi:
+\begin{lstlisting}[style=XmlStyle]
+	<hibernate-configuration>
+	<session-factory>
+	<property name="hibernate.hbm2ddl.auto">create</property>
+	<!-- Mapping entitas -->
+	<mapping class="com.example.model.Siswa"/>
+	</session-factory>
+	</hibernate-configuration>
+\end{lstlisting}
+Nilai \texttt{create} akan menyebabkan Hibernate membuat ulang tabel setiap kali aplikasi dijalankan, sedangkan nilai \texttt{update} akan memperbarui skema tabel tanpa menghapus data yang sudah ada.
+
+\subsection*{Contoh Entitas}
+Berikut adalah contoh singkat entitas \texttt{Siswa} yang akan menghasilkan tabel \texttt{siswa} di basis data:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	
+	@Entity
+	@Table(name = "siswa")
+	public class Siswa {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private int id;
+		
+		private String nama;
+		private int umur;
+		
+		public Siswa() {}
+		
+		public Siswa(String nama, int umur) {
+			this.nama = nama;
+			this.umur = umur;
+		}
+		
+		// Getter dan Setter
+	}
+\end{lstlisting}
+
+Dengan konfigurasi \texttt{hibernate.hbm2ddl.auto} disetel ke \texttt{create}, Hibernate akan secara otomatis membuat tabel \texttt{siswa} di basis data berdasarkan definisi entitas di atas. Dengan cara ini, Hibernate akan menghasilkan perintah SQL yang diperlukan untuk membuat atau memperbarui tabel sesuai dengan definisi entitas.
+
+
+\subsection{Insert}
+
+Untuk melakukan operasi insert (penyisipan data) menggunakan ORM (Hibernate), cukup buat entitas baru, buka sesi, mulai transaksi, simpan entitas, dan commit transaksi. Berikut adalah contoh kode Java untuk melakukan insert data ke dalam basis data, misalnya pada entitas \texttt{User}.
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import org.hibernate.Transaction;
+	import com.example.model.User;
+	
+	public class InsertExample {
+		public static void main(String[] args) {
+			// Membuka sesi Hibernate
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Memulai transaksi
+			Transaction tx = session.beginTransaction();
+			
+			// Membuat objek entitas baru
+			User newUser = new User("John Doe");
+			
+			// Menyimpan entitas ke dalam basis data
+			session.save(newUser);
+			
+			// Commit transaksi untuk menyimpan perubahan
+			tx.commit();
+			
+			// Menutup sesi
+			session.close();
+			
+			System.out.println("Data berhasil disisipkan dengan ID: " + newUser.getId());
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka melalui \texttt{SessionFactory} (di sini menggunakan \texttt{MultiDatabaseFactory}) untuk berinteraksi dengan basis data.
+	\item \textbf{Mulai Transaksi:} Transaksi dimulai dengan \texttt{session.beginTransaction()} agar operasi penyisipan data berjalan secara atomik.
+	\item \textbf{Buat dan Simpan Entitas:} Objek entitas \texttt{User} baru dibuat dan disimpan ke basis data menggunakan metode \texttt{session.save()}.
+	\item \textbf{Commit Transaksi:} Transaksi di-commit untuk memastikan bahwa data yang disisipkan tersimpan secara permanen ke dalam basis data.
+	\item \textbf{Tutup Sesi:} Setelah operasi selesai, sesi ditutup untuk melepaskan sumber daya.
+\end{itemize}
+
+Dengan langkah-langkah tersebut, Hibernate secara otomatis akan menghasilkan perintah SQL yang sesuai untuk melakukan penyisipan data ke dalam tabel yang terkait dengan entitas \texttt{User}.
+
+\subsection{Select}
+
+Untuk mengambil (select) data menggunakan ORM (Hibernate), cukup buka sesi, buat query menggunakan HQL (Hibernate Query Language) atau Criteria API, dan ambil hasilnya. Berikut adalah contoh kode Java untuk mengambil data dari tabel yang terkait dengan entitas \texttt{User}:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import com.example.model.User;
+	import java.util.List;
+	
+	public class SelectExample {
+		public static void main(String[] args) {
+			// Membuka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Membuat query untuk mengambil semua data dari entitas User
+			List<User> users = session.createQuery("FROM User", User.class).list();
+			
+			// Menampilkan data yang diambil
+			for (User user : users) {
+				System.out.println("User ID: " + user.getId() + ", Name: " + user.getName());
+			}
+			
+			// Menutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka melalui \texttt{SessionFactory} untuk berinteraksi dengan basis data.
+	\item \textbf{Membuat Query:} Query HQL dibuat dengan perintah \texttt{session.createQuery("FROM User", User.class)} untuk mengambil semua entitas \texttt{User}.
+	\item \textbf{Mengambil Hasil:} Metode \texttt{list()} mengembalikan hasil query dalam bentuk \texttt{List<User>}.
+	\item \textbf{Iterasi Hasil:} Hasil query diiterasi dan setiap data \texttt{User} ditampilkan.
+	\item \textbf{Tutup Sesi:} Setelah operasi selesai, sesi ditutup untuk melepaskan sumber daya.
+\end{itemize}
+
+Dengan langkah-langkah tersebut, Hibernate secara otomatis akan menerjemahkan query HQL ke dalam perintah SQL yang sesuai untuk mengambil data dari basis data.
+
+\subsection{Select dengan Kondisi Ganda (WHERE Multiple Condition)}
+
+Untuk mengambil data dengan kondisi ganda, gunakan klausa \texttt{WHERE} dalam query HQL dengan parameter yang diikat. Berikut adalah contoh kode Java yang mengambil entitas \texttt{User} berdasarkan dua kondisi, misalnya nama harus sama dengan nilai tertentu dan ID lebih besar dari nilai tertentu.
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import com.example.model.User;
+	import java.util.List;
+	
+	public class SelectMultipleConditionExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory (misalnya menggunakan MySQL)
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Buat query HQL dengan kondisi ganda: 
+			// ambil entitas User dimana nama sama dengan :name dan id lebih besar dari :minId
+			String hql = "from User u where u.name = :name and u.id > :minId";
+			List<User> users = session.createQuery(hql, User.class)
+			.setParameter("name", "John Doe")
+			.setParameter("minId", 5L)
+			.list();
+			
+			// Iterasi dan tampilkan hasil query
+			for (User user : users) {
+				System.out.println("User ID: " + user.getId() + ", Name: " + user.getName());
+			}
+			
+			// Tutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka dari \texttt{SessionFactory} untuk mengakses basis data.
+	\item \textbf{Query HQL:} Query \texttt{"from User u where u.name = :name and u.id > :minId"} digunakan untuk mengambil entitas \texttt{User} yang memenuhi dua kondisi:
+	\begin{itemize}
+		\item \texttt{u.name = :name}: Hanya entitas dengan nama "John Doe" yang akan diambil.
+		\item \texttt{u.id > :minId}: Hanya entitas dengan ID lebih besar dari 5 yang diambil.
+	\end{itemize}
+	\item \textbf{Parameter Binding:} Metode \texttt{setParameter()} digunakan untuk mengikat nilai pada parameter \texttt{:name} dan \texttt{:minId} sehingga query menjadi dinamis dan aman dari SQL Injection.
+	\item \textbf{Iterasi Hasil:} Hasil query dikembalikan sebagai list objek \texttt{User} yang diiterasi untuk menampilkan informasi setiap user.
+	\item \textbf{Tutup Sesi:} Sesi ditutup setelah operasi selesai untuk melepaskan sumber daya.
+\end{itemize}
+
+\subsection{Update}
+
+Untuk melakukan operasi update data menggunakan ORM (Hibernate), buka sesi, mulai transaksi, ambil entitas yang ingin diubah, modifikasi atribut yang diinginkan, kemudian commit transaksi untuk menyimpan perubahan. Berikut adalah contoh kode Java untuk memperbarui data entitas \texttt{User}:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import org.hibernate.Transaction;
+	import com.example.model.User;
+	
+	public class UpdateExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			Transaction tx = session.beginTransaction();
+			
+			// Ambil entitas User dengan ID tertentu (misalnya 1)
+			User user = session.get(User.class, 1L);
+			
+			// Ubah data entitas, misalnya update nama
+			if (user != null) {
+				user.setName("Updated Name");
+			}
+			
+			// Commit transaksi untuk menyimpan perubahan
+			tx.commit();
+			session.close();
+			
+			System.out.println("Data User dengan ID 1 telah diperbarui.");
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka dari \texttt{SessionFactory} untuk berinteraksi dengan basis data.
+	\item \textbf{Mulai Transaksi:} Transaksi dimulai menggunakan \texttt{session.beginTransaction()} untuk memastikan operasi update dilakukan secara atomik.
+	\item \textbf{Ambil Entitas:} Entitas \texttt{User} diambil dengan \texttt{session.get(User.class, 1L)}, di mana \texttt{1L} merupakan ID dari user yang akan diupdate.
+	\item \textbf{Update Atribut:} Setelah entitas diambil, nilai atribut yang diinginkan (misalnya nama) diubah. Hibernate secara otomatis mendeteksi perubahan tersebut.
+	\item \textbf{Commit Transaksi:} Transaksi di-commit untuk menyimpan perubahan ke basis data.
+	\item \textbf{Tutup Sesi:} Sesi ditutup untuk melepaskan sumber daya yang digunakan.
+\end{itemize}
+
+\subsection{Delete}
+
+Untuk melakukan operasi delete (penghapusan data) menggunakan ORM (Hibernate), buka sesi, mulai transaksi, ambil entitas yang akan dihapus, lakukan operasi delete, kemudian commit transaksi untuk menghapus data secara permanen dari basis data. Berikut adalah contoh kode Java untuk menghapus data entitas \texttt{User}:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import org.hibernate.Transaction;
+	import com.example.model.User;
+	
+	public class DeleteExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			Transaction tx = session.beginTransaction();
+			
+			// Ambil entitas User dengan ID tertentu (misalnya 1)
+			User user = session.get(User.class, 1L);
+			
+			// Jika entitas ditemukan, lakukan operasi delete
+			if (user != null) {
+				session.delete(user);
+			}
+			
+			// Commit transaksi untuk menghapus data secara permanen
+			tx.commit();
+			session.close();
+			
+			System.out.println("Data User dengan ID 1 telah dihapus.");
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka menggunakan \texttt{SessionFactory} untuk mengakses basis data.
+	\item \textbf{Mulai Transaksi:} Transaksi dimulai dengan \texttt{session.beginTransaction()} agar operasi delete dilakukan secara atomik.
+	\item \textbf{Ambil Entitas:} Entitas \texttt{User} diambil dari basis data menggunakan \texttt{session.get(User.class, 1L)}, dengan \texttt{1L} sebagai ID user yang ingin dihapus.
+	\item \textbf{Operasi Delete:} Jika entitas ditemukan (tidak null), metode \texttt{session.delete(user)} dipanggil untuk menghapus entitas tersebut.
+	\item \textbf{Commit Transaksi:} Transaksi di-commit untuk menerapkan penghapusan data ke basis data secara permanen.
+	\item \textbf{Tutup Sesi:} Sesi ditutup untuk melepaskan sumber daya yang digunakan.
+\end{itemize}
+
+\subsection{Alter - Update dengan Penambahan Kolom dan Ubah Tipe Data Kolom}
+
+Misalnya, entitas \texttt{Siswa} sebelumnya didefinisikan dengan kolom \texttt{id}, \texttt{nama}, dan \texttt{umur} (tipe \texttt{int}). Kemudian dilakukan perubahan, yaitu:
+\begin{enumerate}
+	\item Penambahan kolom baru \texttt{alamat} dengan tipe \texttt{String}.
+	\item Perubahan tipe data kolom \texttt{umur} dari \texttt{int} menjadi \texttt{double}.
+\end{enumerate}
+
+Berikut adalah contoh kode entitas \texttt{Siswa} setelah dilakukan perubahan:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.Column;
+	
+	@Entity
+	@Table(name = "siswa")
+	public class Siswa {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private int id;
+		
+		// Perubahan: Menambah panjang kolom nama menjadi 100 karakter
+		@Column(length = 100)
+		private String nama;
+		
+		// Perubahan: Ubah tipe data umur dari int ke double
+		private double umur;
+		
+		// Penambahan kolom baru: alamat
+		private String alamat;
+		
+		public Siswa() {}
+		
+		public Siswa(String nama, double umur, String alamat) {
+			this.nama = nama;
+			this.umur = umur;
+			this.alamat = alamat;
+		}
+		
+		// Getter dan Setter
+	}
+\end{lstlisting}
+
+Dengan properti \texttt{hibernate.hbm2ddl.auto} yang disetel ke \texttt{update} dalam file konfigurasi Hibernate, perubahan ini akan dideteksi secara otomatis. Hibernate akan menghasilkan perintah SQL untuk menambahkan kolom \texttt{alamat} ke dalam tabel \texttt{siswa} dan mengubah tipe data kolom \texttt{umur} sesuai definisi entitas yang baru.
+
+
+\subsection{Join (Penggabungan Data Antar Entitas)}
+
+Untuk melakukan operasi join menggunakan Hibernate, pertama-tama definisikan relasi antar entitas. Misalnya, buat dua entitas, \texttt{Siswa} dan \texttt{Kelas}, di mana setiap \texttt{Siswa} memiliki relasi many-to-one ke \texttt{Kelas}. Selanjutnya, gunakan HQL untuk melakukan join antar entitas tersebut.
+
+\subsubsection*{Contoh Entitas Kelas}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.OneToMany;
+	import jakarta.persistence.CascadeType;
+	import java.util.List;
+	
+	@Entity
+	@Table(name = "kelas")
+	public class Kelas {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private int id;
+		
+		private String namaKelas;
+		
+		// Relasi one-to-many dengan Siswa
+		@OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL)
+		private List<Siswa> siswas;
+		
+		public Kelas() {}
+		
+		public Kelas(String namaKelas) {
+			this.namaKelas = namaKelas;
+		}
+		
+		// Getter dan Setter
+		public int getId() {
+			return id;
+		}
+		
+		public void setId(int id) {
+			this.id = id;
+		}
+		
+		public String getNamaKelas() {
+			return namaKelas;
+		}
+		
+		public void setNamaKelas(String namaKelas) {
+			this.namaKelas = namaKelas;
+		}
+		
+		public List<Siswa> getSiswas() {
+			return siswas;
+		}
+		
+		public void setSiswas(List<Siswa> siswas) {
+			this.siswas = siswas;
+		}
+	}
+\end{lstlisting}
+
+\subsubsection*{Contoh Entitas Siswa dengan Relasi ke Kelas}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.ManyToOne;
+	import jakarta.persistence.JoinColumn;
+	
+	@Entity
+	@Table(name = "siswa")
+	public class Siswa {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private int id;
+		
+		private String nama;
+		private int umur;
+		
+		// Relasi many-to-one ke Kelas
+		@ManyToOne
+		@JoinColumn(name = "kelas_id")
+		private Kelas kelas;
+		
+		public Siswa() {}
+		
+		public Siswa(String nama, int umur, Kelas kelas) {
+			this.nama = nama;
+			this.umur = umur;
+			this.kelas = kelas;
+		}
+		
+		// Getter dan Setter
+		public int getId() {
+			return id;
+		}
+		
+		public void setId(int id) {
+			this.id = id;
+		}
+		
+		public String getNama() {
+			return nama;
+		}
+		
+		public void setNama(String nama) {
+			this.nama = nama;
+		}
+		
+		public int getUmur() {
+			return umur;
+		}
+		
+		public void setUmur(int umur) {
+			this.umur = umur;
+		}
+		
+		public Kelas getKelas() {
+			return kelas;
+		}
+		
+		public void setKelas(Kelas kelas) {
+			this.kelas = kelas;
+		}
+	}
+\end{lstlisting}
+
+\subsubsection*{Contoh Kode Join Menggunakan HQL}
+Berikut adalah contoh kode Java untuk melakukan operasi join antara entitas \texttt{Siswa} dan \texttt{Kelas} menggunakan HQL:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import java.util.List;
+	import com.example.model.Siswa;
+	import com.example.model.Kelas;
+	
+	public class JoinExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory (misalnya, menggunakan MySQL)
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Membuat query HQL untuk join antara Siswa dan Kelas
+			String hql = "select s, k from Siswa s join s.kelas k";
+			List<Object[]> result = session.createQuery(hql, Object[].class).list();
+			
+			// Menampilkan hasil join
+			for (Object[] row : result) {
+				Siswa siswa = (Siswa) row[0];
+				Kelas kelas = (Kelas) row[1];
+				System.out.println("Siswa: " + siswa.getNama() + " | Kelas: " + kelas.getNamaKelas());
+			}
+			
+			// Menutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Definisi Entitas:} Entitas \texttt{Siswa} memiliki relasi many-to-one ke entitas \texttt{Kelas} yang didefinisikan menggunakan anotasi \texttt{@ManyToOne} dan \texttt{@JoinColumn}.
+	\item \textbf{Query HQL:} Query HQL \texttt{"select s, k from Siswa s join s.kelas k"} digunakan untuk melakukan join antar entitas \texttt{Siswa} dan \texttt{Kelas}. Hasil query berupa array objek, di mana indeks ke-0 berisi objek \texttt{Siswa} dan indeks ke-1 berisi objek \texttt{Kelas}.
+	\item \textbf{Iterasi Hasil:} Hasil join diiterasi, dan masing-masing data dari entitas \texttt{Siswa} dan \texttt{Kelas} ditampilkan.
+	\item \textbf{Sesi:} Sesi dibuka melalui \texttt{SessionFactory} dan ditutup setelah operasi selesai untuk melepaskan sumber daya.
+\end{itemize}
+
+\subsection{Primary Key dan Foreign Key}
+
+Mapping primary key dan foreign key merupakan konsep dasar dalam ORM untuk menghubungkan entitas dan menjaga integritas referensial antar tabel. Dalam Hibernate, primary key didefinisikan menggunakan anotasi \texttt{@Id} dan \texttt{@GeneratedValue}, sedangkan foreign key dapat didefinisikan melalui relasi seperti \texttt{@ManyToOne} dan \texttt{@OneToMany} yang dilengkapi dengan anotasi \texttt{@JoinColumn}.
+
+Berikut adalah contoh implementasi dua entitas, \texttt{Department} dan \texttt{Employee}, yang menggambarkan penggunaan primary key dan foreign key:
+
+\subsubsection*{Contoh Entitas Department (Primary Key)}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.OneToMany;
+	import java.util.List;
+	
+	@Entity
+	@Table(name = "department")
+	public class Department {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		// Relasi one-to-many: Satu Department memiliki banyak Employee
+		@OneToMany(mappedBy = "department")
+		private List<Employee> employees;
+		
+		public Department() {}
+		
+		public Department(String name) {
+			this.name = name;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public List<Employee> getEmployees() {
+			return employees;
+		}
+		
+		public void setEmployees(List<Employee> employees) {
+			this.employees = employees;
+		}
+	}
+\end{lstlisting}
+
+\subsubsection*{Contoh Entitas Employee (Foreign Key)}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.ManyToOne;
+	import jakarta.persistence.JoinColumn;
+	
+	@Entity
+	@Table(name = "employee")
+	public class Employee {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		// Mapping foreign key: Setiap Employee terkait dengan satu Department
+		@ManyToOne
+		@JoinColumn(name = "department_id")
+		private Department department;
+		
+		public Employee() {}
+		
+		public Employee(String name, Department department) {
+			this.name = name;
+			this.department = department;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public Department getDepartment() {
+			return department;
+		}
+		
+		public void setDepartment(Department department) {
+			this.department = department;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item Pada entitas \texttt{Department}:
+	\begin{itemize}
+		\item \texttt{@Id} dan \texttt{@GeneratedValue} mendefinisikan kolom \texttt{id} sebagai primary key yang nilainya dihasilkan secara otomatis.
+		\item Relasi one-to-many dengan entitas \texttt{Employee} didefinisikan menggunakan anotasi \texttt{@OneToMany} dengan properti \texttt{mappedBy = "department"}, yang berarti bahwa kolom foreign key berada pada entitas \texttt{Employee}.
+	\end{itemize}
+	\item Pada entitas \texttt{Employee}:
+	\begin{itemize}
+		\item \texttt{@Id} dan \texttt{@GeneratedValue} mendefinisikan kolom \texttt{id} sebagai primary key.
+		\item Relasi many-to-one ke entitas \texttt{Department} didefinisikan dengan \texttt{@ManyToOne} dan \texttt{@JoinColumn(name = "department\_id")}. Anotasi \texttt{@JoinColumn} menentukan bahwa kolom \texttt{department\_id} pada tabel \texttt{employee} merupakan foreign key yang mengacu pada primary key di tabel \texttt{department}.
+	\end{itemize}
+\end{itemize}
+
+Dengan konfigurasi ini, Hibernate secara otomatis akan menghasilkan skema basis data yang mencerminkan hubungan antar entitas melalui primary key dan foreign key, sehingga menjaga integritas data antar tabel.
+
+\subsection{One-to-One Relationships}
+
+Pada one-to-one relationship, setiap entitas berpasangan secara eksklusif dengan satu entitas lain. Hibernate mendukung one-to-one relationship dengan menggunakan anotasi seperti \texttt{@OneToOne} dan \texttt{@JoinColumn} untuk menentukan kolom foreign key yang menghubungkan kedua entitas.
+
+Berikut adalah contoh implementasi one-to-one relationship antara entitas \texttt{Employee} dan \texttt{EmployeeDetail}. Dalam contoh ini, setiap \texttt{Employee} memiliki satu \texttt{EmployeeDetail}, dan \texttt{EmployeeDetail} memiliki foreign key yang mengacu ke \texttt{Employee}.
+
+\subsubsection*{Contoh Entitas Employee}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.OneToOne;
+	
+	@Entity
+	@Table(name = "employee")
+	public class Employee {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		// One-to-one relationship, mapped by EmployeeDetail.employee
+		@OneToOne(mappedBy = "employee")
+		private EmployeeDetail employeeDetail;
+		
+		public Employee() {}
+		
+		public Employee(String name) {
+			this.name = name;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public EmployeeDetail getEmployeeDetail() {
+			return employeeDetail;
+		}
+		
+		public void setEmployeeDetail(EmployeeDetail employeeDetail) {
+			this.employeeDetail = employeeDetail;
+		}
+	}
+\end{lstlisting}
+
+\subsubsection*{Contoh Entitas EmployeeDetail}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.OneToOne;
+	import jakarta.persistence.JoinColumn;
+	
+	@Entity
+	@Table(name = "employee_detail")
+	public class EmployeeDetail {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String address;
+		
+		// One-to-one relationship dengan Employee
+		@OneToOne
+		@JoinColumn(name = "employee_id", unique = true)
+		private Employee employee;
+		
+		public EmployeeDetail() {}
+		
+		public EmployeeDetail(String address, Employee employee) {
+			this.address = address;
+			this.employee = employee;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getAddress() {
+			return address;
+		}
+		
+		public void setAddress(String address) {
+			this.address = address;
+		}
+		
+		public Employee getEmployee() {
+			return employee;
+		}
+		
+		public void setEmployee(Employee employee) {
+			this.employee = employee;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item Pada entitas \texttt{Employee}:
+	\begin{itemize}
+		\item Kolom \texttt{id} didefinisikan sebagai primary key dengan anotasi \texttt{@Id} dan \texttt{@GeneratedValue}.
+		\item Relasi one-to-one didefinisikan dengan \texttt{@OneToOne(mappedBy = "employee")}, yang menunjukkan bahwa pemetaan relasi berada pada entitas \texttt{EmployeeDetail}.
+	\end{itemize}
+	\item Pada entitas \texttt{EmployeeDetail}:
+	\begin{itemize}
+		\item Kolom \texttt{id} juga didefinisikan sebagai primary key.
+		\item Anotasi \texttt{@OneToOne} digunakan untuk mendefinisikan relasi dengan \texttt{Employee}.
+		\item Anotasi \texttt{@JoinColumn(name = "employee\_id", unique = true)} menentukan bahwa kolom \texttt{employee\_id} pada tabel \texttt{employee\_detail} berfungsi sebagai foreign key yang mengacu pada \texttt{Employee.id} dan harus bernilai unik.
+	\end{itemize}
+\end{itemize}
+
+Dengan konfigurasi ini, Hibernate akan mengelola hubungan one-to-one antara \texttt{Employee} dan \texttt{EmployeeDetail}, memastikan bahwa setiap entitas \texttt{Employee} terhubung secara eksklusif dengan satu entitas \texttt{EmployeeDetail} melalui foreign key \texttt{employee\_id}.
+
+\subsection{One-to-Many Relationships}
+
+One-to-many relationships mendefinisikan hubungan di mana satu entitas (parent) dapat memiliki banyak entitas (child) yang terkait. Dalam Hibernate, hubungan ini diimplementasikan dengan menggunakan anotasi \texttt{@OneToMany} pada entitas parent dan \texttt{@ManyToOne} pada entitas child.
+
+Contoh berikut menunjukkan implementasi one-to-many relationship antara entitas \texttt{Department} dan \texttt{Employee}, di mana satu department dapat memiliki banyak employee.
+
+\subsubsection*{Contoh Entitas Department (Parent)}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.OneToMany;
+	import java.util.List;
+	
+	@Entity
+	@Table(name = "department")
+	public class Department {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		// One-to-many relationship: Satu Department memiliki banyak Employee
+		@OneToMany(mappedBy = "department")
+		private List<Employee> employees;
+		
+		public Department() {}
+		
+		public Department(String name) {
+			this.name = name;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public List<Employee> getEmployees() {
+			return employees;
+		}
+		
+		public void setEmployees(List<Employee> employees) {
+			this.employees = employees;
+		}
+	}
+\end{lstlisting}
+
+\subsubsection*{Contoh Entitas Employee (Child)}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.ManyToOne;
+	import jakarta.persistence.JoinColumn;
+	
+	@Entity
+	@Table(name = "employee")
+	public class Employee {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		// Many-to-one relationship: Banyak Employee terkait dengan satu Department
+		@ManyToOne
+		@JoinColumn(name = "department_id")
+		private Department department;
+		
+		public Employee() {}
+		
+		public Employee(String name, Department department) {
+			this.name = name;
+			this.department = department;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public Department getDepartment() {
+			return department;
+		}
+		
+		public void setDepartment(Department department) {
+			this.department = department;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item Pada entitas \texttt{Department}:
+	\begin{itemize}
+		\item Anotasi \texttt{@OneToMany(mappedBy = "department")} mendefinisikan bahwa satu department dapat memiliki banyak employee. Parameter \texttt{mappedBy} menunjuk pada properti \texttt{department} di entitas \texttt{Employee} yang mengelola relasi.
+	\end{itemize}
+	\item Pada entitas \texttt{Employee}:
+	\begin{itemize}
+		\item Anotasi \texttt{@ManyToOne} mendefinisikan bahwa banyak employee dapat terkait dengan satu department.
+		\item Anotasi \texttt{@JoinColumn(name = "department\_id")} menentukan bahwa kolom \texttt{department\_id} pada tabel \texttt{employee} berfungsi sebagai foreign key yang mengacu pada primary key di tabel \texttt{department}.
+	\end{itemize}
+\end{itemize}
+
+Dengan konfigurasi ini, Hibernate akan secara otomatis mengelola hubungan one-to-many antara entitas \texttt{Department} dan \texttt{Employee} serta menghasilkan perintah SQL yang sesuai untuk menghubungkan kedua tabel melalui foreign key.
+
+
+\subsection{Many-to-Many Relationships}
+
+Many-to-many relationships mendefinisikan hubungan di mana satu entitas dapat terkait dengan banyak entitas lain, dan sebaliknya. Dalam Hibernate, hubungan many-to-many diimplementasikan dengan menggunakan anotasi \texttt{@ManyToMany} bersama dengan anotasi \texttt{@JoinTable} untuk menentukan tabel penghubung (join table) yang mengelola foreign key dari kedua entitas.
+
+Berikut adalah contoh implementasi many-to-many relationship antara entitas \texttt{Student} dan \texttt{Course}, di mana seorang mahasiswa dapat mengikuti banyak mata kuliah, dan satu mata kuliah dapat diikuti oleh banyak mahasiswa.
+
+\subsubsection*{Contoh Entitas Student}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.ManyToMany;
+	import jakarta.persistence.JoinTable;
+	import jakarta.persistence.JoinColumn;
+	import java.util.Set;
+	
+	@Entity
+	@Table(name = "student")
+	public class Student {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String name;
+		
+		// Many-to-many relationship dengan Course
+		@ManyToMany
+		@JoinTable(
+		name = "student_course",
+		joinColumns = @JoinColumn(name = "student_id"),
+		inverseJoinColumns = @JoinColumn(name = "course_id")
+		)
+		private Set<Course> courses;
+		
+		public Student() {}
+		
+		public Student(String name) {
+			this.name = name;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public void setName(String name) {
+			this.name = name;
+		}
+		
+		public Set<Course> getCourses() {
+			return courses;
+		}
+		
+		public void setCourses(Set<Course> courses) {
+			this.courses = courses;
+		}
+	}
+\end{lstlisting}
+
+\subsubsection*{Contoh Entitas Course}
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example.model;
+	
+	import jakarta.persistence.Entity;
+	import jakarta.persistence.GeneratedValue;
+	import jakarta.persistence.GenerationType;
+	import jakarta.persistence.Id;
+	import jakarta.persistence.Table;
+	import jakarta.persistence.ManyToMany;
+	import java.util.Set;
+	
+	@Entity
+	@Table(name = "course")
+	public class Course {
+		@Id
+		@GeneratedValue(strategy = GenerationType.IDENTITY)
+		private Long id;
+		
+		private String title;
+		
+		// Many-to-many relationship, sudah didefinisikan pada Student
+		@ManyToMany(mappedBy = "courses")
+		private Set<Student> students;
+		
+		public Course() {}
+		
+		public Course(String title) {
+			this.title = title;
+		}
+		
+		// Getter dan Setter
+		public Long getId() {
+			return id;
+		}
+		
+		public void setId(Long id) {
+			this.id = id;
+		}
+		
+		public String getTitle() {
+			return title;
+		}
+		
+		public void setTitle(String title) {
+			this.title = title;
+		}
+		
+		public Set<Student> getStudents() {
+			return students;
+		}
+		
+		public void setStudents(Set<Student> students) {
+			this.students = students;
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Entitas Student:}
+	\begin{itemize}
+		\item Anotasi \texttt{@Entity} dan \texttt{@Table} menandai kelas sebagai entitas yang dipetakan ke tabel \texttt{student}.
+		\item Anotasi \texttt{@ManyToMany} mendefinisikan hubungan many-to-many dengan entitas \texttt{Course}.
+		\item Anotasi \texttt{@JoinTable} menentukan tabel penghubung dengan nama \texttt{student\_course}, di mana kolom \texttt{student\_id} adalah foreign key untuk entitas \texttt{Student} dan kolom \texttt{course\_id} adalah foreign key untuk entitas \texttt{Course}.
+	\end{itemize}
+	\item \textbf{Entitas Course:}
+	\begin{itemize}
+		\item Anotasi \texttt{@Entity} dan \texttt{@Table} menandai kelas sebagai entitas yang dipetakan ke tabel \texttt{course}.
+		\item Anotasi \texttt{@ManyToMany(mappedBy = "courses")} menunjukkan bahwa pemetaan relasi sudah didefinisikan pada entitas \texttt{Student} sehingga Hibernate tidak perlu membuat tabel penghubung tambahan.
+	\end{itemize}
+\end{itemize}
+
+Dengan konfigurasi ini, Hibernate akan mengelola relasi many-to-many antara entitas \texttt{Student} dan \texttt{Course} secara otomatis melalui tabel penghubung \texttt{student\_course}. Tabel tersebut akan memiliki dua kolom foreign key (\texttt{student\_id} dan \texttt{course\_id}) yang menghubungkan data antara tabel \texttt{student} dan \texttt{course}.
+
+
+
+\subsection{Distinct}
+
+Keyword \texttt{distinct} digunakan dalam query HQL untuk menghilangkan duplikasi hasil query. Dengan menggunakan \texttt{distinct}, Hibernate akan memastikan bahwa objek entitas yang dikembalikan adalah unik, meskipun query yang dilakukan menghasilkan duplikasi karena join atau pengambilan data yang kompleks.
+
+Berikut adalah contoh kode Java untuk mengambil data entitas \texttt{User} secara distinct menggunakan Hibernate:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import com.example.model.User;
+	import java.util.List;
+	
+	public class DistinctExample {
+		public static void main(String[] args) {
+			// Membuka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Menggunakan query HQL dengan keyword distinct untuk mengambil entitas User secara unik
+			List<User> distinctUsers = session.createQuery("select distinct u from User u", User.class).list();
+			
+			// Menampilkan hasil query
+			for (User user : distinctUsers) {
+				System.out.println("User ID: " + user.getId() + ", Name: " + user.getName());
+			}
+			
+			// Menutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka melalui \texttt{SessionFactory} untuk melakukan operasi pada basis data.
+	\item \textbf{Query HQL dengan \texttt{distinct}:} Query HQL \texttt{"select distinct u from User u"} memastikan bahwa setiap entitas \texttt{User} yang diambil adalah unik, sehingga menghindari duplikasi pada hasil query.
+	\item \textbf{Iterasi Hasil:} Hasil query berupa list objek \texttt{User} diiterasi dan informasi seperti ID dan nama ditampilkan.
+	\item \textbf{Tutup Sesi:} Setelah operasi selesai, sesi ditutup untuk melepaskan sumber daya.
+\end{itemize}
+
+
+
+\subsection{Group By}
+
+Keyword \texttt{group by} dalam HQL digunakan untuk mengelompokkan data berdasarkan satu atau lebih kolom, biasanya digunakan bersama fungsi agregat seperti \texttt{count()}, \texttt{sum()}, \texttt{avg()}, dll. Dengan demikian, query akan mengembalikan hasil agregasi untuk setiap grup data yang dibentuk.
+
+Berikut adalah contoh kode Java untuk melakukan query \texttt{group by} pada entitas \texttt{User}. Query ini akan mengelompokkan data berdasarkan nama dan menghitung jumlah entitas untuk setiap nama.
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import java.util.List;
+	
+	public class GroupByExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory (misalnya, menggunakan MySQL)
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Membuat query HQL dengan fungsi agregat dan group by
+			String hql = "select u.name, count(u) from User u group by u.name";
+			List<Object[]> results = session.createQuery(hql, Object[].class).list();
+			
+			// Iterasi hasil query untuk menampilkan nama dan jumlah entitas
+			for (Object[] row : results) {
+				String name = (String) row[0];
+				Long count = (Long) row[1];
+				System.out.println("Name: " + name + ", Count: " + count);
+			}
+			
+			// Tutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka melalui \texttt{SessionFactory} untuk mengakses basis data.
+	\item \textbf{Query HQL:} Query \texttt{"select u.name, count(u) from User u group by u.name"} mengelompokkan entitas \texttt{User} berdasarkan kolom \texttt{name} dan menghitung jumlah entitas pada setiap grup.
+	\item \textbf{Hasil Query:} Hasil query dikembalikan sebagai \texttt{List<Object[]>}, di mana setiap elemen array berisi dua nilai: nama pengguna dan jumlah entitas dengan nama tersebut.
+	\item \textbf{Iterasi Hasil:} Hasil diiterasi untuk menampilkan masing-masing nama dan jumlah entitas.
+	\item \textbf{Tutup Sesi:} Sesi ditutup untuk melepaskan sumber daya setelah operasi selesai.
+\end{itemize}
+
+\subsection{Aggregate Functions (Fungsi Agregasi)}
+
+Fungsi agregasi seperti \texttt{avg}, \texttt{sum}, \texttt{min}, dan \texttt{max} digunakan untuk menghitung nilai statistik dari data numerik dalam satu atau beberapa kolom. Pada contoh berikut, digunakan entitas \texttt{Siswa} yang memiliki atribut \texttt{umur} untuk menghitung rata-rata, jumlah total, nilai minimum, dan nilai maksimum umur.
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import com.example.model.Siswa;
+	
+	public class AggregationExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Query HQL dengan fungsi agregat untuk menghitung nilai statistik dari kolom umur
+			Object[] aggregates = session.createQuery(
+			"select avg(s.umur), sum(s.umur), min(s.umur), max(s.umur) from Siswa s", 
+			Object[].class
+			).getSingleResult();
+			
+			// Konversi hasil query ke tipe data yang sesuai
+			Double averageAge = (Double) aggregates[0];
+			Long sumAge = (Long) aggregates[1];
+			Integer minAge = (Integer) aggregates[2];
+			Integer maxAge = (Integer) aggregates[3];
+			
+			// Tampilkan hasil perhitungan
+			System.out.println("Average Age: " + averageAge);
+			System.out.println("Sum of Ages: " + sumAge);
+			System.out.println("Minimum Age: " + minAge);
+			System.out.println("Maximum Age: " + maxAge);
+			
+			// Tutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan Kode:}
+\begin{itemize}
+	\item \textbf{Buka Sesi:} Sesi dibuka dari \texttt{SessionFactory} untuk mengakses basis data.
+	\item \textbf{Query HQL:} Query \texttt{"select avg(s.umur), sum(s.umur), min(s.umur), max(s.umur) from Siswa s"} digunakan untuk menghitung:
+	\begin{itemize}
+		\item Rata-rata umur menggunakan \texttt{avg(s.umur)}.
+		\item Jumlah total umur menggunakan \texttt{sum(s.umur)}.
+		\item Nilai minimum umur menggunakan \texttt{min(s.umur)}.
+		\item Nilai maksimum umur menggunakan \texttt{max(s.umur)}.
+	\end{itemize}
+	\item \textbf{Pengambilan Hasil:} Hasil query dikembalikan sebagai sebuah array objek. Setiap elemen array mewakili hasil fungsi agregat yang bersesuaian.
+	\item \textbf{Casting dan Output:} Hasil dari fungsi agregat dikonversi ke tipe data yang sesuai (misalnya, \texttt{Double}, \texttt{Long}, \texttt{Integer}) dan kemudian ditampilkan ke konsol.
+	\item \textbf{Tutup Sesi:} Setelah operasi selesai, sesi ditutup untuk melepaskan sumber daya.
+\end{itemize}
+
+\subsection{Subquery}
+
+Subquery digunakan dalam HQL untuk mengambil nilai atau kumpulan data dari query lain yang bersarang di dalam query utama. Berikut adalah dua contoh: satu untuk subquery yang menghasilkan nilai tunggal dan satu lagi untuk subquery yang menghasilkan sekumpulan data (tabel).
+
+\subsubsection*{Contoh Subquery (Nilai Tunggal)}
+Misalnya, ambil entitas \texttt{User} dengan \texttt{id} maksimum, yang diambil menggunakan subquery. Subquery ini menghasilkan satu nilai (maksimum \texttt{id}) dan digunakan dalam klausa \texttt{WHERE}.
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import com.example.model.User;
+	
+	public class SubquerySingleValueExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Query HQL dengan subquery yang menghasilkan nilai tunggal (max id)
+			String hql = "from User u where u.id = (select max(u2.id) from User u2)";
+			User user = session.createQuery(hql, User.class).uniqueResult();
+			
+			// Tampilkan hasil
+			System.out.println("User dengan ID maksimum: " + user.getName() + " (ID: " + user.getId() + ")");
+			
+			// Tutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:}
+\begin{itemize}
+	\item Query utama mengambil entitas \texttt{User} dengan kondisi \texttt{u.id = (subquery)}.
+	\item Subquery \texttt{(select max(u2.id) from User u2)} menghasilkan nilai \texttt{id} maksimum dari entitas \texttt{User}.
+	\item Metode \texttt{uniqueResult()} memastikan hanya satu hasil yang dikembalikan.
+\end{itemize}
+
+\subsubsection*{Contoh Subquery (Menghasilkan Tabel)}
+Contoh berikut menunjukkan bagaimana menggunakan subquery untuk menghasilkan sekumpulan data. Misalnya, ambil semua entitas \texttt{User} yang \texttt{id}-nya terdapat dalam hasil subquery, di mana subquery mengambil \texttt{id} dari \texttt{User} dengan nama yang diawali huruf 'J'.
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+	package com.example;
+	
+	import org.hibernate.Session;
+	import com.example.model.User;
+	import java.util.List;
+	
+	public class SubqueryTableExample {
+		public static void main(String[] args) {
+			// Buka sesi dari SessionFactory
+			Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+			
+			// Query HQL dengan subquery yang menghasilkan kumpulan nilai (tabel)
+			String hql = "from User u where u.id in (select u2.id from User u2 where u2.name like 'J%')";
+			List<User> users = session.createQuery(hql, User.class).list();
+			
+			// Iterasi dan tampilkan hasil
+			for (User u : users) {
+				System.out.println("User: " + u.getName() + " (ID: " + u.getId() + ")");
+			}
+			
+			// Tutup sesi
+			session.close();
+		}
+	}
+\end{lstlisting}
+
+\textbf{Penjelasan:}
+\begin{itemize}
+	\item Query utama mengambil entitas \texttt{User} dengan kondisi \texttt{u.id in (subquery)}.
+	\item Subquery \texttt{(select u2.id from User u2 where u2.name like 'J\%')} menghasilkan daftar \texttt{id} dari entitas \texttt{User} yang nama-nya diawali dengan huruf 'J'.
+	\item Metode \texttt{list()} mengembalikan hasil query sebagai list, sehingga memungkinkan iterasi atas seluruh entitas yang memenuhi kondisi.
+\end{itemize}
+

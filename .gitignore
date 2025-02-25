@@ -312,3 +312,7 @@ TSWLatexianTemp*
 
 *.jar
 *.class
+/code/pertemuan_03/orm/target/surefire-reports
+/code/pertemuan_03/orm/target
+/module/MODUL.pdf
+/code/pertemuan_03/orm/*.sqlite
