@@ -15,6 +15,7 @@ Aplikasi enterprise sering membutuhkan dukungan untuk berbagai sistem basis data
 
 
 
+
 \section{Keuntungan dan Kerugian ORM}
 
 \subsection{Keuntungan}
@@ -513,7 +514,7 @@ Setelah unit test dibuat, jalankan perintah berikut untuk menjalankan test:
 
 \section{Operasi-operasi Database}
 
-\section{Create Table}
+\subsection{Create Table}
 
 Hibernate memungkinkan pembuatan tabel secara otomatis berdasarkan definisi entitas. Cukup definisikan entitas dengan anotasi JPA dan atur properti \texttt{hibernate.hbm2ddl.auto} (misalnya ke \texttt{create} atau \texttt{update}) pada konfigurasi Hibernate. Dengan demikian, Hibernate akan menghasilkan tabel sesuai dengan definisi entitas.
 
@@ -1797,4 +1798,5 @@ Contoh berikut menunjukkan bagaimana menggunakan subquery untuk menghasilkan sek
 	\item Subquery \texttt{(select u2.id from User u2 where u2.name like 'J\%')} menghasilkan daftar \texttt{id} dari entitas \texttt{User} yang nama-nya diawali dengan huruf 'J'.
 	\item Metode \texttt{list()} mengembalikan hasil query sebagai list, sehingga memungkinkan iterasi atas seluruh entitas yang memenuhi kondisi.
 \end{itemize}
+
 

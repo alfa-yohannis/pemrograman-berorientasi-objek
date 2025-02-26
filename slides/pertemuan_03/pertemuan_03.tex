@@ -1,0 +1,1945 @@
+\documentclass[aspectratio=169, table]{beamer}
+
+%\usepackage[beamertheme=./praditatheme]{Pradita}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor} % for color
+\usepackage{colortbl} % for table color
+\usepackage{listings}
+
+% Define Java language style for listings
+\lstdefinestyle{JavaStyle}{
+	language=Java,
+	basicstyle=\ttfamily\tiny,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinestyle{sql}{
+	language=sql,
+	keywords={use, insert, into, values, select, from,
+		update, set, delete, create, where, join, left, right, inner, order, by, primary, key},
+	ndkeywords={max, min, varchar, int},
+	ndkeywordstyle=\color{purple}\bfseries,
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinelanguage{bash} {
+	keywords={},
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={iex},
+	ndkeywordstyle=\color{purple}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	tabsize=2,
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{purple}\ttfamily,
+	showstringspaces=false
+}
+
+\lstdefinestyle{XmlStyle} {
+	language=xml,
+	keywords={},
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={iex},
+	ndkeywordstyle=\color{purple}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	tabsize=2,
+	comment=[l]{\#},
+	morecomment=[s]{<!--}{-->},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{purple}\ttfamily,
+	showstringspaces=false
+}
+
+\usetheme{Pradita}
+
+\subtitle{IF220303 - Object-oriented Programming}
+
+\title{\Huge Object-relational\\Mapping}
+\date[Serial]{\scriptsize {PRU/SPMI/FR-BM-18/0222}}
+\author[Pradita]{\small {\textbf{Alfa Yohannis}}}
+
+\begin{document}
+	
+	\frame{\titlepage}
+	
+\begin{frame}[fragile]
+	\frametitle{Contents}
+	
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\tableofcontents[sections={1-2}]
+		
+		\column{0.5\textwidth}
+		\tableofcontents[sections={3-4}]
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Contents}
+	
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\tableofcontents[sections={5-6}]
+		
+		\column{0.5\textwidth}
+		\tableofcontents[sections={7-8}]
+	\end{columns}
+\end{frame}
+
+\section{Introduction}
+\begin{frame}{Introduction}
+	\vspace{20pt}
+	\textbf{ORM (Object-Relational Mapping)}
+	\begin{itemize}
+		\item Bridges the object paradigm in Java with relational databases.
+		\item Automatically maps Java classes to database tables.
+		\item Reduces the need to write complex SQL queries.
+	\end{itemize}
+	
+	\textbf{Hibernate}
+	\begin{itemize}
+		\item A leading ORM framework in the Java ecosystem.
+		\item Simplifies database interaction through abstraction.
+		\item Supports connection management, transactions, and caching.
+	\end{itemize}
+	
+	\textbf{Database Support}
+	\begin{itemize}
+		\item MySQL, PostgreSQL, SQLite, etc.
+	\end{itemize}
+\end{frame}
+
+\section{Advantages and Disadvantages of ORM}
+
+\subsection{Advantages}
+\begin{frame}{Advantages of ORM}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Reduced Complexity:} ORM eliminates the need to write explicit SQL queries by providing an abstraction layer that connects Java classes to database tables.
+		\item \textbf{Increased Productivity:} Using ORM allows developers to focus on business logic, enabling faster and more efficient application development.
+		\item \textbf{Database Abstraction:} ORM supports multiple database systems through flexible configuration, minimizing the need for major code changes.
+		\item \textbf{Transaction and Caching Management:} ORM frameworks typically include transaction management and caching mechanisms, enhancing performance and data consistency.
+		\item \textbf{Integration with Other Frameworks:} ORM integrates easily with frameworks like Spring, supporting complex enterprise application development.
+	\end{itemize}
+\end{frame}
+
+\subsection{Disadvantages}
+\begin{frame}{Disadvantages of ORM}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Performance Overhead:} The abstraction provided by ORM can introduce overhead compared to manually written and optimized SQL queries.
+		\item \textbf{Configuration Complexity:} Setting up and configuring ORM can be complex, especially for applications with large database schemas or intricate table relationships.
+		\item \textbf{Learning Curve:} A deep understanding of ORM concepts and configuration requires time and effort, particularly for inexperienced developers.
+		\item \textbf{Excessive Abstraction:} Overuse of ORM may reduce flexibility in query optimization or direct database management.
+		\item \textbf{Compatibility Issues:} Some database-specific features may not be optimally supported by ORM, sometimes requiring native queries or additional adjustments.
+	\end{itemize}
+\end{frame}
+
+\section{Tutorial}
+
+\subsection{Create an MVN Project}
+\begin{frame}[fragile]{Create an MVN Project}
+	\vspace{20pt}
+	Run the following command to create a Maven project:
+	\begin{lstlisting}[language=bash]
+		mvn archetype:generate -DgroupId=com.example -DartifactId=orm \
+		-DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false
+	\end{lstlisting}
+	
+	This command creates a basic Maven project:
+	\begin{itemize}
+		\item \textbf{Group ID:} \texttt{com.example} (represent the name of organization/domain).
+		\item \textbf{Artifact ID:} \texttt{orm} (project name).
+		\item \textbf{Archetype:} \texttt{maven-archetype-quickstart} (Java template).
+		\item \textbf{Non-interactive mode:} Skips user input.
+	\end{itemize}
+	
+	The project is ready for Hibernate configuration and further development.
+\end{frame}
+
+\subsection{Maven Configuration (pom.xml)}
+
+\begin{frame}[fragile]{Maven Configuration (pom.xml)}
+	\vspace{20pt}
+	Edit the \texttt{pom.xml} file to add the required dependencies.
+	
+	\begin{lstlisting}[style=XmlStyle]
+		<dependencies>
+		<!-- Hibernate Core for ORM -->
+		<dependency>
+		<groupId>org.hibernate</groupId>
+		<artifactId>hibernate-core</artifactId>
+		<version>6.6.9.Final</version>
+		</dependency>
+		
+		<!-- JPA API for JPA annotations -->
+		<dependency>
+		<groupId>jakarta.persistence</groupId>
+		<artifactId>jakarta.persistence-api</artifactId>
+		<version>3.1.0</version>
+		</dependency>
+
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Database Drivers (SQLite \& PostgreSQL)}
+	\vspace{20pt}
+	Add the necessary database drivers:
+	
+	\begin{lstlisting}[style=XmlStyle]
+
+		<!-- SQLite JDBC Driver -->
+		<dependency>
+		<groupId>org.xerial</groupId>
+		<artifactId>sqlite-jdbc</artifactId>
+		<version>3.36.0.3</version>
+		</dependency>
+		
+		<!-- PostgreSQL JDBC Driver -->
+		<dependency>
+		<groupId>org.postgresql</groupId>
+		<artifactId>postgresql</artifactId>
+		<version>42.3.1</version>
+		</dependency>
+
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Database Drivers (MySQL \& Logging)}
+	\vspace{20pt}
+	Add MySQL driver and logging dependencies:
+	
+	\begin{lstlisting}[style=XmlStyle]
+
+		<!-- MySQL JDBC Driver -->
+		<dependency>
+		<groupId>mysql</groupId>
+		<artifactId>mysql-connector-java</artifactId>
+		<version>8.0.27</version>
+		</dependency>
+		
+		<!-- SLF4J Simple Binding for Logging -->
+		<dependency>
+		<groupId>org.slf4j</groupId>
+		<artifactId>slf4j-simple</artifactId>
+		<version>1.7.32</version>
+		</dependency>
+
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{JUnit Dependencies for Testing}
+	\vspace{20pt}
+	Add JUnit dependencies for unit testing:
+	
+	\begin{lstlisting}[style=XmlStyle]
+
+		<!-- JUnit 5 API -->
+		<dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-api</artifactId>
+		<version>5.9.2</version>
+		<scope>test</scope>
+		</dependency>
+		
+		<!-- JUnit 5 Engine -->
+		<dependency>
+		<groupId>org.junit.jupiter</groupId>
+		<artifactId>junit-jupiter-engine</artifactId>
+		<version>5.9.2</version>
+		<scope>test</scope>
+		</dependency>
+		</dependencies>
+	\end{lstlisting}
+\end{frame}
+
+
+\subsection{Hibernate Configuration}
+
+\begin{frame}{Hibernate Configuration}
+	\vspace{20pt}
+	Create a Hibernate configuration file for each database in:
+	\begin{itemize}
+		\item \texttt{src/main/resources/hibernate-mysql.cfg.xml}
+		\item \texttt{src/main/resources/hibernate-postgresql.cfg.xml}
+		\item \texttt{src/main/resources/hibernate-sqlite.cfg.xml}
+	\end{itemize}
+	
+	Ensure that the database is created before using Hibernate.
+\end{frame}
+
+\begin{frame}[fragile]{Creating the Database}
+	\vspace{20pt}
+	Before using Hibernate, ensure the database/schema is created using either a command-line tool or a graphical interface.
+	
+	\textbf{MySQL:}  
+	Create a database named \texttt{orm} using:
+	\begin{lstlisting}[language=bash]
+		mysql -u alfa -p
+		CREATE DATABASE orm;
+	\end{lstlisting}
+	
+	\textbf{PostgreSQL:}  
+	Create a database named \texttt{orm} using:
+	\begin{lstlisting}[language=bash]
+		psql -U postgres
+		CREATE DATABASE orm;
+	\end{lstlisting}
+	
+	\textbf{SQLite:}  
+	The database file (e.g., \texttt{orm.sqlite}) is created automatically if it does not exist, so no schema creation is required.
+\end{frame}
+
+\begin{frame}[fragile]{MySQL Configuration}
+	\vspace{20pt}
+	\begin{lstlisting}[style=XmlStyle]
+		<?xml version="1.0" encoding="utf-8"?>
+		<!DOCTYPE hibernate-configuration PUBLIC 
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+		<hibernate-configuration><session-factory>
+		<property name="connection.driver_class">com.mysql.cj.jdbc.Driver</property>
+		<property name="connection.url">
+		jdbc:mysql://localhost:3306/orm?useSSL=false&amp;serverTimezone=UTC
+		</property>
+		<property name="connection.username">alfa</property>
+		<property name="connection.password">1234</property>
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		
+		<mapping class="com.example.model.User"/></session-factory>
+		</hibernate-configuration>
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{PostgreSQL Configuration}
+	\vspace{20pt}
+	\begin{lstlisting}[style=XmlStyle]
+		<?xml version="1.0" encoding="utf-8"?>
+		<!DOCTYPE hibernate-configuration PUBLIC 
+		"-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+		<hibernate-configuration><session-factory>
+		<property name="connection.driver_class">org.postgresql.Driver</property>
+		<property name="connection.url">jdbc:postgresql://localhost:5432/orm</property>
+		<property name="connection.username">postgres</property>
+		<property name="connection.password">1234</property>
+		<property name="dialect">org.hibernate.dialect.PostgreSQLDialect</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		
+		<mapping class="com.example.model.User"/></session-factory>
+		</hibernate-configuration>
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{SQLite Configuration}
+	\vspace{20pt}
+	\begin{lstlisting}[style=XmlStyle]
+		<?xml version="1.0" encoding="utf-8"?>
+		<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+		"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+		<hibernate-configuration><session-factory>
+		<property name="connection.driver_class">org.sqlite.JDBC</property>
+		<property name="connection.url">jdbc:sqlite:orm.sqlite</property>
+		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.hbm2ddl.auto">update</property>
+		<property name="dialect">org.hibernate.community.dialect.SQLiteDialect</property>
+		
+		<mapping class="com.example.model.User"/></session-factory>
+		</hibernate-configuration>
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Model}
+
+\begin{frame}[fragile]{User Entity Code}
+	\vspace{20pt}
+	
+	
+	\begin{columns}
+		\column{0.49\textwidth}
+		Create the \texttt{User} entity in the file:
+		\begin{itemize}
+			\item \texttt{src/main/java/com/example/\-model/User.java}
+		\end{itemize}
+		\begin{lstlisting}[language=Java, style=JavaStyle]
+			package com.example.model;
+			
+			import jakarta.persistence.Entity;
+			import jakarta.persistence.GeneratedValue;
+			import jakarta.persistence.GenerationType;
+			import jakarta.persistence.Id;
+			import jakarta.persistence.Table;
+			
+			@Entity
+			@Table(name = "users")
+			public class User {
+				@Id
+				@GeneratedValue(strategy = GenerationType.IDENTITY)
+				private Long id;
+				
+				private String name;
+				
+			\end{lstlisting}
+			
+			\column{0.49\textwidth}
+			\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=17]
+				public User() {}
+				
+				public User(String name) {
+					this.name = name;
+				}
+
+				// Getters and setters
+				public Long getId() {
+					return id;
+				}
+				
+				public void setId(Long id) {
+					this.id = id;
+				}
+				
+				public String getName() {
+					return name;
+				}
+				
+				public void setName(String name) {
+					this.name = name;
+				}
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+\subsection{Factory}
+
+\begin{frame}[fragile]{MultiDatabaseFactory (Part 1)}
+	\vspace{20pt}
+	Create the \texttt{MultiDatabaseFactory} class in:
+	\begin{itemize}
+		\item \texttt{src/main/java/com/example/MultiDatabaseFactory.java}
+	\end{itemize}
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		
+		import org.hibernate.SessionFactory;
+		import org.hibernate.cfg.Configuration;
+		import org.slf4j.Logger;
+		import org.slf4j.LoggerFactory;
+		
+		public class MultiDatabaseFactory {
+			
+			private static final Logger logger = 
+			LoggerFactory.getLogger(MultiDatabaseFactory.class);
+			
+			private static final SessionFactory sqliteSessionFactory;
+			private static final SessionFactory postgresSessionFactory;
+			private static final SessionFactory mysqlSessionFactory;
+		\end{lstlisting}
+
+		\begin{itemize}
+			\item \textbf{Initializes} \texttt{SessionFactory} instances for \textbf{SQLite, PostgreSQL, and MySQL}.
+			\item \textbf{Uses SLF4J} for logging configuration details.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]{MultiDatabaseFactory (Part 2)}
+		\vspace{20pt}
+		\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=15]
+			static {
+				try {
+					String sqliteConfigFile = System.getProperty(
+					"hibernate.sqlite.config", "hibernate-sqlite.cfg.xml");
+					String postgresConfigFile = System.getProperty(
+					"hibernate.postgresql.config", "hibernate-postgresql.cfg.xml");
+					String mysqlConfigFile = System.getProperty(
+					"hibernate.mysql.config", "hibernate-mysql.cfg.xml");
+					
+					System.out.println("Using SQLite config: " + sqliteConfigFile);
+					System.out.println("Using PostgreSQL config: " + postgresConfigFile);
+					System.out.println("Using MySQL config: " + mysqlConfigFile);
+				\end{lstlisting}
+
+				\begin{itemize}
+					\item \textbf{Retrieves configuration file paths} via \texttt{System.getProperty()}.
+					\item \textbf{Prints configuration paths} to the console for debugging.
+				\end{itemize}
+			\end{frame}
+			
+			\begin{frame}[fragile]{MultiDatabaseFactory (Part 3)}
+				\vspace{20pt}
+				\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=25]
+					postgresSessionFactory = new Configuration()
+					.configure(postgresConfigFile)
+					.buildSessionFactory();
+					
+					mysqlSessionFactory = new Configuration()
+					.configure(mysqlConfigFile)
+					.buildSessionFactory();
+					
+					sqliteSessionFactory = new Configuration()
+					.configure(sqliteConfigFile)
+					.buildSessionFactory();
+					
+					logger.info("End of database configuration");
+				} catch (Throwable ex) {
+					System.err.println("Initial SessionFactory creation failed: " + ex);
+					throw new ExceptionInInitializerError(ex);
+				}
+			}
+		\end{lstlisting}
+
+		\begin{itemize}
+			\item \textbf{Builds a separate} \texttt{SessionFactory} \textbf{for each database}.
+			\item \textbf{Logs configuration completion}.
+			\item \textbf{Throws} \texttt{ExceptionInInitializerError} \textbf{if an error occurs}.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]{MultiDatabaseFactory (Part 4)}
+		\vspace{20pt}
+		\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=40]
+			public static SessionFactory getSqliteSessionFactory() {
+				return sqliteSessionFactory;
+			}
+			
+			public static SessionFactory getPostgresSessionFactory() {
+				return postgresSessionFactory;
+			}
+			
+			public static SessionFactory getMysqlSessionFactory() {
+				return mysqlSessionFactory;
+			}
+		}
+	\end{lstlisting}
+
+	\begin{itemize}
+		\item \textbf{Provides getter methods} for accessing \texttt{SessionFactory} instances.
+		\item \textbf{Allows database sessions} to be retrieved from other parts of the application.
+	\end{itemize}
+\end{frame}
+
+\subsection{Unit Test}
+
+\begin{frame}[fragile]{Unit Test Setup}
+	\vspace{20pt}
+	Create a unit test to verify the connections of the 3 databases. \textbf{Write File:}  
+	\begin{itemize}
+		\item \texttt{src/main/java/com/example/MultiDatabaseTest.java}
+	\end{itemize}
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		
+		import org.hibernate.Session;
+		import org.hibernate.Transaction;
+		import static org.junit.jupiter.api.Assertions.assertNotNull;
+		import org.junit.jupiter.api.Test;
+		import org.slf4j.Logger;
+		import org.slf4j.LoggerFactory;
+		import com.example.model.User;
+		
+		public class MultiDatabaseTest {
+			private static final Logger logger = 
+			LoggerFactory.getLogger(MultiDatabaseTest.class);
+		\end{lstlisting}
+		
+		\begin{itemize}
+			\item Imports necessary classes from Hibernate, JUnit 5, and SLF4J.
+			\item Defines \texttt{MultiDatabaseTest}, which contains unit tests for database connections.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]{SQLite Database Test}
+		\vspace{20pt}
+		\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=15]
+			@Test
+			public void testSqliteDatabase() {
+				Session session = MultiDatabaseFactory
+				.getSqliteSessionFactory().openSession();
+				Transaction transaction = session.beginTransaction();
+				
+				User user = new User("SQLite Test User");
+				Long generatedId = (Long) session.save(user);
+				transaction.commit(); session.close();
+				
+				Session newSession = MultiDatabaseFactory
+				.getSqliteSessionFactory().openSession();
+				User savedUser = newSession.get(User.class, generatedId);
+				newSession.close();
+				
+				logger.info("SQLite - Retrieved User ID: " + savedUser.getId());
+				assertNotNull(savedUser.getId(), "User ID should be generated in SQLite");
+			}
+		\end{lstlisting}
+		
+		\begin{itemize}
+			\item Opens a session for SQLite, and creates and saves a user object.
+			\item Retrieves and validates the saved user using \texttt{assertNotNull()}.
+			\item Logs the retrieved user ID.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]{PostgreSQL Database Test}
+		\vspace{20pt}
+		\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=40]
+			@Test
+			public void testPostgresqlDatabase() {
+				Session session = MultiDatabaseFactory
+				.getPostgresSessionFactory().openSession();
+				Transaction transaction = session.beginTransaction();
+				
+				User user = new User("PostgreSQL Test User");
+				Long generatedId = (Long) session.save(user);
+				transaction.commit(); session.close();
+				
+				Session newSession = MultiDatabaseFactory
+				.getPostgresSessionFactory().openSession();
+				User savedUser = newSession.get(User.class, generatedId);
+				newSession.close();
+				
+				logger.info("PostgreSQL - Retrieved User ID: " + savedUser.getId());
+				assertNotNull(savedUser.getId(), 
+				"User ID should be generated in PostgreSQL");
+			}
+		\end{lstlisting}
+		
+		\begin{itemize}
+			\item Opens a session for PostgreSQL and creates and saves a user object.
+			\item Retrieves and validates the saved user and logs the retrieved user ID.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]{MySQL Database Test}
+		\vspace{20pt}
+		\begin{lstlisting}[language=Java, style=JavaStyle, firstnumber=65]
+			@Test
+			public void testMysqlDatabase() {
+				Session session = MultiDatabaseFactory
+				.getMysqlSessionFactory().openSession();
+				Transaction transaction = session.beginTransaction();
+				
+				User user = new User("MySQL Test User");
+				Long generatedId = (Long) session.save(user);
+				transaction.commit(); session.close();
+				
+				Session newSession = MultiDatabaseFactory
+				.getMysqlSessionFactory().openSession();
+				User savedUser = newSession.get(User.class, generatedId);
+				newSession.close();
+				
+				logger.info("MySQL - Retrieved User ID: " + savedUser.getId());
+				assertNotNull(savedUser.getId(), 
+				"User ID should be generated in MySQL");
+			}
+		\end{lstlisting}
+		
+		\begin{itemize}
+			\item Opens a session for MySQL, creates and saves a user object.
+			\item Retrieves and validates the saved user, and logs the retrieved user ID.
+		\end{itemize}
+	\end{frame}
+	
+	\begin{frame}[fragile]{Running the Unit Test}
+		Once the unit tests are created, run the following command to execute them:
+		
+		\begin{lstlisting}[language=bash, style=XmlStyle]
+			mvn clean test
+		\end{lstlisting}
+		
+		\begin{itemize}
+			\item Runs all JUnit tests in the project.
+			\item Ensures database connections are working.
+			\item Validates entity persistence and retrieval.
+		\end{itemize}
+	\end{frame}
+
+
+\section{Database Operations}
+
+\subsection{Create Table}
+
+\begin{frame}{Automatic Table Creation in Hibernate}
+\vspace{20pt}
+Hibernate allows automatic table creation based on entity definitions.
+Simply define an entity with JPA annotations and set the \texttt{hibernate.hbm2ddl.auto} property (e.g., \texttt{create} or \texttt{update}) in the Hibernate configuration.
+Hibernate will generate the corresponding database tables automatically.
+\end{frame}
+
+\begin{frame}[fragile]{Location of \texttt{hibernate.hbm2ddl.auto} Property}
+\vspace{20pt}
+The \texttt{hibernate.hbm2ddl.auto} property is specified in Hibernate configuration files such as:
+\begin{itemize}
+\item \texttt{hibernate.cfg.xml}
+\item \texttt{hibernate-mysql.cfg.xml}
+\item \texttt{hibernate-postgresql.cfg.xml}
+\item \texttt{hibernate-sqlite.cfg.xml}
+\end{itemize}
+
+These configuration files are typically located in the \texttt{src/main/resources} directory.
+
+Example configuration snippet:
+\begin{lstlisting}[style=XmlStyle]
+<hibernate-configuration>
+<session-factory>
+<property name="hibernate.hbm2ddl.auto">create</property>
+<!-- Entity Mapping -->
+<mapping class="com.example.model.Siswa"/>
+</session-factory>
+</hibernate-configuration>
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Effects of \texttt{hibernate.hbm2ddl.auto} Values}
+\vspace{20pt}
+The value of \texttt{hibernate.hbm2ddl.auto} determines how Hibernate manages database schema creation:
+\begin{itemize}
+\item \texttt{create} – Drops and recreates tables each time the application starts.
+\item \texttt{update} – Modifies the schema without removing existing data.
+\item \texttt{validate} – Ensures schema consistency but does not modify it.
+\item \texttt{none} – Disables automatic schema management.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example Entity: \texttt{Siswa}}
+\vspace{20pt}
+The following \texttt{Siswa} entity will generate a \texttt{siswa} table in the database:
+
+\begin{lstlisting}[language=Java, style=JavaStyle]
+package com.example.model;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "siswa")
+public class Siswa {
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+private int id;
+
+private String nama;
+private int umur;
+
+public Siswa() {}
+
+public Siswa(String nama, int umur) {
+this.nama = nama;
+this.umur = umur;
+}
+\end{lstlisting}
+\end{frame}
+
+
+\section{Database Operations}
+
+\subsection{Create Table}
+
+\section{Database Operations}
+
+\subsection{Create Table}
+
+\begin{frame}{Automatic Table Creation in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate allows automatic table creation based on entity definitions.
+		\item Define an entity with JPA annotations.
+		\item Set the \texttt{hibernate.hbm2ddl.auto} property (e.g., \texttt{create} or \texttt{update}) in the Hibernate configuration.
+		\item Hibernate will generate the corresponding database tables automatically.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{\texttt{hibernate.hbm2ddl.auto} Property}
+	\vspace{20pt}
+	\begin{itemize}
+		\item The \texttt{hibernate.hbm2ddl.auto} property is specified in Hibernate configuration files such as \texttt{hibernate.cfg.xml}
+		\item These configuration files are typically located in the \texttt{src/main/resources} directory.
+		\item Example configuration snippet:
+	\end{itemize}
+	
+	\begin{lstlisting}[style=XmlStyle]
+		<hibernate-configuration>
+		<session-factory>
+		<property name="hibernate.hbm2ddl.auto">create</property>
+		<!-- Entity Mapping -->
+		<mapping class="com.example.model.Siswa"/>
+		</session-factory>
+		</hibernate-configuration>
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}{Effects of \texttt{hibernate.hbm2ddl.auto} Values}
+	\vspace{20pt}
+	The value of \texttt{hibernate.hbm2ddl.auto} determines how Hibernate manages database schema creation:
+	\begin{itemize}
+		\item \texttt{create} – Drops and recreates tables each time the application starts.
+		\item \texttt{update} – Modifies the schema without removing existing data.
+		\item \texttt{validate} – Ensures schema consistency but does not modify it.
+		\item \texttt{none} – Disables automatic schema management.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Example Entity: \texttt{Siswa}}
+	\vspace{20pt}
+	The following \texttt{Siswa} entity will generate a \texttt{siswa} table in the database:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		
+		@Entity
+		@Table(name = "siswa")
+		public class Siswa {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private int id;
+			
+			private String nama;
+			private int umur;
+			
+			public Siswa() {}
+			
+			public Siswa(String nama, int umur) {
+				this.nama = nama;
+				this.umur = umur;
+			}
+		\end{lstlisting}
+	\end{frame}
+	
+	\begin{frame}{Automatic Table Generation}
+		\vspace{20pt}
+		With \texttt{hibernate.hbm2ddl.auto} set to \texttt{create}, Hibernate automatically generates the \texttt{siswa} table in the database based on the entity definition.
+		
+		Hibernate executes SQL commands internally to create or modify the table structure as required.
+	\end{frame}
+
+
+\subsection{Insert}
+
+\begin{frame}{Insert Operation in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Inserting data using Hibernate requires creating a new entity, opening a session, starting a transaction, saving the entity, and committing the transaction.
+		\item Hibernate automatically generates the necessary SQL statements for inserting data into the database.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Insert Operation}
+	\vspace{20pt}
+	Below is a Java example for inserting data into the database using Hibernate:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import org.hibernate.Transaction;
+		import com.example.model.User;
+		
+		public class InsertExample {
+			public static void main(String[] args) {
+				// Open Hibernate session
+				Session session = MultiDatabaseFactory
+				.getMysqlSessionFactory().openSession();
+				// Start transaction
+				Transaction tx = session.beginTransaction();
+				// Create new entity object
+				User newUser = new User("John Doe");
+				// Save entity to the database
+				session.save(newUser);
+				// Commit transaction
+				tx.commit();
+				// Close session
+				session.close();
+				System.out.println("Data inserted with ID: " + newUser.getId());
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Insert Operation}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Open Session:} A session is opened through \texttt{SessionFactory} (using \texttt{MultiDatabaseFactory}) to interact with the database.
+		\item \textbf{Start Transaction:} The transaction starts using \texttt{session.beginTransaction()} to ensure atomic data insertion.
+		\item \textbf{Create and Save Entity:} A new \texttt{User} entity object is created and saved to the database using \texttt{session.save()}.
+		\item \textbf{Commit Transaction:} The transaction is committed to permanently save the inserted data.
+		\item \textbf{Close Session:} The session is closed after the operation to release resources.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How Hibernate Handles Insert}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate automatically generates SQL statements to insert the entity into the corresponding database table.
+		\item The entity's primary key (\texttt{ID}) is generated based on the strategy defined in the entity class.
+		\item The insertion follows ACID properties, ensuring consistency and atomicity within a transaction.
+	\end{itemize}
+\end{frame}
+
+\subsection{Update}
+
+\begin{frame}{Update Operation in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Updating data in Hibernate involves opening a session, starting a transaction, retrieving an entity, modifying attributes, and committing the transaction.
+		\item Hibernate automatically detects changes and generates the corresponding SQL \texttt{UPDATE} statement.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Update Operation}
+	\vspace{20pt}
+	Below is a Java example for updating an entity in the database:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import org.hibernate.Transaction;
+		import com.example.model.User;
+		
+		public class UpdateExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				Transaction tx = session.beginTransaction();
+				User user = session.get(User.class, 1L);
+				if (user != null) {
+					user.setName("Updated Name");
+				}
+				tx.commit();
+				session.close();
+				System.out.println("User data with ID 1 has been updated.");
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Update Operation}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Open Session:} The session is opened via \texttt{SessionFactory} to interact with the database.
+		\item \textbf{Start Transaction:} A transaction is started using \texttt{session.beginTransaction()} to ensure atomicity.
+		\item \textbf{Retrieve Entity:} The \texttt{User} entity is fetched using \texttt{session.get(User.class, 1L)}, where \texttt{1L} is the ID of the record to be updated.
+		\item \textbf{Modify Attribute:} If the entity exists, the attribute (e.g., name) is updated. Hibernate automatically tracks and applies the changes.
+		\item \textbf{Commit Transaction:} The transaction is committed to persist the update in the database.
+		\item \textbf{Close Session:} The session is closed to release resources.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How Hibernate Handles Update}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate detects entity modifications and generates the necessary SQL \texttt{UPDATE} statement.
+		\item The update is executed only if a change is detected in the entity.
+		\item Transactions ensure that the update operation maintains consistency and integrity.
+	\end{itemize}
+\end{frame}
+
+\subsection{Delete}
+
+\begin{frame}{Delete Operation in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Deleting data in Hibernate involves opening a session, starting a transaction, retrieving an entity, performing a delete operation, and committing the transaction.
+		\item Hibernate automatically generates the necessary SQL \texttt{DELETE} statement.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Delete Operation}
+	\vspace{20pt}
+	Below is a Java example for deleting an entity from the database using Hibernate:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import org.hibernate.Transaction;
+		import com.example.model.User;
+		
+		public class DeleteExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				Transaction tx = session.beginTransaction();
+				User user = session.get(User.class, 1L);
+				if (user != null) {
+					session.delete(user);
+				}
+				tx.commit();
+				session.close();
+				System.out.println("User data with ID 1 has been deleted.");
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Delete Operation}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Open Session:} The session is opened via \texttt{SessionFactory} to interact with the database.
+		\item \textbf{Start Transaction:} A transaction is started using \texttt{session.beginTransaction()} to ensure atomicity.
+		\item \textbf{Retrieve Entity:} The \texttt{User} entity is fetched using \texttt{session.get(User.class, 1L)}, where \texttt{1L} is the ID of the record to be deleted.
+		\item \textbf{Perform Delete:} If the entity is found (not null), the \texttt{session.delete(user)} method is called to remove it from the database.
+		\item \textbf{Commit Transaction:} The transaction is committed to persist the deletion permanently.
+		\item \textbf{Close Session:} The session is closed to release resources.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How Hibernate Handles Delete}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate generates the appropriate SQL \texttt{DELETE} statement to remove the entity from the database.
+		\item The deletion is permanent once the transaction is committed.
+		\item Transactions ensure data consistency and maintain ACID properties.
+	\end{itemize}
+\end{frame}
+
+\subsection{Alter - Update with Column Addition and Data Type Change}
+
+\begin{frame}{Schema Modification in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item The \texttt{Siswa} entity initially contained columns: \texttt{id}, \texttt{nama}, and \texttt{umur} (\texttt{int}).
+		\item Schema changes include:
+		\begin{enumerate}
+			\item Adding a new column \texttt{alamat} with type \texttt{String}.
+			\item Changing the data type of \texttt{umur} from \texttt{int} to \texttt{double}.
+		\end{enumerate}
+		\item Hibernate can automatically detect and apply these changes when \texttt{hibernate.hbm2ddl.auto} is set to \texttt{update}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Updated Siswa Entity Class}
+	\vspace{20pt}
+	Below is the modified \texttt{Siswa} entity after the schema update:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.Column;
+		
+		@Entity
+		@Table(name = "siswa")
+		public class Siswa {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private int id;
+			
+			@Column(length = 100)
+			private String nama;
+			
+			private double umur;
+			private String alamat;
+			
+			public Siswa() {}
+			public Siswa(String nama, double umur, String alamat) {
+				this.nama = nama;
+				this.umur = umur;
+				this.alamat = alamat;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Schema Changes}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Column Length Change:} The \texttt{nama} column's length is now explicitly set to 100 characters using \texttt{@Column(length = 100)}.
+		\item \textbf{Data Type Change:} The \texttt{umur} column's data type is changed from \texttt{int} to \texttt{double}.
+		\item \textbf{New Column Addition:} A new column \texttt{alamat} is introduced in the entity.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How Hibernate Handles Schema Updates}
+	\vspace{20pt}
+	\begin{itemize}
+		\item When \texttt{hibernate.hbm2ddl.auto} is set to \texttt{update}, Hibernate automatically:
+		\begin{itemize}
+			\item Adds new columns if they are detected in the entity class.
+			\item Modifies the column type if there is a type mismatch.
+		\end{itemize}
+		\item These changes are reflected in the database schema without data loss.
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Join (Data Merging Between Entities)}
+
+\begin{frame}{Joining Entities in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item To perform a join in Hibernate, define relationships between entities.
+		\item Example: A \texttt{Siswa} entity has a many-to-one relationship with \texttt{Kelas}.
+		\item Use HQL to join these entities and retrieve combined data.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Kelas Entity Definition}
+	\vspace{20pt}
+	Below is the \texttt{Kelas} entity, which has a one-to-many relationship with \texttt{Siswa}:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.OneToMany;
+		import jakarta.persistence.CascadeType;
+		import java.util.List;
+		
+		@Entity
+		@Table(name = "kelas")
+		public class Kelas {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private int id;
+			private String namaKelas;
+			
+			@OneToMany(mappedBy = "kelas", cascade = CascadeType.ALL)
+			private List<Siswa> siswas;
+			
+			public Kelas() {}
+			public Kelas(String namaKelas) { this.namaKelas = namaKelas; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Siswa Entity with Relationship to Kelas}
+	\vspace{20pt}
+	Below is the \texttt{Siswa} entity, which has a many-to-one relationship with \texttt{Kelas}:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.ManyToOne;
+		import jakarta.persistence.JoinColumn;
+		
+		@Entity
+		@Table(name = "siswa")
+		public class Siswa {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private int id;
+			private String nama;
+			private int umur;
+			
+			@ManyToOne
+			@JoinColumn(name = "kelas_id")
+			private Kelas kelas;
+			
+			public Siswa() {}
+			public Siswa(String nama, int umur, Kelas kelas) {
+				this.nama = nama;
+				this.umur = umur;
+				this.kelas = kelas;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Joining Siswa and Kelas Using HQL}
+	\vspace{20pt}
+	Below is a Java example for joining \texttt{Siswa} and \texttt{Kelas} using HQL:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import java.util.List;
+		import com.example.model.Siswa;
+		import com.example.model.Kelas;
+		
+		public class JoinExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				String hql = "select s, k from Siswa s join s.kelas k";
+				List<Object[]> result = session.createQuery(hql, Object[].class).list();
+				
+				for (Object[] row : result) {
+					Siswa siswa = (Siswa) row[0];
+					Kelas kelas = (Kelas) row[1];
+					System.out.println("Siswa: " + siswa.getNama() + " | Kelas: " + kelas.getNamaKelas());
+				}
+				session.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Join Operation}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Entity Definition:} \texttt{Siswa} has a many-to-one relationship with \texttt{Kelas} using \texttt{@ManyToOne} and \texttt{@JoinColumn}.
+		\item \textbf{HQL Query:} The query \texttt{"select s, k from Siswa s join s.kelas k"} performs a join between \texttt{Siswa} and \texttt{Kelas}.
+		\item \textbf{Result Iteration:} The query returns an array where index 0 is a \texttt{Siswa} object and index 1 is a \texttt{Kelas} object.
+		\item \textbf{Session Management:} The session is opened using \texttt{SessionFactory} and closed after execution to free resources.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How Hibernate Handles Joins}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate generates the corresponding SQL \texttt{JOIN} statement based on entity relationships.
+		\item Fetching strategies (\texttt{EAGER} or \texttt{LAZY}) affect how joined data is retrieved.
+		\item Using HQL allows flexible and optimized queries while maintaining object-oriented mapping.
+	\end{itemize}
+\end{frame}
+
+\subsection{Primary Key and Foreign Key}
+
+\begin{frame}{Primary Key and Foreign Key in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Primary and foreign keys are fundamental concepts in ORM for linking entities and ensuring referential integrity.
+		\item In Hibernate:
+		\begin{itemize}
+			\item Primary keys are defined using \texttt{@Id} and \texttt{@GeneratedValue}.
+			\item Foreign keys are established using relationships like \texttt{@ManyToOne} and \texttt{@OneToMany}, along with \texttt{@JoinColumn}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Department Entity (Primary Key)}
+	\vspace{20pt}
+	Below is the \texttt{Department} entity, which contains a primary key:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.OneToMany;
+		import java.util.List;
+		
+		@Entity
+		@Table(name = "department")
+		public class Department {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String name;
+			
+			@OneToMany(mappedBy = "department")
+			private List<Employee> employees;
+			
+			public Department() {}
+			public Department(String name) { this.name = name; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Employee Entity (Foreign Key)}
+	\vspace{20pt}
+	Below is the \texttt{Employee} entity, which contains a foreign key reference to \texttt{Department}:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.ManyToOne;
+		import jakarta.persistence.JoinColumn;
+		@Entity
+		@Table(name = "employee")
+		public class Employee {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String name;
+			@ManyToOne
+			@JoinColumn(name = "department_id")
+			private Department department;
+			
+			public Employee() {}
+			public Employee(String name, Department department) {
+				this.name = name;
+				this.department = department;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Primary and Foreign Key Mapping}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{In the Department Entity:}
+		\begin{itemize}
+			\item \texttt{@Id} and \texttt{@GeneratedValue} define \texttt{id} as the primary key, automatically generated.
+			\item The one-to-many relationship with \texttt{Employee} is mapped using \texttt{@OneToMany(mappedBy = "department")}, indicating that the foreign key resides in \texttt{Employee}.
+		\end{itemize}
+		\item \textbf{In the Employee Entity:}
+		\begin{itemize}
+			\item \texttt{@Id} and \texttt{@GeneratedValue} define \texttt{id} as the primary key.
+			\item The many-to-one relationship with \texttt{Department} is defined using \texttt{@ManyToOne} and \texttt{@JoinColumn(name = "department\_id")}.
+			\item The \texttt{@JoinColumn} annotation specifies that the \texttt{department\_id} column in the \texttt{employee} table is a foreign key referencing \texttt{department}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How Primary and Foreign Keys are handled}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate automatically generates database schema reflecting entity relationships through primary and foreign keys.
+		\item Foreign key constraints ensure referential integrity between tables.
+		\item Queries can efficiently fetch related data using relationships without needing explicit \texttt{JOIN} statements.
+	\end{itemize}
+\end{frame}
+
+\subsection{One-to-One Relationships}
+
+\begin{frame}{One-to-One Relationships in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item In a one-to-one relationship, each entity is exclusively linked to one other entity.
+		\item Hibernate supports one-to-one relationships using:
+		\begin{itemize}
+			\item \texttt{@OneToOne} for defining the relationship.
+			\item \texttt{@JoinColumn} for specifying the foreign key column.
+		\end{itemize}
+		\item Example: \texttt{Employee} has one \texttt{EmployeeDetail}, and \texttt{EmployeeDetail} references \texttt{Employee}.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Employee Entity (One-to-One)}
+	\vspace{20pt}
+	Below is the \texttt{Employee} entity, which has a one-to-one relationship with \texttt{EmployeeDetail}:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.OneToOne;
+		
+		@Entity
+		@Table(name = "employee")
+		public class Employee {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String name;
+			
+			@OneToOne(mappedBy = "employee")
+			private EmployeeDetail employeeDetail;
+			
+			public Employee() {}
+			public Employee(String name) { this.name = name; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{EmployeeDetail Entity (Foreign Key)}
+	\vspace{30pt}
+	Below is the \texttt{EmployeeDetail} entity, which references \texttt{Employee} via a foreign key:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.OneToOne;
+		import jakarta.persistence.JoinColumn;
+		@Entity
+		@Table(name = "employee_detail")
+		public class EmployeeDetail {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String address;
+			@OneToOne
+			@JoinColumn(name = "employee_id", unique = true)
+			private Employee employee;
+			
+			public EmployeeDetail() {}
+			public EmployeeDetail(String address, Employee employee) {
+				this.address = address;
+				this.employee = employee;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of One-to-One Relationship}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{In the Employee Entity:}
+		\begin{itemize}
+			\item \texttt{@Id} and \texttt{@GeneratedValue} define \texttt{id} as the primary key.
+			\item The one-to-one relationship is mapped with \texttt{@OneToOne(mappedBy = "employee")}, meaning the foreign key is in \texttt{EmployeeDetail}.
+		\end{itemize}
+		\item \textbf{In the EmployeeDetail Entity:}
+		\begin{itemize}
+			\item \texttt{@Id} and \texttt{@GeneratedValue} define \texttt{id} as the primary key.
+			\item \texttt{@OneToOne} defines the relationship to \texttt{Employee}.
+			\item \texttt{@JoinColumn(name = "employee\_id", unique = true)} ensures that \texttt{employee\_id} in \texttt{employee\_detail} is a unique foreign key referencing \texttt{Employee.id}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How 1-to-1 Relationships are handled}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate ensures that each \texttt{Employee} is linked to only one \texttt{EmployeeDetail}.
+		\item The \texttt{employee\_id} column in \texttt{employee\_detail} enforces referential integrity.
+		\item Queries can be optimized using eager or lazy fetching strategies.
+	\end{itemize}
+\end{frame}
+
+\subsection{One-to-Many Relationships}
+
+\begin{frame}{One-to-Many Relationships in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item A one-to-many relationship defines a connection where a single entity (parent) can have multiple related entities (child).
+		\item In Hibernate, this relationship is implemented using:
+		\begin{itemize}
+			\item \texttt{@OneToMany} in the parent entity.
+			\item \texttt{@ManyToOne} in the child entity.
+		\end{itemize}
+		\item Example: A \texttt{Department} can have multiple \texttt{Employee} records.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Department Entity (Parent)}
+	\vspace{30pt}
+	Below is the \texttt{Department} entity, which represents the parent in the one-to-many relationship:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.OneToMany;
+		import java.util.List;
+		
+		@Entity
+		@Table(name = "department")
+		public class Department {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String name;
+			
+			@OneToMany(mappedBy = "department")
+			private List<Employee> employees;
+			
+			public Department() {}
+			public Department(String name) { this.name = name; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Employee Entity (Child)}
+	\vspace{30pt}
+	Below is the \texttt{Employee} entity, which represents the child in the one-to-many relationship:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.ManyToOne;
+		import jakarta.persistence.JoinColumn;
+		@Entity
+		@Table(name = "employee")
+		public class Employee {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String name;
+			@ManyToOne
+			@JoinColumn(name = "department_id")
+			private Department department;
+			
+			public Employee() {}
+			public Employee(String name, Department department) {
+				this.name = name;
+				this.department = department;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of One-to-Many Relationship}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{In the Department Entity (Parent):}
+		\begin{itemize}
+			\item \texttt{@OneToMany(mappedBy = "department")} defines that a department can have multiple employees.
+			\item The \texttt{mappedBy} attribute references the \texttt{department} field in the \texttt{Employee} entity, which manages the relationship.
+		\end{itemize}
+		\item \textbf{In the Employee Entity (Child):}
+		\begin{itemize}
+			\item \texttt{@ManyToOne} defines that multiple employees can be linked to a single department.
+			\item \texttt{@JoinColumn(name = "department\_id")} specifies that the \texttt{department\_id} column in the \texttt{employee} table acts as a foreign key referring to the primary key in \texttt{department}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How One-to-* Relationships are handled}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate automatically manages the one-to-many relationship between \texttt{Department} and \texttt{Employee}.
+		\item The foreign key in the \texttt{employee} table ensures referential integrity.
+		\item SQL queries are automatically generated to maintain the relationship between the two entities.
+	\end{itemize}
+\end{frame}
+
+\subsection{Many-to-Many Relationships}
+
+\begin{frame}{Many-to-Many Relationships in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item A many-to-many relationship defines a connection where one entity can relate to many others, and vice versa.
+		\item In Hibernate, this is implemented using:
+		\begin{itemize}
+			\item \texttt{@ManyToMany} to define the relationship.
+			\item \texttt{@JoinTable} to specify the join table managing the foreign keys.
+		\end{itemize}
+		\item Example: A \texttt{Student} can enroll in multiple \texttt{Course}, and a \texttt{Course} can have multiple students.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Student Entity (Many-to-Many)}
+	\vspace{30pt}
+	Below is the \texttt{Student} entity, which defines the many-to-many relationship:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.ManyToMany;
+		import jakarta.persistence.JoinTable;
+		import jakarta.persistence.JoinColumn;
+		import java.util.Set;
+		@Entity
+		@Table(name = "student")
+		public class Student {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String name;
+			@ManyToMany
+			@JoinTable(
+				name = "student_course",
+				joinColumns = @JoinColumn(name = "student_id"),
+				inverseJoinColumns = @JoinColumn(name = "course_id")
+			)
+			private Set<Course> courses;
+			public Student() {}
+			public Student(String name) { this.name = name; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Course Entity (Many-to-Many)}
+	\vspace{20pt}
+	Below is the \texttt{Course} entity, which completes the many-to-many relationship:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example.model;
+		import jakarta.persistence.Entity;
+		import jakarta.persistence.GeneratedValue;
+		import jakarta.persistence.GenerationType;
+		import jakarta.persistence.Id;
+		import jakarta.persistence.Table;
+		import jakarta.persistence.ManyToMany;
+		import java.util.Set;
+		
+		@Entity
+		@Table(name = "course")
+		public class Course {
+			@Id
+			@GeneratedValue(strategy = GenerationType.IDENTITY)
+			private Long id;
+			private String title;
+			
+			@ManyToMany(mappedBy = "courses")
+			private Set<Student> students;
+			
+			public Course() {}
+			public Course(String title) { this.title = title; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Many-to-Many Relationship}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{In the Student Entity:}
+		\begin{itemize}
+			\item \texttt{@Entity} and \texttt{@Table} map the class to the \texttt{student} table.
+			\item \texttt{@ManyToMany} defines a many-to-many relationship with \texttt{Course}.
+			\item \texttt{@JoinTable} specifies the join table \texttt{student\_course}, with \texttt{student\_id} as a foreign key for \texttt{Student} and \texttt{course\_id} as a foreign key for \texttt{Course}.
+		\end{itemize}
+		\item \textbf{In the Course Entity:}
+		\begin{itemize}
+			\item \texttt{@Entity} and \texttt{@Table} map the class to the \texttt{course} table.
+			\item \texttt{@ManyToMany(mappedBy = "courses")} indicates that the relationship mapping is already defined in \texttt{Student}, so Hibernate does not create an additional join table.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{How *-to-* Relationships are handled}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Hibernate automatically manages the many-to-many relationship between \texttt{Student} and \texttt{Course}.
+		\item The join table \texttt{student\_course} contains two foreign keys: \texttt{student\_id} and \texttt{course\_id}.
+		\item SQL queries are automatically generated to insert and retrieve data across both tables efficiently.
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Distinct}
+
+\begin{frame}{Using \texttt{distinct} in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item The \texttt{distinct} keyword in HQL removes duplicate query results.
+		\item Using \texttt{distinct}, Hibernate ensures that the returned entity objects are unique.
+		\item This is particularly useful when joins or complex queries may cause duplicate results.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Using \texttt{distinct}}
+	\vspace{20pt}
+	Below is a Java example demonstrating how to retrieve distinct \texttt{User} entities using Hibernate:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import com.example.model.User;
+		import java.util.List;
+		
+		public class DistinctExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				List<User> distinctUsers = session.createQuery(
+				"select distinct u from User u", User.class).list();
+				
+				for (User user : distinctUsers) {
+					System.out.println("User ID: " + user.getId() + ", Name: " + user.getName());
+				}
+				session.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of \texttt{distinct} in HQL}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Open Session:} The session is opened via \texttt{SessionFactory} to interact with the database.
+		\item \textbf{Using HQL with \texttt{distinct}:} The query \texttt{"select distinct u from User u"} ensures that each \texttt{User} entity retrieved is unique, preventing duplicate results.
+		\item \textbf{Iterating Over Results:} The resulting list of \texttt{User} objects is iterated over, and each user’s ID and name are displayed.
+		\item \textbf{Close Session:} The session is closed after execution to release resources.
+	\end{itemize}
+\end{frame}
+
+\subsection{Group By}
+
+\begin{frame}{Using \texttt{group by} in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item The \texttt{group by} keyword in HQL is used to group data based on one or more columns.
+		\item It is often used with aggregate functions like:
+		\begin{itemize}
+			\item \texttt{count()} - Counts the number of occurrences.
+			\item \texttt{sum()} - Sums numeric values.
+			\item \texttt{avg()} - Computes the average value.
+		\end{itemize}
+		\item The query returns aggregated results for each formed group.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Using \texttt{group by}}
+	\vspace{20pt}
+	Below is a Java example demonstrating how to group data using Hibernate:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import java.util.List;
+		
+		public class GroupByExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				String hql = "select u.name, count(u) from User u group by u.name";
+				List<Object[]> results = session.createQuery(hql, Object[].class).list();
+				
+				for (Object[] row : results) {
+					String name = (String) row[0];
+					Long count = (Long) row[1];
+					System.out.println("Name: " + name + ", Count: " + count);
+				}
+				session.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of \texttt{group by} in HQL}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Open Session:} The session is opened via \texttt{SessionFactory} to access the database.
+		\item \textbf{HQL Query:} The query \texttt{"select u.name, count(u) from User u group by u.name"} groups \texttt{User} entities by the \texttt{name} column and counts the number of entities in each group.
+		\item \textbf{Query Results:} The query returns a \texttt{List<Object[]>}, where each array contains:
+		\begin{itemize}
+			\item The user's name.
+			\item The count of users with that name.
+		\end{itemize}
+		\item \textbf{Iterating Over Results:} The list is iterated, displaying each user's name and their count.
+		\item \textbf{Close Session:} The session is closed to release resources after execution.
+	\end{itemize}
+\end{frame}
+
+\subsection{Aggregate Functions (Fungsi Agregasi)}
+
+\begin{frame}{Using Aggregate Functions in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Aggregate functions such as:
+		\begin{itemize}
+			\item \texttt{avg} - Calculates the average value.
+			\item \texttt{sum} - Computes the total sum.
+			\item \texttt{min} - Finds the minimum value.
+			\item \texttt{max} - Finds the maximum value.
+		\end{itemize}
+		\item These functions operate on numeric data across one or more columns.
+		\item Example: Calculating statistical values for the \texttt{umur} column in the \texttt{Siswa} entity.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Aggregate Functions}
+	\vspace{30pt}
+	Below is a Java example demonstrating how to compute aggregate functions using Hibernate:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import com.example.model.Siswa;
+		
+		public class AggregationExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				Object[] aggregates = session.createQuery(
+				"select avg(s.umur), sum(s.umur), min(s.umur), max(s.umur) from Siswa s", 
+				Object[].class
+				).getSingleResult();
+				
+				Double averageAge = (Double) aggregates[0];
+				Long sumAge = (Long) aggregates[1];
+				Integer minAge = (Integer) aggregates[2];
+				Integer maxAge = (Integer) aggregates[3];
+				
+				System.out.println("Average Age: " + averageAge);
+				System.out.println("Sum of Ages: " + sumAge);
+				System.out.println("Minimum Age: " + minAge);
+				System.out.println("Maximum Age: " + maxAge);
+				session.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Aggregate Functions in HQL}
+	\vspace{20pt}
+	\begin{itemize}
+		\item \textbf{Open Session:} The session is opened from \texttt{SessionFactory} to access the database.
+		\item \textbf{HQL Query:} The query \texttt{"select avg(s.umur), sum(s.umur), min(s.umur), max(s.umur) from Siswa s"} calculates:
+		\begin{itemize}
+			\item \texttt{avg(s.umur)} - The average age.
+			\item \texttt{sum(s.umur)} - The total sum of ages.
+			\item \texttt{min(s.umur)} - The minimum age.
+			\item \texttt{max(s.umur)} - The maximum age.
+		\end{itemize}
+		\item \textbf{Retrieving Results:} The query returns an \texttt{Object[]} array, where each element represents the corresponding aggregate function result.
+		\item \textbf{Casting and Output:} The results are cast to appropriate data types (\texttt{Double}, \texttt{Long}, \texttt{Integer}) and displayed in the console.
+		\item \textbf{Close Session:} The session is closed to release resources after execution.
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Subquery}
+
+\begin{frame}{Using Subquery in Hibernate}
+	\vspace{20pt}
+	\begin{itemize}
+		\item A subquery in HQL retrieves values or datasets from another nested query.
+		\item There are two types of subqueries:
+		\begin{itemize}
+			\item Subquery that returns a single value.
+			\item Subquery that returns a dataset (table).
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Subquery Returning a Single Value}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Retrieves a \texttt{User} entity with the maximum \texttt{id}.
+		\item The subquery returns a single value (maximum \texttt{id}) used in the \texttt{WHERE} clause.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Single Value Subquery}
+	\vspace{20pt}
+	Below is a Java example demonstrating how to use a subquery that returns a single value:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import com.example.model.User;
+		
+		public class SubquerySingleValueExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				String hql = "from User u where u.id = (select max(u2.id) from User u2)";
+				User user = session.createQuery(hql, User.class).uniqueResult();
+				
+				System.out.println("User dengan ID maksimum: " 
+				+ user.getName() + " (ID: " + user.getId() + ")");
+				session.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Single Value Subquery}
+	\vspace{20pt}
+	\begin{itemize}
+		\item The main query retrieves \texttt{User} with \texttt{u.id = (subquery)}.
+		\item The subquery \texttt{(select max(u2.id) from User u2)} returns the highest \texttt{id} value from \texttt{User}.
+		\item The \texttt{uniqueResult()} method ensures only one result is returned.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Subquery Returning a Dataset}
+	\vspace{20pt}
+	\begin{itemize}
+		\item Retrieves all \texttt{User} entities whose \texttt{id} appears in a subquery result.
+		\item The subquery selects \texttt{id} values from \texttt{User} whose name starts with 'J'.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code for Dataset Subquery}
+	\vspace{20pt}
+	Below is a Java example demonstrating how to use a subquery that returns multiple values:
+	
+	\begin{lstlisting}[language=Java, style=JavaStyle]
+		package com.example;
+		import org.hibernate.Session;
+		import com.example.model.User;
+		import java.util.List;
+		
+		public class SubqueryTableExample {
+			public static void main(String[] args) {
+				Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
+				String hql = "from User u where u.id in " + 
+				"(select u2.id from User u2 where u2.name like 'J%')";
+				List<User> users = session.createQuery(hql, User.class).list();
+				
+				for (User u : users) {
+					System.out.println("User: " + u.getName() + " (ID: " + u.getId() + ")");
+				}
+				session.close();
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of Dataset Subquery}
+	\vspace{20pt}
+	\begin{itemize}
+		\item The main query retrieves \texttt{User} with \texttt{u.id in (subquery)}.
+		\item The subquery \texttt{(select u2.id from User u2 where u2.name like 'J\%')} selects \texttt{id}s of \texttt{User} whose name starts with 'J'.
+		\item The \texttt{list()} method returns a list of results, allowing iteration over all matching entities.
+	\end{itemize}
+\end{frame}
+
+
+
+\end{document}
