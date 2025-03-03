@@ -1,0 +1,632 @@
+\chapter{JavaFX Lanjut}
+
+\section{Memperbaiki Struktur dengan MVC}
+
+Model-View-Controller (MVC) adalah pola desain yang digunakan untuk memisahkan logika bisnis, tampilan, dan kontrol aliran data dalam aplikasi. Penerapan MVC dalam JavaFX memungkinkan pengembangan aplikasi yang lebih modular, mudah dipelihara, dan fleksibel dalam pengelolaan data serta tampilan.
+
+\subsection{Struktur Proyek Berbasis MVC}
+
+Untuk menerapkan MVC dalam JavaFX, struktur proyek harus dirancang agar setiap komponen memiliki tanggung jawab yang jelas. Struktur direktori yang umum digunakan adalah sebagai berikut:
+
+\begin{lstlisting}[style=JavaStyle, caption=Struktur Direktori dalam JavaFX MVC]
+	src/
+	├── main/
+	│   ├── java/
+	│   │   ├── com.example/
+	│   │   │   ├── MainApp.java
+	│   │   │   ├── controllers/
+	│   │   │   │   ├── MahasiswaController.java
+	│   │   │   ├── models/
+	│   │   │   │   ├── Mahasiswa.java
+	│   │   │   ├── views/
+	│   │   │   │   ├── mahasiswa.fxml
+	│   ├── resources/
+	│   │   ├── styles/
+	│   │   │   ├── style.css
+\end{lstlisting}
+
+Pada struktur di atas:
+\begin{itemize}
+	\item \textbf{controllers/} – Berisi kelas-kelas yang menangani interaksi antara pengguna dan aplikasi.
+	\item \textbf{models/} – Berisi kelas yang merepresentasikan data dan logika bisnis.
+	\item \textbf{views/} – Berisi file FXML yang mendefinisikan tampilan antarmuka pengguna.
+	\item \textbf{resources/styles/} – Menyimpan file CSS untuk mengatur tampilan aplikasi.
+\end{itemize}
+
+Dengan struktur ini, setiap bagian aplikasi memiliki tanggung jawab yang jelas dan dapat dikembangkan secara terpisah.
+
+\subsection{Implementasi Model di JavaFX}
+
+Model bertanggung jawab untuk merepresentasikan data dan logika bisnis dalam aplikasi. Model dalam JavaFX menggunakan properti yang dapat diobservasi (\texttt{Observable Property}) agar perubahan data dapat diperbarui secara otomatis dalam tampilan.
+
+\textbf{Contoh kelas Model Mahasiswa:}
+\begin{lstlisting}[style=JavaStyle, caption=Implementasi Model dalam JavaFX]
+	public class Mahasiswa {
+		private StringProperty nama = new SimpleStringProperty();
+		private IntegerProperty umur = new SimpleIntegerProperty();
+		
+		public Mahasiswa(String nama, int umur) {
+			this.nama.set(nama);
+			this.umur.set(umur);
+		}
+		
+		public StringProperty namaProperty() { return nama; }
+		public IntegerProperty umurProperty() { return umur; }
+		
+		public String getNama() { return nama.get(); }
+		public void setNama(String nama) { this.nama.set(nama); }
+		
+		public int getUmur() { return umur.get(); }
+		public void setUmur(int umur) { this.umur.set(umur); }
+	}
+\end{lstlisting}
+
+Dengan menggunakan \texttt{StringProperty} dan \texttt{IntegerProperty}, data dapat dihubungkan dengan tampilan melalui mekanisme binding.
+
+\subsection{Menghubungkan View dan Controller}
+
+Controller dalam JavaFX mengelola interaksi antara pengguna dan elemen UI dalam View. Untuk menghubungkan View dengan Controller, atribut \texttt{fx:controller} digunakan dalam file FXML.
+
+\textbf{Contoh file FXML:}
+\begin{lstlisting}[style=XmlStyle, caption=File mahasiswa.fxml dengan deklarasi Controller]
+	<?xml version="1.0" encoding="UTF-8"?>
+	
+	<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controllers.MahasiswaController">
+	<Label text="Nama:"/>
+	<TextField fx:id="txtNama"/>
+	<Button text="Tambah" onAction="#tambahMahasiswa"/>
+	</GridPane>
+\end{lstlisting}
+
+Controller harus memiliki variabel yang sesuai dengan elemen UI dalam FXML serta metode untuk menangani event.
+
+\textbf{Contoh Controller:}
+\begin{lstlisting}[style=JavaStyle, caption=MahasiswaController.java]
+	public class MahasiswaController {
+		@FXML private TextField txtNama;
+		
+		@FXML
+		private void tambahMahasiswa() {
+			String nama = txtNama.getText();
+			System.out.println("Nama yang dimasukkan: " + nama);
+		}
+	}
+\end{lstlisting}
+
+\subsection{Menerapkan MVC pada Aplikasi yang Sedang Dikembangkan}
+
+Untuk menerapkan MVC pada aplikasi JavaFX yang sedang dikembangkan, langkah-langkah berikut harus diikuti:
+
+\begin{itemize}
+	\item Pisahkan logika bisnis dalam kelas Model.
+	\item Definisikan tampilan menggunakan FXML untuk menjaga modularitas.
+	\item Gunakan Controller untuk menangani event dan menghubungkan Model dengan View.
+\end{itemize}
+
+\textbf{Contoh memuat FXML ke dalam aplikasi JavaFX:}
+\begin{lstlisting}[style=JavaStyle, caption=Memuat FXML dalam aplikasi JavaFX]
+	public class MainApp extends Application {
+		@Override
+		public void start(Stage primaryStage) throws Exception {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/mahasiswa.fxml"));
+			Parent root = loader.load();
+			Scene scene = new Scene(root, 600, 400);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Aplikasi JavaFX dengan MVC");
+			primaryStage.show();
+		}
+		
+		public static void main(String[] args) {
+			launch(args);
+		}
+	}
+\end{lstlisting}
+
+Dengan pendekatan ini:
+\begin{itemize}
+	\item Model bertanggung jawab atas penyimpanan dan manipulasi data.
+	\item View bertindak sebagai antarmuka pengguna tanpa logika pemrosesan.
+	\item Controller mengatur komunikasi antara Model dan View, menangani input pengguna, dan memperbarui tampilan sesuai dengan perubahan data.
+\end{itemize}
+
+\subsubsection{Keuntungan Menerapkan MVC dalam JavaFX}
+
+Menerapkan MVC dalam JavaFX memiliki beberapa keuntungan utama:
+\begin{itemize}
+	\item \textbf{Pemisahan kode} – Logika bisnis dan tampilan dipisahkan, meningkatkan keterbacaan dan pemeliharaan.
+	\item \textbf{Kemudahan pengujian} – Model dapat diuji secara terpisah dari View.
+	\item \textbf{Dukungan untuk perubahan tampilan} – View dapat diubah tanpa mengubah logika bisnis.
+	\item \textbf{Peningkatan fleksibilitas} – Memungkinkan pengembangan aplikasi yang lebih modular dan scalable.
+\end{itemize}
+
+Dengan menerapkan pola desain MVC, aplikasi JavaFX dapat dikembangkan dengan struktur yang lebih terorganisir, fleksibel, dan mudah untuk dikembangkan lebih lanjut.
+
+\section{Meningkatkan Tampilan dengan CSS dan FXML}
+
+JavaFX mendukung penggunaan \textit{Cascading Style Sheets} (CSS) dan \textit{FXML} untuk memisahkan desain tampilan dari logika program. Dengan CSS, elemen UI dalam JavaFX dapat diberi gaya yang lebih menarik dan konsisten tanpa perlu mengubah kode Java secara langsung. FXML memungkinkan deklarasi tampilan menggunakan XML, sehingga tampilan dapat dirancang secara visual menggunakan alat seperti Scene Builder.
+
+\subsection{Penggunaan CSS untuk Styling JavaFX}
+
+CSS dalam JavaFX berfungsi serupa dengan CSS dalam pengembangan web. Properti visual komponen dapat diatur menggunakan file \texttt{.css}, yang kemudian diterapkan pada Scene dalam aplikasi JavaFX.
+
+\subsubsection{1. Struktur Dasar CSS dalam JavaFX}
+
+Untuk menggunakan CSS dalam JavaFX, file CSS harus dibuat dan diterapkan ke dalam \texttt{Scene} atau elemen UI tertentu. Struktur dasar CSS dalam JavaFX mirip dengan CSS untuk web, tetapi dengan prefiks khusus seperti \texttt{-fx-}.
+
+\textbf{Contoh file CSS dalam JavaFX:}
+\begin{lstlisting}[language=css, caption=Contoh file CSS dalam JavaFX]
+	.root {
+		-fx-background-color: #f4f4f4;
+	}
+	
+	.button {
+		-fx-background-color: #3498db;
+		-fx-text-fill: white;
+		-fx-font-size: 14px;
+		-fx-padding: 10px 20px;
+		-fx-border-radius: 5px;
+	}
+\end{lstlisting}
+
+\subsubsection{2. Menerapkan CSS dalam JavaFX}
+
+File CSS dapat diterapkan ke dalam Scene atau elemen UI dengan beberapa cara:
+
+\begin{itemize}
+	\item Menambahkan CSS ke \texttt{Scene} menggunakan metode \texttt{getStylesheets().add()}.
+	\item Menggunakan metode \texttt{getStyleClass().add()} untuk menetapkan kelas CSS ke elemen tertentu.
+	\item Menentukan gaya langsung dalam kode Java dengan metode \texttt{setStyle()}.
+\end{itemize}
+
+\textbf{Contoh menerapkan CSS dalam JavaFX:}
+\begin{lstlisting}[style=JavaStyle, caption=Menerapkan CSS ke Scene]
+	scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+\end{lstlisting}
+
+\textbf{Contoh menetapkan kelas CSS ke elemen tertentu:}
+\begin{lstlisting}[style=JavaStyle, caption=Menetapkan kelas CSS ke tombol]
+	button.getStyleClass().add("button");
+\end{lstlisting}
+
+\subsection{Mengenal dan Menggunakan FXML}
+
+FXML (\textit{FXML Markup Language}) adalah format berbasis XML yang digunakan dalam JavaFX untuk mendeklarasikan antarmuka pengguna secara terpisah dari logika bisnis. Dengan FXML, tampilan dapat didefinisikan secara deklaratif dan dipisahkan dari kode Java.
+
+\subsubsection{1. Struktur Dasar FXML}
+
+FXML menggunakan struktur berbasis XML untuk mendefinisikan komponen UI.
+
+\textbf{Contoh struktur dasar file FXML:}
+\begin{lstlisting}[style=XmlStyle, caption=Struktur dasar file FXML]
+	<?xml version="1.0" encoding="UTF-8"?>
+	
+	<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.controllers.MainController">
+	<Label text="Nama:"/>
+	<TextField fx:id="txtNama"/>
+	<Button text="Simpan" onAction="#simpanData"/>
+	</GridPane>
+\end{lstlisting}
+
+\subsubsection{2. Menghubungkan FXML dengan Controller}
+
+Untuk menghubungkan FXML dengan Controller, atribut \texttt{fx:controller} digunakan untuk menentukan kelas Controller yang menangani interaksi dengan elemen UI dalam file FXML.
+
+\textbf{Contoh Controller yang dihubungkan dengan FXML:}
+\begin{lstlisting}[style=JavaStyle, caption=MainController.java]
+	public class MainController {
+		@FXML private TextField txtNama;
+		
+		@FXML
+		private void simpanData() {
+			String nama = txtNama.getText();
+			System.out.println("Nama yang dimasukkan: " + nama);
+		}
+	}
+\end{lstlisting}
+
+\subsection{Menerapkan CSS dan FXML pada Aplikasi}
+
+Untuk menerapkan CSS dan FXML dalam aplikasi JavaFX, file CSS dan FXML harus dimuat dalam Scene.
+
+\textbf{Contoh memuat FXML dan menerapkan CSS:}
+\begin{lstlisting}[style=JavaStyle, caption=Memuat FXML dan CSS dalam JavaFX]
+	public class MainApp extends Application {
+		@Override
+		public void start(Stage primaryStage) throws Exception {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/main.fxml"));
+			Parent root = loader.load();
+			Scene scene = new Scene(root, 600, 400);
+			scene.getStylesheets().add(getClass().getResource("/styles/style.css").toExternalForm());
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("Aplikasi JavaFX dengan CSS dan FXML");
+			primaryStage.show();
+		}
+		
+		public static void main(String[] args) {
+			launch(args);
+		}
+	}
+\end{lstlisting}
+
+Dengan pendekatan ini:
+\begin{itemize}
+	\item File FXML digunakan untuk mendeklarasikan tampilan UI.
+	\item File CSS diterapkan ke Scene untuk meningkatkan tampilan visual.
+	\item Controller menangani interaksi antara pengguna dan UI.
+\end{itemize}
+
+\subsubsection{Keuntungan Menerapkan CSS dan FXML dalam JavaFX}
+
+Menggunakan CSS dan FXML dalam JavaFX memiliki beberapa keuntungan utama:
+\begin{itemize}
+	\item \textbf{Pemisahan tampilan dan logika} – Kode UI dipisahkan dari kode Java, meningkatkan keterbacaan dan pemeliharaan.
+	\item \textbf{Kemudahan modifikasi} – Perubahan tampilan dapat dilakukan dengan mengedit file CSS atau FXML tanpa mengubah kode Java.
+	\item \textbf{Dukungan untuk Scene Builder} – FXML dapat didesain secara visual menggunakan alat seperti Scene Builder.
+	\item \textbf{Konsistensi gaya tampilan} – CSS memungkinkan penggunaan gaya yang seragam di seluruh aplikasi.
+\end{itemize}
+
+Dengan memahami dan menerapkan CSS serta FXML dalam JavaFX, tampilan aplikasi dapat dibuat lebih menarik dan profesional tanpa mengubah struktur logika dalam kode Java.
+
+
+\section{Menambahkan Fitur Database}
+
+Aplikasi JavaFX sering kali memerlukan integrasi dengan database untuk menyimpan, mengelola, dan menampilkan data secara dinamis. JavaFX mendukung koneksi ke database menggunakan \textit{Java Database Connectivity} (JDBC). Dengan JDBC, data dapat dimanipulasi melalui operasi CRUD (\textit{Create, Read, Update, Delete}), serta ditampilkan dalam komponen UI seperti \texttt{TableView}.
+
+\subsection{Menggunakan JDBC dalam JavaFX}
+
+JDBC (\textit{Java Database Connectivity}) adalah API yang memungkinkan Java berkomunikasi dengan berbagai sistem manajemen basis data (DBMS) seperti MySQL, PostgreSQL, dan SQLite.
+
+\subsubsection{1. Menyiapkan Koneksi ke Database}
+
+Untuk menggunakan JDBC dalam JavaFX, langkah-langkah berikut harus dilakukan:
+\begin{itemize}
+	\item Menambahkan driver JDBC ke dalam proyek.
+	\item Membuat kelas untuk mengelola koneksi database.
+	\item Menggunakan pernyataan SQL untuk mengakses dan memanipulasi data.
+\end{itemize}
+
+\textbf{Contoh kelas koneksi database:}
+\begin{lstlisting}[style=JavaStyle, caption=Membuat koneksi ke database MySQL]
+	public class DatabaseConnection {
+		private static final String URL = "jdbc:mysql://localhost:3306/kampus";
+		private static final String USER = "root";
+		private static final String PASSWORD = "";
+		
+		public static Connection getConnection() throws SQLException {
+			return DriverManager.getConnection(URL, USER, PASSWORD);
+		}
+	}
+\end{lstlisting}
+
+\subsubsection{2. Menggunakan Query SQL dalam JavaFX}
+
+\textbf{Contoh mengambil data dari database:}
+\begin{lstlisting}[style=JavaStyle, caption=Menjalankan Query SQL dalam JavaFX]
+	public static List<Mahasiswa> getMahasiswaList() throws SQLException {
+		List<Mahasiswa> list = new ArrayList<>();
+		String query = "SELECT * FROM mahasiswa";
+		Connection conn = DatabaseConnection.getConnection();
+		Statement stmt = conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		
+		while (rs.next()) {
+			list.add(new Mahasiswa(rs.getString("nama"), rs.getInt("umur")));
+		}
+		
+		return list;
+	}
+\end{lstlisting}
+
+Kode di atas mengambil data dari tabel \texttt{mahasiswa} dan menyimpannya dalam daftar objek \texttt{Mahasiswa}.
+
+\subsection{Menampilkan Data dalam TableView}
+
+\texttt{TableView} dalam JavaFX digunakan untuk menampilkan data dalam bentuk tabel yang dapat diperbarui secara dinamis.
+
+\subsubsection{1. Menentukan Model Data}
+
+\textbf{Contoh kelas Model Mahasiswa:}
+\begin{lstlisting}[style=JavaStyle, caption=Membuat kelas model Mahasiswa]
+	public class Mahasiswa {
+		private StringProperty nama = new SimpleStringProperty();
+		private IntegerProperty umur = new SimpleIntegerProperty();
+		
+		public Mahasiswa(String nama, int umur) {
+			this.nama.set(nama);
+			this.umur.set(umur);
+		}
+		
+		public StringProperty namaProperty() { return nama; }
+		public IntegerProperty umurProperty() { return umur; }
+	}
+\end{lstlisting}
+
+\subsubsection{2. Menampilkan Data dalam TableView}
+
+\textbf{Contoh menghubungkan data ke \texttt{TableView}:}
+\begin{lstlisting}[style=JavaStyle, caption=Menampilkan data dalam TableView]
+	@FXML private TableView<Mahasiswa> tableMahasiswa;
+	@FXML private TableColumn<Mahasiswa, String> colNama;
+	@FXML private TableColumn<Mahasiswa, Integer> colUmur;
+	
+	private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
+	
+	@FXML
+	public void initialize() throws SQLException {
+		colNama.setCellValueFactory(new PropertyValueFactory<>("nama"));
+		colUmur.setCellValueFactory(new PropertyValueFactory<>("umur"));
+		data.addAll(DatabaseHelper.getMahasiswaList());
+		tableMahasiswa.setItems(data);
+	}
+\end{lstlisting}
+
+Kode di atas menampilkan data dari database ke dalam \texttt{TableView}.
+
+\subsection{CRUD dalam Aplikasi JavaFX}
+
+Operasi CRUD (\textit{Create, Read, Update, Delete}) adalah bagian penting dari aplikasi database. Berikut adalah implementasi masing-masing operasi dalam JavaFX.
+
+\subsubsection{1. Menambahkan Data (Create)}
+
+\textbf{Contoh metode untuk menambahkan data ke database:}
+\begin{lstlisting}[style=JavaStyle, caption=Menambahkan data ke database]
+	public static void tambahMahasiswa(String nama, int umur) throws SQLException {
+		String query = "INSERT INTO mahasiswa (nama, umur) VALUES (?, ?)";
+		Connection conn = DatabaseConnection.getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query);
+		stmt.setString(1, nama);
+		stmt.setInt(2, umur);
+		stmt.executeUpdate();
+	}
+\end{lstlisting}
+
+\subsubsection{2. Memperbarui Data (Update)}
+
+\textbf{Contoh metode untuk memperbarui data:}
+\begin{lstlisting}[style=JavaStyle, caption=Memperbarui data mahasiswa]
+	public static void updateMahasiswa(int id, String nama, int umur) throws SQLException {
+		String query = "UPDATE mahasiswa SET nama = ?, umur = ? WHERE id = ?";
+		Connection conn = DatabaseConnection.getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query);
+		stmt.setString(1, nama);
+		stmt.setInt(2, umur);
+		stmt.setInt(3, id);
+		stmt.executeUpdate();
+	}
+\end{lstlisting}
+
+\subsubsection{3. Menghapus Data (Delete)}
+
+\textbf{Contoh metode untuk menghapus data:}
+\begin{lstlisting}[style=JavaStyle, caption=Menghapus data mahasiswa]
+	public static void deleteMahasiswa(int id) throws SQLException {
+		String query = "DELETE FROM mahasiswa WHERE id = ?";
+		Connection conn = DatabaseConnection.getConnection();
+		PreparedStatement stmt = conn.prepareStatement(query);
+		stmt.setInt(1, id);
+		stmt.executeUpdate();
+	}
+\end{lstlisting}
+
+\subsection{Menghubungkan Database ke Aplikasi yang Dibangun}
+
+Setelah koneksi ke database dibuat dan fungsi CRUD diimplementasikan, langkah berikutnya adalah menghubungkan semua bagian aplikasi.
+
+\textbf{Contoh memuat data dari database ke dalam JavaFX:}
+\begin{lstlisting}[style=JavaStyle, caption=Memuat data dari database ke TableView]
+	@FXML
+	public void loadData() throws SQLException {
+		data.clear();
+		data.addAll(DatabaseHelper.getMahasiswaList());
+		tableMahasiswa.setItems(data);
+	}
+\end{lstlisting}
+
+\textbf{Contoh menambahkan data melalui antarmuka pengguna:}
+\begin{lstlisting}[style=JavaStyle, caption=Menambahkan data melalui UI]
+	@FXML
+	private void handleTambahMahasiswa() throws SQLException {
+		String nama = txtNama.getText();
+		int umur = Integer.parseInt(txtUmur.getText());
+		DatabaseHelper.tambahMahasiswa(nama, umur);
+		loadData();
+	}
+\end{lstlisting}
+
+\subsubsection{Keuntungan Menggunakan Database dalam JavaFX}
+
+Menggunakan database dalam aplikasi JavaFX memiliki beberapa keuntungan utama:
+\begin{itemize}
+	\item \textbf{Penyimpanan data yang persisten} – Data tetap tersimpan meskipun aplikasi ditutup.
+	\item \textbf{Kemudahan pengelolaan data} – Operasi CRUD memungkinkan manipulasi data secara dinamis.
+	\item \textbf{Integrasi dengan berbagai DBMS} – JavaFX dapat terhubung ke berbagai jenis database seperti MySQL, PostgreSQL, dan SQLite.
+\end{itemize}
+
+Dengan memahami cara menghubungkan JavaFX dengan database, aplikasi dapat dikembangkan lebih dinamis dan fungsional.
+
+\section{Pengujian dan Debugging Aplikasi}
+
+Dalam pengembangan aplikasi JavaFX, pengujian dan debugging merupakan tahap penting untuk memastikan aplikasi berjalan dengan baik tanpa kesalahan. Proses debugging membantu mengidentifikasi dan memperbaiki kesalahan dalam kode, sedangkan unit testing memastikan bahwa setiap komponen berfungsi sesuai dengan spesifikasinya. Dengan menerapkan teknik debugging dan pengujian yang tepat, pengembangan aplikasi dapat dilakukan lebih efisien dan bebas dari bug.
+
+\subsection{Debugging dalam JavaFX}
+
+Debugging adalah proses menemukan dan memperbaiki kesalahan dalam kode sumber. JavaFX mendukung berbagai teknik debugging, termasuk penggunaan breakpoint, logging, dan alat debugging yang tersedia dalam lingkungan pengembangan (\textit{Integrated Development Environment} - IDE).
+
+\subsubsection{1. Menggunakan Breakpoint dalam IDE}
+
+Breakpoint memungkinkan eksekusi kode dihentikan pada titik tertentu sehingga nilai variabel dan aliran eksekusi dapat diperiksa.
+
+\textbf{Langkah-langkah menggunakan breakpoint dalam IntelliJ IDEA atau Eclipse:}
+\begin{enumerate}
+	\item Buka file kode JavaFX yang ingin diuji.
+	\item Klik di sisi kiri nomor baris untuk menambahkan breakpoint.
+	\item Jalankan aplikasi dalam mode debug (\texttt{Debug Mode}).
+	\item Periksa nilai variabel saat eksekusi berhenti pada breakpoint.
+\end{enumerate}
+
+\subsubsection{2. Menggunakan Logging untuk Debugging}
+
+Logging adalah teknik yang digunakan untuk mencatat informasi penting selama eksekusi program. Java menyediakan pustaka \texttt{java.util.logging} dan pustaka pihak ketiga seperti Log4j untuk mencatat log.
+
+\textbf{Contoh penggunaan logging dalam JavaFX:}
+\begin{lstlisting}[style=JavaStyle, caption=Menggunakan logging dalam JavaFX]
+	import java.util.logging.Logger;
+	
+	public class DebugExample {
+		private static final Logger logger = Logger.getLogger(DebugExample.class.getName());
+		
+		public static void main(String[] args) {
+			logger.info("Aplikasi dimulai...");
+			
+			try {
+				int hasil = 10 / 0; // Kesalahan pembagian dengan nol
+			} catch (Exception e) {
+				logger.severe("Kesalahan terjadi: " + e.getMessage());
+			}
+		}
+	}
+\end{lstlisting}
+
+\subsubsection{3. Menggunakan \texttt{System.out.println()} untuk Debugging}
+
+Teknik sederhana dengan menggunakan \texttt{System.out.println()} dapat membantu memahami aliran eksekusi kode.
+
+\textbf{Contoh debugging menggunakan \texttt{System.out.println()}:}
+\begin{lstlisting}[style=JavaStyle, caption=Menampilkan nilai variabel dalam console]
+	Button btn = new Button("Klik Saya");
+	btn.setOnAction(e -> {
+		System.out.println("Tombol diklik!");
+	});
+\end{lstlisting}
+
+\subsection{Unit Testing pada JavaFX dengan JUnit}
+
+Unit testing adalah metode pengujian perangkat lunak yang menguji komponen individu untuk memastikan bahwa setiap bagian bekerja sebagaimana mestinya. Dalam JavaFX, JUnit digunakan untuk melakukan unit testing, terutama untuk menguji logika bisnis tanpa harus menjalankan antarmuka pengguna.
+
+\subsubsection{1. Mengatur JUnit dalam Proyek JavaFX}
+
+JUnit dapat digunakan dengan Maven atau Gradle untuk mengelola dependensi proyek.
+
+\textbf{Menambahkan dependensi JUnit dalam Maven:}
+\begin{lstlisting}[style=XmlStyle, caption=Menambahkan dependensi JUnit dalam Maven]
+	<dependencies>
+	<dependency>
+	<groupId>org.junit.jupiter</groupId>
+	<artifactId>junit-jupiter-api</artifactId>
+	<version>5.7.1</version>
+	<scope>test</scope>
+	</dependency>
+	</dependencies>
+\end{lstlisting}
+
+\subsubsection{2. Menulis Unit Test untuk Model JavaFX}
+
+Model dalam JavaFX dapat diuji menggunakan JUnit untuk memastikan bahwa data diproses dengan benar.
+
+\textbf{Contoh unit test untuk kelas Mahasiswa:}
+\begin{lstlisting}[style=JavaStyle, caption=Unit test untuk Model Mahasiswa]
+	import org.junit.jupiter.api.Test;
+	import static org.junit.jupiter.api.Assertions.*;
+	
+	public class MahasiswaTest {
+		@Test
+		public void testMahasiswa() {
+			Mahasiswa mhs = new Mahasiswa("Budi", 20);
+			assertEquals("Budi", mhs.getNama());
+			assertEquals(20, mhs.getUmur());
+		}
+	}
+\end{lstlisting}
+
+\subsubsection{3. Menguji Controller dalam JavaFX}
+
+Untuk menguji Controller, JavaFX menyediakan pustaka \texttt{TestFX} yang memungkinkan pengujian elemen UI secara otomatis.
+
+\textbf{Contoh unit test untuk Controller:}
+\begin{lstlisting}[style=JavaStyle, caption=Unit test untuk Controller JavaFX]
+	import static org.testfx.api.FxAssert.verifyThat;
+	import static org.testfx.matcher.control.LabeledMatchers.hasText;
+	import org.junit.jupiter.api.Test;
+	import org.testfx.framework.junit5.ApplicationTest;
+	
+	public class MahasiswaControllerTest extends ApplicationTest {
+		@Test
+		public void testButtonClick() {
+			clickOn("#btnTambah");
+			verifyThat("#lblOutput", hasText("Mahasiswa ditambahkan"));
+		}
+	}
+\end{lstlisting}
+
+Kode di atas menguji apakah label akan diperbarui setelah tombol diklik.
+
+\subsection{Best Practices dalam Pengembangan JavaFX}
+
+Untuk memastikan aplikasi JavaFX tetap optimal dan mudah dipelihara, beberapa praktik terbaik harus diterapkan:
+
+\subsubsection{1. Pemisahan Logika Bisnis dan Tampilan}
+
+Menggunakan arsitektur MVC (Model-View-Controller) memastikan bahwa logika bisnis terpisah dari tampilan.
+
+\textbf{Prinsip utama MVC:}
+\begin{itemize}
+	\item Model menangani data dan logika bisnis.
+	\item View hanya bertanggung jawab untuk menampilkan data.
+	\item Controller menghubungkan Model dengan View dan menangani interaksi pengguna.
+\end{itemize}
+
+\subsubsection{2. Menggunakan Binding untuk Mengurangi Kode Boilerplate}
+
+JavaFX mendukung \texttt{Property Binding} untuk mengurangi kode yang harus diperbarui secara manual.
+
+\textbf{Contoh binding antara TextField dan Label:}
+\begin{lstlisting}[style=JavaStyle, caption=Binding dalam JavaFX]
+	TextField txtInput = new TextField();
+	Label lblOutput = new Label();
+	lblOutput.textProperty().bind(txtInput.textProperty());
+\end{lstlisting}
+
+\subsubsection{3. Mengoptimalkan Kinerja dengan Lazy Loading}
+
+JavaFX memungkinkan penggunaan \textit{lazy loading} untuk meningkatkan kinerja aplikasi.
+
+\textbf{Contoh penggunaan \texttt{Service} untuk memuat data secara asinkron:}
+\begin{lstlisting}[style=JavaStyle, caption=Lazy Loading dalam JavaFX]
+	Service<ObservableList<Mahasiswa>> service = new Service<>() {
+		@Override
+		protected Task<ObservableList<Mahasiswa>> createTask() {
+			return new Task<>() {
+				@Override
+				protected ObservableList<Mahasiswa> call() throws Exception {
+					return FXCollections.observableArrayList(DatabaseHelper.getMahasiswaList());
+				}
+			};
+		}
+	};
+\end{lstlisting}
+
+\subsubsection{4. Menggunakan CSS untuk Styling yang Konsisten}
+
+Pemisahan tampilan dan logika dengan CSS meningkatkan keterbacaan kode dan memudahkan modifikasi tampilan.
+
+\textbf{Contoh penggunaan CSS dalam JavaFX:}
+\begin{lstlisting}[language=css, caption=Custom styling untuk tombol dalam JavaFX]
+	.button {
+		-fx-background-color: #3498db;
+		-fx-text-fill: white;
+		-fx-font-size: 14px;
+	}
+\end{lstlisting}
+
+\subsubsection{5. Menghindari Hardcoding dan Menggunakan Resource Bundle}
+
+Untuk aplikasi yang mendukung berbagai bahasa, gunakan \texttt{ResourceBundle} untuk menyimpan teks antarmuka.
+
+\textbf{Contoh penggunaan ResourceBundle:}
+\begin{lstlisting}[style=JavaStyle, caption=Memuat teks dari ResourceBundle]
+	ResourceBundle bundle = ResourceBundle.getBundle("messages", Locale.getDefault());
+	label.setText(bundle.getString("welcome_message"));
+\end{lstlisting}
+
+Dengan menerapkan praktik terbaik dalam debugging, pengujian, dan pengembangan, aplikasi JavaFX dapat menjadi lebih efisien, mudah dikelola, dan bebas dari kesalahan.
+
