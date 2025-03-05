@@ -17,65 +17,138 @@ Sebelum melakukan pengembangan dan pengujian aplikasi JavaFX, JavaFX harus diins
 JavaFX sejak versi 11 tidak lagi disertakan dalam JDK, sehingga perlu diunduh dan dikonfigurasi secara terpisah.
 
 \begin{enumerate}
-	\item Unduh JavaFX SDK dari situs resmi \texttt{https://gluonhq.com/products/javafx/}.
-	\item Ekstrak file yang telah diunduh ke dalam direktori pilihan.
-	\item Tambahkan path JavaFX ke dalam konfigurasi proyek.
+\item Unduh JavaFX SDK dari situs resmi \texttt{https://gluonhq.com/products/javafx/}.
+\item Ekstrak file yang telah diunduh ke dalam direktori pilihan.
+\item Tambahkan path JavaFX ke dalam konfigurasi proyek.
 \end{enumerate}
 
-\subsubsection{2. Menambahkan JavaFX ke Proyek dalam IntelliJ IDEA}
+\subsection{Inisialisasi Proyek Gradle untuk JavaFX}
+\label{gradle_javafx}
 
-\begin{enumerate}
-	\item Buka IntelliJ IDEA dan buat proyek baru.
-	\item Pilih \texttt{File} $\to$ \texttt{Project Structure} $\to$ \texttt{Libraries}.
-	\item Klik \texttt{Add} dan pilih folder \texttt{lib} dari JavaFX SDK.
-	\item Tambahkan VM options berikut untuk menjalankan aplikasi:
-	\begin{lstlisting}[style=JavaStyle, caption=Menambahkan JavaFX pada VM Options]
-		--module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml
-	\end{lstlisting}
-\end{enumerate}
+Gradle adalah alat otomatisasi pembangunan yang sering digunakan dalam pengembangan JavaFX untuk mengelola dependensi dan build system secara efisien. Langkah pertama dalam menggunakan Gradle untuk JavaFX adalah menginisialisasi proyek Gradle dan mengonfigurasinya agar mendukung JavaFX.
 
-\subsubsection{3. Menggunakan JavaFX dengan Maven}
+\subsubsection{1. Membuat Proyek Gradle melalui Console}
 
-Untuk menambahkan JavaFX ke proyek berbasis Maven, tambahkan dependensi berikut ke dalam \texttt{pom.xml}:
+Untuk membuat proyek JavaFX berbasis Gradle, gunakan perintah berikut di terminal atau command prompt:
 
-\begin{lstlisting}[style=XmlStyle, caption=Menambahkan JavaFX dalam Maven]
-	<dependencies>
-	<dependency>
-	<groupId>org.openjfx</groupId>
-	<artifactId>javafx-controls</artifactId>
-	<version>17</version>
-	</dependency>
-	<dependency>
-	<groupId>org.openjfx</groupId>
-	<artifactId>javafx-fxml</artifactId>
-	<version>17</version>
-	</dependency>
-	</dependencies>
+\begin{lstlisting}[language=bash, caption=Menginisialisasi proyek Gradle]
+gradle init --type java-application
 \end{lstlisting}
 
-\subsubsection{4. Menggunakan JavaFX dengan Gradle}
+Setelah perintah ini dijalankan, Gradle akan membuat struktur proyek dengan direktori utama berikut:
 
-Untuk proyek berbasis Gradle, tambahkan konfigurasi berikut ke dalam \texttt{build.gradle}:
+\begin{lstlisting}[language=bash, caption=Struktur proyek Gradle setelah inisialisasi]
+my-javafx-project/
+|- app/
+|   |- src/
+|   |   |- main/
+|   |   |   |- java/
+|   |   |   |   |- org/example/
+|   |   |   |   |   |- App.java
+|   |   |- test/
+|   |   |   |- java/
+|   |   |   |   |- org/example/
+|   |   |   |   |   |- AppTest.java
+|- build.gradle
+|- gradlew
+|- gradlew.bat
+|- settings.gradle
+\end{lstlisting}
 
-\begin{lstlisting}[style=JavaStyle, caption=Menambahkan JavaFX dalam Gradle]
-	plugins {
-		id 'application'
-		id 'org.openjfx.javafxplugin' version '0.0.10'
-	}
+
+Pada struktur ini:
+\begin{itemize}
+\item Direktori \texttt{app/src/main/java/} menyimpan kode sumber aplikasi.
+\item Direktori \texttt{app/src/test/java/} menyimpan unit test.
+\item File \texttt{build.gradle} adalah konfigurasi utama proyek Gradle.
+\item File \texttt{gradlew} dan \texttt{gradlew.bat} adalah wrapper Gradle yang memungkinkan proyek dibangun tanpa perlu instalasi Gradle global.
+\end{itemize}
+
+\subsubsection{2. Konfigurasi build.gradle untuk JavaFX}
+
+Setelah proyek dibuat, langkah berikutnya adalah mengonfigurasi \texttt{build.gradle} agar mendukung JavaFX. Berikut adalah konfigurasi lengkap untuk \texttt{build.gradle}:
+
+\begin{lstlisting}[style=JavaStyle, caption=Konfigurasi build.gradle untuk JavaFX]
+/*
+* File ini dihasilkan oleh Gradle 'init' task.
+* Berisi konfigurasi untuk proyek JavaFX berbasis Gradle.
+*/
+
+plugins {
+	// Plugin untuk aplikasi Java dan JavaFX
+	id 'application'
+	id 'org.openjfx.javafxplugin' version '0.1.0'
+}
+
+repositories {
+	// Menggunakan Maven Central untuk mendownload dependensi
+	mavenCentral()
+}
+
+dependencies {
+	// Menambahkan dependensi JUnit untuk unit testing
+	testImplementation 'org.junit.jupiter:junit-jupiter'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 	
-	javafx {
-		version = "17"
-		modules = [ 'javafx.controls', 'javafx.fxml' ]
+	// Menambahkan dependensi Guava sebagai contoh
+	implementation 'com.google.guava:guava:31.0.1-jre'
+}
+
+// Konfigurasi versi Java yang digunakan
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
 	}
+}
+
+// Konfigurasi aplikasi utama
+application {
+	mainClass = 'org.example.App'
+}
+
+// Konfigurasi JavaFX
+javafx {
+	version = "21.0.1"
+	modules = [ 'javafx.controls' ]
+}
+
+// Konfigurasi task testing
+tasks.named('test') {
+	useJUnitPlatform()
+}
 \end{lstlisting}
 
-Dengan konfigurasi ini, JavaFX dapat dijalankan dan digunakan dalam proyek secara langsung.
+Konfigurasi di atas melakukan hal-hal berikut:
+\begin{itemize}
+\item \textbf{Menambahkan plugin JavaFX} menggunakan \texttt{org.openjfx.javafxplugin}.
+\item \textbf{Menggunakan Maven Central} sebagai repositori dependensi.
+\item \textbf{Menentukan versi Java} menggunakan toolchain Gradle.
+\item \textbf{Mengatur kelas utama aplikasi} (\texttt{mainClass}).
+\item \textbf{Menambahkan JavaFX versi 21.0.1} dengan modul \texttt{javafx.controls}.
+\end{itemize}
+
+
+\subsubsection{3. Menjalankan Aplikasi JavaFX dengan Gradle}
+
+Setelah konfigurasi selesai, aplikasi tersebut dapat dijalankan menggunakan perintah:
+
+\begin{lstlisting}[language=bash, caption=Menjalankan aplikasi JavaFX dengan Gradle]
+./gradlew run
+\end{lstlisting}
+
+Jika menggunakan Windows, gunakan perintah berikut:
+
+\begin{lstlisting}[language=bash, caption=Menjalankan aplikasi proyek Gradle di Windows]
+gradlew.bat run
+\end{lstlisting}
+
+Perintah ini akan mengompilasi kode sumber dan menjalankan aplikasi utama yang telah didefinisikan dalam \texttt{mainClass}.
 
 
 \subsection{Hello World menggunakan JavaFX}
 \label{hello_world_menggunakan_javafx}
 
-Setelah JavaFX berhasil diinstal, langkah pertama dalam pengembangan aplikasi adalah membuat program \textit{Hello World}. Program ini akan menampilkan jendela sederhana dengan label "Hello, JavaFX!".
+Setelah project berhasil dibuat, langkah pertama dalam pengembangan aplikasi adalah membuat program \textit{Hello World}. Program ini akan menampilkan jendela sederhana dengan label "Hello, JavaFX!".
 
 \subsubsection{1. Struktur Program JavaFX}
 
@@ -83,31 +156,31 @@ JavaFX menggunakan kelas \texttt{Application} sebagai titik awal eksekusi. Metod
 
 \subsubsection{2. Implementasi Kode Hello World}
 
-Berikut adalah contoh kode JavaFX untuk menampilkan pesan "Hello, JavaFX!".
+Berikut adalah contoh kode JavaFX untuk menampilkan pesan "Hello, JavaFX!". Update file \texttt{app/src/main/java/org/example/App.java}.
 
 \begin{lstlisting}[style=JavaStyle, caption=Program Hello World menggunakan JavaFX]
-	import javafx.application.Application;
-	import javafx.scene.Scene;
-	import javafx.scene.control.Label;
-	import javafx.scene.layout.StackPane;
-	import javafx.stage.Stage;
-	
-	public class HelloWorld extends Application {
-		@Override
-		public void start(Stage primaryStage) {
-			Label label = new Label("Hello, JavaFX!");
-			StackPane root = new StackPane(label);
-			Scene scene = new Scene(root, 300, 200);
-			
-			primaryStage.setTitle("Hello JavaFX");
-			primaryStage.setScene(scene);
-			primaryStage.show();
-		}
+import javafx.application.Application;
+import javafx.scene.Scene;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+public class HelloWorld extends Application {
+	@Override
+	public void start(Stage primaryStage) {
+		Label label = new Label("Hello, JavaFX!");
+		StackPane root = new StackPane(label);
+		Scene scene = new Scene(root, 300, 200);
 		
-		public static void main(String[] args) {
-			launch(args);
-		}
+		primaryStage.setTitle("Hello JavaFX");
+		primaryStage.setScene(scene);
+		primaryStage.show();
 	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
 \end{lstlisting}
 
 \subsubsection{3. Menjalankan Program Hello World}
@@ -115,7 +188,7 @@ Berikut adalah contoh kode JavaFX untuk menampilkan pesan "Hello, JavaFX!".
 Setelah kode ditulis, program dapat dijalankan dengan perintah berikut di terminal atau melalui IDE:
 
 \begin{lstlisting}[language=bash, caption=Menjalankan program Hello World]
-	java --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -jar HelloWorld.jar
+java --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -jar HelloWorld.jar
 \end{lstlisting}
 
 Jika menggunakan IntelliJ IDEA atau Eclipse, cukup tekan tombol \texttt{Run} untuk menjalankan program.
@@ -132,9 +205,9 @@ JavaFX menggunakan \textit{Scene Graph} untuk mengelola komponen antarmuka pengg
 
 \textbf{Contoh penggunaan efek visual di JavaFX:}
 \begin{lstlisting}[style=JavaStyle, caption=Menambahkan efek bayangan pada sebuah tombol]
-	Button btn = new Button("Klik Saya");
-	DropShadow shadow = new DropShadow();
-	btn.setEffect(shadow);
+Button btn = new Button("Klik Saya");
+DropShadow shadow = new DropShadow();
+btn.setEffect(shadow);
 \end{lstlisting}
 
 \subsubsection{2. Integrasi dengan CSS}
@@ -142,10 +215,10 @@ JavaFX memungkinkan pemisahan antara tampilan dan logika bisnis dengan mendukung
 
 \textbf{Contoh penggunaan CSS di JavaFX:}
 \begin{lstlisting}[language=css, caption=Mengatur warna latar belakang tombol dengan CSS]
-	.button {
-		-fx-background-color: #3498db;
-		-fx-text-fill: white;
-	}
+.button {
+	-fx-background-color: #3498db;
+	-fx-text-fill: white;
+}
 \end{lstlisting}
 
 \subsubsection{3. Penggunaan FXML untuk Deklaratif UI}
@@ -153,7 +226,7 @@ JavaFX mendukung penggunaan FXML, sebuah format berbasis XML yang memungkinkan p
 
 \textbf{Contoh file FXML untuk tampilan sederhana:}
 \begin{lstlisting}[style=XmlStyle, caption=Contoh file FXML]
-	<Button text="Klik Saya" fx:id="btnKlik" onAction="#handleButtonClick"/>
+<Button text="Klik Saya" fx:id="btnKlik" onAction="#handleButtonClick"/>
 \end{lstlisting}
 
 \subsubsection{4. Performa Lebih Baik}
@@ -171,11 +244,11 @@ Scene Graph merupakan struktur hierarkis yang digunakan untuk mengatur elemen-el
 
 \textbf{Contoh struktur Scene Graph:}
 \begin{lstlisting}[style=JavaStyle, caption=Contoh penggunaan Scene Graph dalam JavaFX]
-	VBox root = new VBox();
-	Button btn = new Button("Klik Saya");
-	Label lbl = new Label("Selamat Datang");
-	root.getChildren().addAll(lbl, btn);
-	Scene scene = new Scene(root, 400, 300);
+VBox root = new VBox();
+Button btn = new Button("Klik Saya");
+Label lbl = new Label("Selamat Datang");
+root.getChildren().addAll(lbl, btn);
+Scene scene = new Scene(root, 400, 300);
 \end{lstlisting}
 
 \subsubsection{2. Stage dan Scene}
@@ -183,31 +256,31 @@ Scene Graph merupakan struktur hierarkis yang digunakan untuk mengatur elemen-el
 
 \textbf{Contoh penggunaan Stage dan Scene:}
 \begin{lstlisting}[style=JavaStyle, caption=Contoh implementasi Stage dan Scene]
-	@Override
-	public void start(Stage primaryStage) {
-		VBox root = new VBox();
-		Scene scene = new Scene(root, 400, 300);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Aplikasi JavaFX");
-		primaryStage.show();
-	}
+@Override
+public void start(Stage primaryStage) {
+	VBox root = new VBox();
+	Scene scene = new Scene(root, 400, 300);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Aplikasi JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
 
 \subsubsection{3. Layout Manager}
 JavaFX menyediakan berbagai jenis \textit{layout manager} untuk mengatur posisi komponen secara fleksibel, seperti:
 \begin{itemize}
-	\item \textbf{VBox} dan \textbf{HBox}: Menyusun elemen secara vertikal atau horizontal.
-	\item \textbf{GridPane}: Mengatur elemen dalam bentuk grid.
-	\item \textbf{BorderPane}: Membagi area tampilan menjadi lima bagian (atas, bawah, kiri, kanan, tengah).
-	\item \textbf{StackPane}: Menumpuk elemen di atas satu sama lain.
+\item \textbf{VBox} dan \textbf{HBox}: Menyusun elemen secara vertikal atau horizontal.
+\item \textbf{GridPane}: Mengatur elemen dalam bentuk grid.
+\item \textbf{BorderPane}: Membagi area tampilan menjadi lima bagian (atas, bawah, kiri, kanan, tengah).
+\item \textbf{StackPane}: Menumpuk elemen di atas satu sama lain.
 \end{itemize}
 
 \textbf{Contoh penggunaan GridPane untuk form sederhana:}
 \begin{lstlisting}[style=JavaStyle, caption=Contoh GridPane dalam JavaFX]
-	GridPane grid = new GridPane();
-	grid.add(new Label("Nama:"), 0, 0);
-	grid.add(new TextField(), 1, 0);
-	grid.add(new Button("Submit"), 1, 1);
+GridPane grid = new GridPane();
+grid.add(new Label("Nama:"), 0, 0);
+grid.add(new TextField(), 1, 0);
+grid.add(new Button("Submit"), 1, 1);
 \end{lstlisting}
 
 \subsubsection{4. Event Handling}
@@ -215,7 +288,7 @@ JavaFX menerapkan paradigma \textit{event-driven programming} di mana setiap int
 
 \textbf{Contoh menangani event pada tombol:}
 \begin{lstlisting}[style=JavaStyle, caption=Menangani event klik tombol di JavaFX]
-	btn.setOnAction(e -> System.out.println("Tombol diklik!"));
+btn.setOnAction(e -> System.out.println("Tombol diklik!"));
 \end{lstlisting}
 
 \subsubsection{5. Properties dan Binding}
@@ -223,9 +296,9 @@ JavaFX menyediakan sistem \textit{binding} yang memungkinkan properti suatu elem
 
 \textbf{Contoh binding antara TextField dan Label:}
 \begin{lstlisting}[style=JavaStyle, caption=Contoh binding dalam JavaFX]
-	TextField textField = new TextField();
-	Label label = new Label();
-	label.textProperty().bind(textField.textProperty());
+TextField textField = new TextField();
+Label label = new Label();
+label.textProperty().bind(textField.textProperty());
 \end{lstlisting}
 
 Dengan memahami arsitektur dan komponen utama JavaFX, pengembangan aplikasi berbasis GUI dapat dilakukan dengan lebih sistematis dan terstruktur.
@@ -241,11 +314,11 @@ Struktur Scene Graph selalu memiliki satu elemen utama yang disebut sebagai \tex
 
 \textbf{Contoh struktur Scene Graph sederhana:}
 \begin{lstlisting}[style=JavaStyle, caption=Contoh Scene Graph dalam JavaFX]
-	VBox root = new VBox(); // Root node
-	Label lbl = new Label("Selamat Datang");
-	Button btn = new Button("Klik Saya");
-	root.getChildren().addAll(lbl, btn); // Menambahkan elemen ke root
-	Scene scene = new Scene(root, 400, 300);
+VBox root = new VBox(); // Root node
+Label lbl = new Label("Selamat Datang");
+Button btn = new Button("Klik Saya");
+root.getChildren().addAll(lbl, btn); // Menambahkan elemen ke root
+Scene scene = new Scene(root, 400, 300);
 \end{lstlisting}
 
 Dalam contoh di atas, \texttt{VBox} digunakan sebagai elemen utama (root node) yang berisi dua elemen anak, yaitu \texttt{Label} dan \texttt{Button}. Dengan model ini, perubahan pada elemen dalam Scene Graph dapat dengan mudah dikelola tanpa harus merombak struktur kode secara menyeluruh.
@@ -255,37 +328,37 @@ Dalam contoh di atas, \texttt{VBox} digunakan sebagai elemen utama (root node) y
 Aplikasi JavaFX memiliki siklus hidup yang terdiri dari beberapa tahapan utama. JavaFX menggunakan kelas \texttt{Application} sebagai titik masuk utama bagi setiap aplikasi berbasis GUI. Siklus hidup utama dalam JavaFX meliputi:
 
 \begin{itemize}
-	\item \textbf{\texttt{init()}}: Metode ini dipanggil sebelum antarmuka pengguna dibuat. Biasanya digunakan untuk menginisialisasi variabel atau data yang akan digunakan dalam aplikasi.
-	\item \textbf{\texttt{start(Stage primaryStage)}}: Metode utama yang digunakan untuk menampilkan antarmuka pengguna dan menetapkan Scene serta Stage utama.
-	\item \textbf{\texttt{stop()}}: Metode ini dipanggil ketika aplikasi dihentikan. Biasanya digunakan untuk membersihkan sumber daya atau menyimpan data sebelum aplikasi ditutup.
+\item \textbf{\texttt{init()}}: Metode ini dipanggil sebelum antarmuka pengguna dibuat. Biasanya digunakan untuk menginisialisasi variabel atau data yang akan digunakan dalam aplikasi.
+\item \textbf{\texttt{start(Stage primaryStage)}}: Metode utama yang digunakan untuk menampilkan antarmuka pengguna dan menetapkan Scene serta Stage utama.
+\item \textbf{\texttt{stop()}}: Metode ini dipanggil ketika aplikasi dihentikan. Biasanya digunakan untuk membersihkan sumber daya atau menyimpan data sebelum aplikasi ditutup.
 \end{itemize}
 
 \textbf{Contoh siklus hidup aplikasi JavaFX:}
 \begin{lstlisting}[style=JavaStyle, caption=Contoh siklus hidup JavaFX]
-	public class MainApp extends Application {
-		@Override
-		public void init() {
-			System.out.println("Inisialisasi aplikasi");
-		}
-		
-		@Override
-		public void start(Stage primaryStage) {
-			VBox root = new VBox();
-			Scene scene = new Scene(root, 400, 300);
-			primaryStage.setScene(scene);
-			primaryStage.setTitle("Aplikasi JavaFX");
-			primaryStage.show();
-		}
-		
-		@Override
-		public void stop() {
-			System.out.println("Aplikasi dihentikan");
-		}
-		
-		public static void main(String[] args) {
-			launch(args);
-		}
+public class MainApp extends Application {
+	@Override
+	public void init() {
+		System.out.println("Inisialisasi aplikasi");
 	}
+	
+	@Override
+	public void start(Stage primaryStage) {
+		VBox root = new VBox();
+		Scene scene = new Scene(root, 400, 300);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Aplikasi JavaFX");
+		primaryStage.show();
+	}
+	
+	@Override
+	public void stop() {
+		System.out.println("Aplikasi dihentikan");
+	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
 \end{lstlisting}
 
 Kode di atas menunjukkan bagaimana metode \texttt{init()}, \texttt{start()}, dan \texttt{stop()} digunakan dalam siklus hidup JavaFX. Metode \texttt{launch(args)} pada \texttt{main()} digunakan untuk memulai aplikasi JavaFX.
@@ -296,30 +369,30 @@ JavaFX menggunakan paradigma \textit{Event-Driven Programming}, di mana setiap i
 
 Setiap event dikendalikan melalui tiga komponen utama:
 \begin{itemize}
-	\item \textbf{Event Source} – Elemen UI yang menghasilkan event, seperti tombol atau bidang teks.
-	\item \textbf{Event Handler} – Metode atau fungsi yang menangani event.
-	\item \textbf{Event Listener} – Mekanisme yang menghubungkan event dengan event handler.
+\item \textbf{Event Source} – Elemen UI yang menghasilkan event, seperti tombol atau bidang teks.
+\item \textbf{Event Handler} – Metode atau fungsi yang menangani event.
+\item \textbf{Event Listener} – Mekanisme yang menghubungkan event dengan event handler.
 \end{itemize}
 
 \textbf{Contoh event handling pada tombol:}
 \begin{lstlisting}[style=JavaStyle, caption=Menangani event klik tombol di JavaFX]
-	Button btn = new Button("Klik Saya");
-	btn.setOnAction(e -> System.out.println("Tombol diklik!"));
+Button btn = new Button("Klik Saya");
+btn.setOnAction(e -> System.out.println("Tombol diklik!"));
 \end{lstlisting}
 
 Pada contoh di atas, metode \texttt{setOnAction()} digunakan untuk menambahkan event handler yang akan dieksekusi ketika tombol diklik.
 
 Selain event berbasis aksi, JavaFX juga mendukung \textit{Event Filters} dan \textit{Event Handlers} tingkat lanjut:
 \begin{itemize}
-	\item \textbf{Event Handlers} – Menggunakan metode \texttt{setOnAction()}, \texttt{setOnMouseClicked()}, dan lainnya untuk menangani event tertentu.
-	\item \textbf{Event Filters} – Menggunakan metode \texttt{addEventFilter()} untuk menangani event sebelum mencapai komponen yang dituju.
+\item \textbf{Event Handlers} – Menggunakan metode \texttt{setOnAction()}, \texttt{setOnMouseClicked()}, dan lainnya untuk menangani event tertentu.
+\item \textbf{Event Filters} – Menggunakan metode \texttt{addEventFilter()} untuk menangani event sebelum mencapai komponen yang dituju.
 \end{itemize}
 
 \textbf{Contoh penggunaan Event Filter:}
 \begin{lstlisting}[style=JavaStyle, caption=Menambahkan Event Filter pada Scene]
-	scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-		System.out.println("Klik terdeteksi di seluruh Scene!");
-	});
+scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+	System.out.println("Klik terdeteksi di seluruh Scene!");
+});
 \end{lstlisting}
 
 Dengan memahami konsep \textit{Event-Driven Programming}, pengembangan aplikasi JavaFX dapat dilakukan dengan lebih interaktif dan responsif terhadap berbagai aksi pengguna.
@@ -331,9 +404,9 @@ Dengan memahami konsep \textit{Event-Driven Programming}, pengembangan aplikasi 
 Model-View-Controller (MVC) adalah pola desain yang digunakan dalam pengembangan perangkat lunak untuk memisahkan logika bisnis, tampilan, dan kontrol aliran data dalam aplikasi. JavaFX mendukung implementasi MVC dengan baik, memungkinkan pengembangan antarmuka pengguna yang lebih modular dan mudah dikelola.
 
 \begin{itemize}
-	\item \textbf{Model} – Merepresentasikan data dan logika bisnis aplikasi.
-	\item \textbf{View} – Bertanggung jawab untuk menampilkan data ke pengguna.
-	\item \textbf{Controller} – Mengelola interaksi antara View dan Model.
+\item \textbf{Model} – Merepresentasikan data dan logika bisnis aplikasi.
+\item \textbf{View} – Bertanggung jawab untuk menampilkan data ke pengguna.
+\item \textbf{Controller} – Mengelola interaksi antara View dan Model.
 \end{itemize}
 
 Pemisahan ini mempermudah pengujian, pemeliharaan, dan pengembangan aplikasi dalam skala besar.
@@ -341,53 +414,53 @@ Pemisahan ini mempermudah pengujian, pemeliharaan, dan pengembangan aplikasi dal
 \textbf{Contoh implementasi MVC dalam JavaFX:}
 
 \begin{lstlisting}[style=JavaStyle, caption=Model dalam aplikasi JavaFX]
-	public class Mahasiswa {
-		private StringProperty nama = new SimpleStringProperty();
-		private IntegerProperty umur = new SimpleIntegerProperty();
-		
-		public Mahasiswa(String nama, int umur) {
-			this.nama.set(nama);
-			this.umur.set(umur);
-		}
-		
-		public StringProperty namaProperty() { return nama; }
-		public IntegerProperty umurProperty() { return umur; }
+public class Mahasiswa {
+	private StringProperty nama = new SimpleStringProperty();
+	private IntegerProperty umur = new SimpleIntegerProperty();
+	
+	public Mahasiswa(String nama, int umur) {
+		this.nama.set(nama);
+		this.umur.set(umur);
 	}
+	
+	public StringProperty namaProperty() { return nama; }
+	public IntegerProperty umurProperty() { return umur; }
+}
 \end{lstlisting}
 
 Kode di atas merepresentasikan Model dengan properti \texttt{nama} dan \texttt{umur}. Properti ini menggunakan \textit{Property Binding} agar dapat dihubungkan langsung ke tampilan.
 
 \begin{lstlisting}[style=JavaStyle, caption=View dalam aplikasi JavaFX]
-	public class MahasiswaView {
-		private TableView<Mahasiswa> table = new TableView<>();
+public class MahasiswaView {
+	private TableView<Mahasiswa> table = new TableView<>();
+	
+	public Parent getView() {
+		TableColumn<Mahasiswa, String> kolomNama = new TableColumn<>("Nama");
+		kolomNama.setCellValueFactory(data -> data.getValue().namaProperty());
 		
-		public Parent getView() {
-			TableColumn<Mahasiswa, String> kolomNama = new TableColumn<>("Nama");
-			kolomNama.setCellValueFactory(data -> data.getValue().namaProperty());
-			
-			TableColumn<Mahasiswa, Integer> kolomUmur = new TableColumn<>("Umur");
-			kolomUmur.setCellValueFactory(data -> data.getValue().umurProperty().asObject());
-			
-			table.getColumns().addAll(kolomNama, kolomUmur);
-			return new VBox(table);
-		}
+		TableColumn<Mahasiswa, Integer> kolomUmur = new TableColumn<>("Umur");
+		kolomUmur.setCellValueFactory(data -> data.getValue().umurProperty().asObject());
+		
+		table.getColumns().addAll(kolomNama, kolomUmur);
+		return new VBox(table);
 	}
+}
 \end{lstlisting}
 
 Bagian View mendefinisikan tampilan tabel untuk menampilkan daftar mahasiswa.
 
 \begin{lstlisting}[style=JavaStyle, caption=Controller dalam aplikasi JavaFX]
-	public class MahasiswaController {
-		private MahasiswaView view;
-		private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
-		
-		public MahasiswaController(MahasiswaView view) {
-			this.view = view;
-			data.add(new Mahasiswa("Budi", 20));
-			data.add(new Mahasiswa("Siti", 21));
-			view.getTable().setItems(data);
-		}
+public class MahasiswaController {
+	private MahasiswaView view;
+	private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
+	
+	public MahasiswaController(MahasiswaView view) {
+		this.view = view;
+		data.add(new Mahasiswa("Budi", 20));
+		data.add(new Mahasiswa("Siti", 21));
+		view.getTable().setItems(data);
 	}
+}
 \end{lstlisting}
 
 Controller mengatur aliran data antara Model dan View serta menangani interaksi pengguna.
@@ -398,19 +471,19 @@ Dalam pengembangan aplikasi berbasis JavaFX, memisahkan logika bisnis dari tampi
 
 Pendekatan ini dapat diterapkan dengan:
 \begin{itemize}
-	\item Menggunakan kelas terpisah untuk menangani logika bisnis.
-	\item Menggunakan FXML untuk mendefinisikan tampilan.
-	\item Menggunakan \textit{Binding} dan \textit{Listener} untuk menghubungkan UI dengan data.
+\item Menggunakan kelas terpisah untuk menangani logika bisnis.
+\item Menggunakan FXML untuk mendefinisikan tampilan.
+\item Menggunakan \textit{Binding} dan \textit{Listener} untuk menghubungkan UI dengan data.
 \end{itemize}
 
 \textbf{Contoh penggunaan FXML untuk pemisahan tampilan:}
 
 \begin{lstlisting}[style=XmlStyle, caption=Contoh file FXML]
-	<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.MahasiswaController">
-	<Label text="Nama:"/>
-	<TextField fx:id="txtNama"/>
-	<Button text="Tambah" onAction="#tambahMahasiswa"/>
-	</GridPane>
+<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.MahasiswaController">
+<Label text="Nama:"/>
+<TextField fx:id="txtNama"/>
+<Button text="Tambah" onAction="#tambahMahasiswa"/>
+</GridPane>
 \end{lstlisting}
 
 Kode di atas mendefinisikan tampilan menggunakan FXML tanpa mencampurkan logika bisnis di dalamnya.
@@ -418,17 +491,17 @@ Kode di atas mendefinisikan tampilan menggunakan FXML tanpa mencampurkan logika 
 \textbf{Contoh controller yang menangani event dari UI:}
 
 \begin{lstlisting}[style=JavaStyle, caption=Menangani aksi tombol dalam JavaFX]
-	public class MahasiswaController {
-		@FXML private TextField txtNama;
-		private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
-		
-		@FXML
-		private void tambahMahasiswa() {
-			String nama = txtNama.getText();
-			data.add(new Mahasiswa(nama, 18));
-			txtNama.clear();
-		}
+public class MahasiswaController {
+	@FXML private TextField txtNama;
+	private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
+	
+	@FXML
+	private void tambahMahasiswa() {
+		String nama = txtNama.getText();
+		data.add(new Mahasiswa(nama, 18));
+		txtNama.clear();
 	}
+}
 \end{lstlisting}
 
 Dengan pendekatan ini, tampilan (View) dapat diperbarui tanpa perlu mengubah kode logika bisnis.
@@ -437,41 +510,41 @@ Dengan pendekatan ini, tampilan (View) dapat diperbarui tanpa perlu mengubah kod
 
 Dependency Injection (DI) adalah teknik yang digunakan untuk mengelola ketergantungan antara komponen dalam aplikasi, sehingga meningkatkan fleksibilitas dan memudahkan pengujian. JavaFX dapat menggunakan berbagai framework DI seperti:
 \begin{itemize}
-	\item \textbf{Guice} – Framework DI yang dikembangkan oleh Google.
-	\item \textbf{Spring} – Framework populer untuk mengelola dependensi dalam aplikasi berbasis Java.
-	\item \textbf{CDI (Contexts and Dependency Injection)} – Standar Java EE untuk DI.
+\item \textbf{Guice} – Framework DI yang dikembangkan oleh Google.
+\item \textbf{Spring} – Framework populer untuk mengelola dependensi dalam aplikasi berbasis Java.
+\item \textbf{CDI (Contexts and Dependency Injection)} – Standar Java EE untuk DI.
 \end{itemize}
 
 \textbf{Contoh penggunaan Dependency Injection dengan Guice dalam JavaFX:}
 
 \begin{lstlisting}[style=JavaStyle, caption=Contoh implementasi Dependency Injection dengan Guice]
-	public class MahasiswaService {
-		public List<Mahasiswa> getMahasiswa() {
-			return List.of(new Mahasiswa("Andi", 22), new Mahasiswa("Lina", 23));
-		}
+public class MahasiswaService {
+	public List<Mahasiswa> getMahasiswa() {
+		return List.of(new Mahasiswa("Andi", 22), new Mahasiswa("Lina", 23));
+	}
+}
+
+public class MahasiswaController {
+	private MahasiswaService mahasiswaService;
+	
+	@Inject
+	public MahasiswaController(MahasiswaService service) {
+		this.mahasiswaService = service;
 	}
 	
-	public class MahasiswaController {
-		private MahasiswaService mahasiswaService;
-		
-		@Inject
-		public MahasiswaController(MahasiswaService service) {
-			this.mahasiswaService = service;
-		}
-		
-		public void tampilkanMahasiswa() {
-			mahasiswaService.getMahasiswa().forEach(m -> System.out.println(m.getNama()));
-		}
+	public void tampilkanMahasiswa() {
+		mahasiswaService.getMahasiswa().forEach(m -> System.out.println(m.getNama()));
 	}
+}
 \end{lstlisting}
 
 Dalam contoh ini, Guice mengelola instansiasi \texttt{MahasiswaService} dan menyuntikkan dependensi tersebut ke dalam \texttt{MahasiswaController}. Hal ini memungkinkan pemisahan kode dan memudahkan pengujian.
 
 \textbf{Keuntungan menggunakan Dependency Injection dalam JavaFX:}
 \begin{itemize}
-	\item Mengurangi ketergantungan langsung antara komponen.
-	\item Memudahkan pengujian unit karena objek dapat diuji secara terisolasi.
-	\item Meningkatkan fleksibilitas kode dengan memungkinkan perubahan implementasi tanpa perlu memodifikasi kode utama.
+\item Mengurangi ketergantungan langsung antara komponen.
+\item Memudahkan pengujian unit karena objek dapat diuji secara terisolasi.
+\item Meningkatkan fleksibilitas kode dengan memungkinkan perubahan implementasi tanpa perlu memodifikasi kode utama.
 \end{itemize}
 
 Dengan mengimplementasikan Dependency Injection, arsitektur aplikasi JavaFX menjadi lebih modular, mudah diperluas, dan lebih mudah dikelola.
@@ -482,52 +555,36 @@ Dengan mengimplementasikan Dependency Injection, arsitektur aplikasi JavaFX menj
 
 \subsection{Menyiapkan Proyek JavaFX}
 
-Lakukan seperti yang dijelaskan di bagian Hello World (\ref{hello_world_menggunakan_javafx}).
+Lakukan seperti yang dijelaskan di bagian Hello World (Subbab \ref{gradle_javafx} dan \ref{hello_world_menggunakan_javafx}).
 
 \subsection{Membuat Struktur Dasar Aplikasi}
 
 Aplikasi JavaFX terdiri dari beberapa komponen utama:
 \begin{itemize}
-	\item \textbf{Kelas utama (Main Application)} – Titik masuk utama aplikasi.
-	\item \textbf{Stage} – Representasi jendela utama aplikasi.
-	\item \textbf{Scene} – Wadah untuk menyusun elemen-elemen antarmuka pengguna.
-	\item \textbf{Layout} – Struktur tata letak komponen UI.
+\item \textbf{Kelas utama (Main Application)} – Titik masuk utama aplikasi.
+\item \textbf{Stage} – Representasi jendela utama aplikasi.
+\item \textbf{Scene} – Wadah untuk menyusun elemen-elemen antarmuka pengguna.
+\item \textbf{Layout} – Struktur tata letak komponen UI.
 \end{itemize}
 
-Struktur direktori proyek JavaFX biasanya terdiri dari:
-\begin{lstlisting}[style=JavaStyle, caption=Struktur proyek JavaFX]
-	src/
-	├── main/
-	│   ├── java/
-	│   │   ├── com.example/
-	│   │   │   ├── MainApp.java
-	│   │   │   ├── controllers/
-	│   │   │   │   ├── MainController.java
-	│   │   │   ├── models/
-	│   │   │   │   ├── DataModel.java
-	│   ├── resources/
-	│   │   ├── views/
-	│   │   │   ├── main.fxml
-	│   │   ├── styles/
-	│   │   │   ├── style.css
-\end{lstlisting}
+
 
 \textbf{Contoh kelas utama dalam JavaFX:}
 \begin{lstlisting}[style=JavaStyle, caption=Kelas utama JavaFX]
-	public class MainApp extends Application {
-		@Override
-		public void start(Stage primaryStage) {
-			VBox root = new VBox();
-			Scene scene = new Scene(root, 400, 300);
-			primaryStage.setScene(scene);
-			primaryStage.setTitle("Aplikasi JavaFX");
-			primaryStage.show();
-		}
-		
-		public static void main(String[] args) {
-			launch(args);
-		}
+public class MainApp extends Application {
+	@Override
+	public void start(Stage primaryStage) {
+		VBox root = new VBox();
+		Scene scene = new Scene(root, 400, 300);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Aplikasi JavaFX");
+		primaryStage.show();
 	}
+	
+	public static void main(String[] args) {
+		launch(args);
+	}
+}
 \end{lstlisting}
 
 Kode di atas merupakan titik masuk utama aplikasi, di mana \texttt{launch(args)} digunakan untuk menjalankan JavaFX.
@@ -541,48 +598,67 @@ Dalam JavaFX, setiap aplikasi memiliki setidaknya satu \texttt{Stage} dan satu \
 
 \textbf{Contoh pengaturan Stage dalam JavaFX:}
 \begin{lstlisting}[style=JavaStyle, caption=Mengatur Stage dalam JavaFX]
+public void start(Stage primaryStage) {
 	primaryStage.setTitle("Aplikasi JavaFX");
 	primaryStage.setWidth(600);
 	primaryStage.setHeight(400);
 	primaryStage.setResizable(false);
 	primaryStage.show();
+}
 \end{lstlisting}
+
 
 \subsubsection{2. Scene dalam JavaFX}
 \texttt{Scene} merupakan wadah yang berisi tata letak (layout) dan elemen-elemen UI dalam aplikasi. Scene harus selalu diatur ke dalam Stage sebelum ditampilkan.
 
 \textbf{Contoh penggunaan Scene dalam JavaFX:}
 \begin{lstlisting}[style=JavaStyle, caption=Membuat Scene dengan layout VBox]
+public void start(Stage primaryStage) {
 	VBox root = new VBox();
 	Scene scene = new Scene(root, 600, 400);
+	
 	primaryStage.setScene(scene);
+	primaryStage.setTitle("Aplikasi JavaFX");
 	primaryStage.show();
+}
 \end{lstlisting}
+
 
 \subsubsection{3. Mengganti Scene dalam JavaFX}
 Aplikasi sering kali memiliki lebih dari satu Scene. JavaFX memungkinkan perubahan Scene secara dinamis dalam sebuah Stage.
 
 \textbf{Contoh mengganti Scene di JavaFX:}
 \begin{lstlisting}[style=JavaStyle, caption=Mengubah Scene dalam JavaFX]
+public void start(Stage primaryStage) {
 	Button btnGanti = new Button("Ganti Scene");
+	
 	btnGanti.setOnAction(e -> {
 		StackPane newRoot = new StackPane(new Label("Scene Baru"));
 		Scene newScene = new Scene(newRoot, 600, 400);
 		primaryStage.setScene(newScene);
 	});
+	
+	VBox root = new VBox(btnGanti);
+	Scene scene = new Scene(root, 600, 400);
+	
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Aplikasi JavaFX - Ganti Scene");
+	primaryStage.show();
+}
 \end{lstlisting}
+
 
 \subsubsection{4. Mode Tampilan Stage}
 JavaFX memungkinkan berbagai mode tampilan untuk Stage, seperti:
 \begin{itemize}
-	\item \textbf{Mode Normal} – Ukuran dapat diubah.
-	\item \textbf{FullScreen Mode} – Tampilan layar penuh.
-	\item \textbf{Transparent Stage} – Latar belakang transparan.
+\item \textbf{Mode Normal} – Ukuran dapat diubah.
+\item \textbf{FullScreen Mode} – Tampilan layar penuh.
+\item \textbf{Transparent Stage} – Latar belakang transparan.
 \end{itemize}
 
 \textbf{Contoh mengaktifkan mode fullscreen:}
 \begin{lstlisting}[style=JavaStyle, caption=Mengaktifkan mode layar penuh dalam JavaFX]
-	primaryStage.setFullScreen(true);
+primaryStage.setFullScreen(true);
 \end{lstlisting}
 
 Dengan memahami konsep Scene dan Stage, pengembangan aplikasi JavaFX dapat dilakukan dengan lebih fleksibel dan terstruktur.
@@ -592,10 +668,10 @@ Dengan memahami konsep Scene dan Stage, pengembangan aplikasi JavaFX dapat dilak
 Layout Manager dalam JavaFX digunakan untuk mengatur posisi dan ukuran komponen antarmuka pengguna secara otomatis. JavaFX menyediakan berbagai jenis layout yang dapat digunakan sesuai dengan kebutuhan desain aplikasi. Setiap layout memiliki karakteristik dan keunggulan masing-masing, memungkinkan pengembang untuk menyusun elemen-elemen UI dengan lebih fleksibel dan responsif.
 
 \begin{itemize}
-	\item \textbf{VBox dan HBox} – Menyusun elemen secara vertikal atau horizontal.
-	\item \textbf{GridPane} – Mengatur elemen dalam bentuk grid.
-	\item \textbf{BorderPane} – Membagi area tampilan menjadi lima bagian (atas, bawah, kiri, kanan, tengah).
-	\item \textbf{StackPane} – Menumpuk elemen di atas satu sama lain.
+\item \textbf{VBox dan HBox} – Menyusun elemen secara vertikal atau horizontal.
+\item \textbf{GridPane} – Mengatur elemen dalam bentuk grid.
+\item \textbf{BorderPane} – Membagi area tampilan menjadi lima bagian (atas, bawah, kiri, kanan, tengah).
+\item \textbf{StackPane} – Menumpuk elemen di atas satu sama lain.
 \end{itemize}
 
 \subsubsection{VBox dan HBox}
@@ -603,12 +679,13 @@ Layout Manager dalam JavaFX digunakan untuk mengatur posisi dan ukuran komponen 
 VBox (\textit{Vertical Box}) dan HBox (\textit{Horizontal Box}) adalah layout sederhana yang digunakan untuk menata elemen dalam satu arah, baik vertikal maupun horizontal.
 
 \begin{itemize}
-	\item \textbf{VBox} menyusun elemen dalam satu kolom secara vertikal.
-	\item \textbf{HBox} menyusun elemen dalam satu baris secara horizontal.
+\item \textbf{VBox} menyusun elemen dalam satu kolom secara vertikal.
+\item \textbf{HBox} menyusun elemen dalam satu baris secara horizontal.
 \end{itemize}
 
 \textbf{Contoh penggunaan VBox:}
 \begin{lstlisting}[style=JavaStyle, caption=Menyusun elemen dalam VBox]
+public void start(Stage primaryStage) {
 	VBox vbox = new VBox();
 	vbox.setSpacing(10); // Jarak antar elemen
 	vbox.setPadding(new Insets(20)); // Padding di dalam layout
@@ -618,12 +695,18 @@ VBox (\textit{Vertical Box}) dan HBox (\textit{Horizontal Box}) adalah layout se
 	Button btnSubmit = new Button("Kirim");
 	
 	vbox.getChildren().addAll(lbl, txtNama, btnSubmit);
+	
 	Scene scene = new Scene(vbox, 300, 200);
 	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh VBox dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
 
 \textbf{Contoh penggunaan HBox:}
 \begin{lstlisting}[style=JavaStyle, caption=Menyusun elemen dalam HBox]
+public void start(Stage primaryStage) {
 	HBox hbox = new HBox();
 	hbox.setSpacing(10); // Jarak antar elemen
 	hbox.setPadding(new Insets(20));
@@ -632,8 +715,12 @@ VBox (\textit{Vertical Box}) dan HBox (\textit{Horizontal Box}) adalah layout se
 	Button btn2 = new Button("Tombol 2");
 	
 	hbox.getChildren().addAll(btn1, btn2);
+	
 	Scene scene = new Scene(hbox, 300, 100);
 	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh HBox dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
 
 Dengan menggunakan VBox dan HBox, pengelolaan elemen dalam satu arah menjadi lebih mudah, baik secara vertikal maupun horizontal.
@@ -644,33 +731,33 @@ GridPane adalah layout yang memungkinkan pengaturan elemen dalam bentuk grid (ba
 
 \textbf{Keunggulan GridPane:}
 \begin{itemize}
-	\item Fleksibel dalam mengatur tata letak berbasis tabel.
-	\item Setiap elemen dapat direntangkan (\textit{spanning}) ke beberapa baris atau kolom.
-	\item Cocok untuk membangun formulir atau tata letak yang kompleks.
+\item Fleksibel dalam mengatur tata letak berbasis tabel.
+\item Setiap elemen dapat direntangkan (\textit{spanning}) ke beberapa baris atau kolom.
+\item Cocok untuk membangun formulir atau tata letak yang kompleks.
 \end{itemize}
 
 \textbf{Contoh penggunaan GridPane untuk formulir sederhana:}
 \begin{lstlisting}[style=JavaStyle, caption=Membuat formulir menggunakan GridPane]
-	GridPane grid = new GridPane();
-	grid.setPadding(new Insets(10));
-	grid.setHgap(10); // Jarak horizontal antar kolom
-	grid.setVgap(10); // Jarak vertikal antar baris
-	
-	Label lblNama = new Label("Nama:");
-	TextField txtNama = new TextField();
-	Label lblEmail = new Label("Email:");
-	TextField txtEmail = new TextField();
-	Button btnSubmit = new Button("Kirim");
-	
-	// Menambahkan elemen ke dalam GridPane (kolom, baris)
-	grid.add(lblNama, 0, 0);
-	grid.add(txtNama, 1, 0);
-	grid.add(lblEmail, 0, 1);
-	grid.add(txtEmail, 1, 1);
-	grid.add(btnSubmit, 1, 2);
-	
-	Scene scene = new Scene(grid, 300, 200);
-	primaryStage.setScene(scene);
+GridPane grid = new GridPane();
+grid.setPadding(new Insets(10));
+grid.setHgap(10); // Jarak horizontal antar kolom
+grid.setVgap(10); // Jarak vertikal antar baris
+
+Label lblNama = new Label("Nama:");
+TextField txtNama = new TextField();
+Label lblEmail = new Label("Email:");
+TextField txtEmail = new TextField();
+Button btnSubmit = new Button("Kirim");
+
+// Menambahkan elemen ke dalam GridPane (kolom, baris)
+grid.add(lblNama, 0, 0);
+grid.add(txtNama, 1, 0);
+grid.add(lblEmail, 0, 1);
+grid.add(txtEmail, 1, 1);
+grid.add(btnSubmit, 1, 2);
+
+Scene scene = new Scene(grid, 300, 200);
+primaryStage.setScene(scene);
 \end{lstlisting}
 
 Kode di atas menunjukkan bagaimana elemen UI ditempatkan dalam sel-sel grid, memungkinkan pengaturan yang lebih terstruktur.
@@ -679,17 +766,18 @@ Kode di atas menunjukkan bagaimana elemen UI ditempatkan dalam sel-sel grid, mem
 
 \textbf{BorderPane} adalah layout yang membagi area menjadi lima bagian utama:
 \begin{itemize}
-	\item \textbf{Top} – Bagian atas.
-	\item \textbf{Bottom} – Bagian bawah.
-	\item \textbf{Left} – Bagian kiri.
-	\item \textbf{Right} – Bagian kanan.
-	\item \textbf{Center} – Bagian tengah.
+\item \textbf{Top} – Bagian atas.
+\item \textbf{Bottom} – Bagian bawah.
+\item \textbf{Left} – Bagian kiri.
+\item \textbf{Right} – Bagian kanan.
+\item \textbf{Center} – Bagian tengah.
 \end{itemize}
 
 BorderPane sering digunakan untuk aplikasi dengan struktur menu dan konten utama.
 
 \textbf{Contoh penggunaan BorderPane:}
 \begin{lstlisting}[style=JavaStyle, caption=Menggunakan BorderPane dalam JavaFX]
+public void start(Stage primaryStage) {
 	BorderPane borderPane = new BorderPane();
 	
 	Label lblHeader = new Label("Judul Aplikasi");
@@ -704,7 +792,11 @@ BorderPane sering digunakan untuk aplikasi dengan struktur menu dan konten utama
 	
 	Scene scene = new Scene(borderPane, 400, 300);
 	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh BorderPane dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
 
 Kode di atas membagi tampilan aplikasi menjadi beberapa bagian dengan menggunakan BorderPane.
 
@@ -712,15 +804,15 @@ Kode di atas membagi tampilan aplikasi menjadi beberapa bagian dengan menggunaka
 
 \textbf{Contoh penggunaan StackPane:}
 \begin{lstlisting}[style=JavaStyle, caption=Menumpuk elemen menggunakan StackPane]
-	StackPane stackPane = new StackPane();
-	
-	Rectangle rect = new Rectangle(100, 100, Color.BLUE);
-	Label lbl = new Label("Teks di atas");
-	
-	stackPane.getChildren().addAll(rect, lbl);
-	
-	Scene scene = new Scene(stackPane, 200, 200);
-	primaryStage.setScene(scene);
+StackPane stackPane = new StackPane();
+
+Rectangle rect = new Rectangle(100, 100, Color.BLUE);
+Label lbl = new Label("Teks di atas");
+
+stackPane.getChildren().addAll(rect, lbl);
+
+Scene scene = new Scene(stackPane, 200, 200);
+primaryStage.setScene(scene);
 \end{lstlisting}
 
 Dalam contoh di atas, teks berada di atas persegi panjang karena elemen Label ditambahkan setelah Rectangle dalam StackPane.
@@ -728,19 +820,19 @@ Dalam contoh di atas, teks berada di atas persegi panjang karena elemen Label di
 \textbf{Perbandingan Layout Manager JavaFX:}
 
 \begin{table}[h]
-	\centering
-	\begin{tabular}{|l|l|l|}
-		\hline
-		\textbf{Layout} & \textbf{Ciri Khas} & \textbf{Cocok untuk} \\
-		\hline
-		VBox & Menyusun elemen secara vertikal & Formulir, daftar komponen \\
-		HBox & Menyusun elemen secara horizontal & Toolbar, menu horizontal \\
-		GridPane & Susunan berbentuk tabel (grid) & Formulir, tampilan tabel \\
-		BorderPane & Membagi area ke lima bagian & Layout aplikasi dengan menu \\
-		StackPane & Menumpuk elemen satu di atas lainnya & Overlay, efek visual \\
-		\hline
-	\end{tabular}
-	\caption{Perbandingan Layout Manager JavaFX}
+\centering
+\begin{tabular}{|l|l|l|}
+	\hline
+	\textbf{Layout} & \textbf{Ciri Khas} & \textbf{Cocok untuk} \\
+	\hline
+	VBox & Menyusun elemen secara vertikal & Formulir, daftar komponen \\
+	HBox & Menyusun elemen secara horizontal & Toolbar, menu horizontal \\
+	GridPane & Susunan berbentuk tabel (grid) & Formulir, tampilan tabel \\
+	BorderPane & Membagi area ke lima bagian & Layout aplikasi dengan menu \\
+	StackPane & Menumpuk elemen satu di atas lainnya & Overlay, efek visual \\
+	\hline
+\end{tabular}
+\caption{Perbandingan Layout Manager JavaFX}
 \end{table}
 
 Dengan memahami berbagai jenis layout manager di JavaFX, pengembangan antarmuka pengguna dapat dilakukan dengan lebih fleksibel dan sesuai dengan kebutuhan aplikasi.
@@ -754,14 +846,27 @@ Komponen interaktif dalam JavaFX digunakan untuk menerima input dari pengguna da
 
 \subsubsection{Label}
 
-\texttt{Label} digunakan untuk menampilkan teks statis dalam antarmuka pengguna. Label dapat diberi gaya menggunakan CSS dan mendukung properti \texttt{binding} untuk memperbarui teks secara dinamis.
+\texttt{Label} digunakan untuk menampilkan teks statis dalam antarmuka pengguna. 
 
 \textbf{Contoh penggunaan Label:}
 \begin{lstlisting}[style=JavaStyle, caption=Membuat Label dalam JavaFX]
-	Label lblJudul = new Label("Selamat Datang di Aplikasi JavaFX");
-	lblJudul.setFont(new Font("Arial", 16));
-	lblJudul.setTextFill(Color.BLUE);
+	public void start(Stage primaryStage) {
+		Label lblJudul = new Label("Selamat Datang di Aplikasi JavaFX");
+		lblJudul.setFont(new Font("Arial", 16));
+		lblJudul.setTextFill(Color.BLUE);
+		
+		VBox root = new VBox(lblJudul);
+		root.setAlignment(Pos.CENTER);
+		Scene scene = new Scene(root, 400, 200);
+		
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh Label dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Label dalam JavaFX dibuat menggunakan kelas \texttt{Label}, yang digunakan untuk menampilkan teks statis dalam antarmuka pengguna. Kode di atas membuat sebuah label dengan teks "Selamat Datang di Aplikasi JavaFX" dan mengatur tampilannya dengan menggunakan metode \texttt{setFont} untuk menentukan jenis dan ukuran huruf serta \texttt{setTextFill} untuk mengubah warna teks menjadi biru. Label ini ditempatkan dalam \texttt{VBox} agar tertata rapi di tengah layar. Kemudian, \texttt{Scene} dengan ukuran \texttt{400x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{Label}, informasi penting dapat ditampilkan dalam aplikasi JavaFX tanpa memerlukan interaksi pengguna, seperti judul halaman, deskripsi fitur, atau notifikasi statis.
+
 
 \subsubsection{Button}
 
@@ -769,30 +874,71 @@ Komponen interaktif dalam JavaFX digunakan untuk menerima input dari pengguna da
 
 \textbf{Contoh penggunaan Button:}
 \begin{lstlisting}[style=JavaStyle, caption=Membuat Button dan Menangani Event]
+public void start(Stage primaryStage) {
 	Button btnKlik = new Button("Klik Saya");
 	btnKlik.setOnAction(e -> System.out.println("Tombol diklik!"));
+	
+	VBox root = new VBox(10, btnKlik);
+	root.setAlignment(Pos.CENTER);
+	root.setPadding(new Insets(20));
+	
+	Scene scene = new Scene(root, 300, 200);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh Button dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
+Tombol dalam JavaFX dibuat menggunakan kelas \texttt{Button}, yang memungkinkan pengguna untuk berinteraksi dengan aplikasi melalui klik. Kode di atas membuat sebuah tombol dengan label "Klik Saya" dan menetapkan event handler menggunakan metode \texttt{setOnAction}. Saat tombol diklik, aksi yang telah didefinisikan dalam ekspresi lambda akan dijalankan, dalam hal ini mencetak teks \texttt{"Tombol diklik!"} ke konsol. Tombol ditempatkan dalam \texttt{VBox} agar tertata dengan baik di tengah layar, dengan jarak antar elemen sebesar \texttt{10} piksel dan padding sebesar \texttt{20} piksel untuk memastikan tata letak yang lebih rapi. Kemudian, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Penggunaan \textbf{Button} dalam JavaFX sangat penting untuk menangani berbagai aksi dalam aplikasi GUI, seperti navigasi, konfirmasi, atau memicu fungsi lainnya.
 
 \subsubsection{TextField}
 
 \texttt{TextField} memungkinkan pengguna untuk memasukkan teks satu baris. Input yang dimasukkan dapat diambil menggunakan metode \texttt{getText()}.
 
-\textbf{Contoh penggunaan TextField:}
-\begin{lstlisting}[style=JavaStyle, caption=Membuat TextField dalam JavaFX]
-	TextField txtNama = new TextField();
-	txtNama.setPromptText("Masukkan Nama");
+\textbf{Contoh penggunaan Button:}
+\begin{lstlisting}[style=JavaStyle, caption=Membuat Button dan Menangani Event]
+	public void start(Stage primaryStage) {
+		Button btnKlik = new Button("Klik Saya");
+		btnKlik.setOnAction(e -> System.out.println("Tombol diklik!"));
+		
+		VBox root = new VBox(btnKlik);
+		root.setAlignment(Pos.CENTER);
+		root.setSpacing(10);
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh Button dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Tombol dalam JavaFX dibuat menggunakan kelas \texttt{Button}, yang memungkinkan pengguna untuk berinteraksi dengan antarmuka aplikasi melalui klik. Kode di atas membuat sebuah tombol dengan label "Klik Saya" dan menetapkan event handler menggunakan metode \texttt{setOnAction}. Saat tombol diklik, ekspresi lambda akan dijalankan untuk mencetak teks \texttt{"Tombol diklik!"} ke konsol. Tombol ini ditempatkan dalam \texttt{VBox} untuk menjaga tata letaknya tetap rapi, dengan \texttt{setAlignment(Pos.CENTER)} agar tombol berada di tengah dan \texttt{setSpacing(10)} untuk memberi jarak antar elemen. Kemudian, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{Button}, aplikasi JavaFX dapat menangani berbagai aksi pengguna, seperti navigasi, konfirmasi, atau menjalankan fungsi tertentu saat tombol ditekan.
 
 \textbf{Contoh penggunaan TextField dengan Button:}
 \begin{lstlisting}[style=JavaStyle, caption=Mengambil Input dari TextField]
-	TextField txtInput = new TextField();
-	Button btnSubmit = new Button("Submit");
-	
-	btnSubmit.setOnAction(e -> {
-		String input = txtInput.getText();
-		System.out.println("Input: " + input);
-	});
+	public void start(Stage primaryStage) {
+		TextField txtInput = new TextField();
+		Button btnSubmit = new Button("Submit");
+		
+		btnSubmit.setOnAction(e -> {
+			String input = txtInput.getText();
+			System.out.println("Input: " + input);
+		});
+		
+		VBox root = new VBox(10, txtInput, btnSubmit);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh TextField dan Button dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{TextField} dalam JavaFX digunakan untuk menerima input teks dari pengguna. Kode di atas membuat sebuah kotak teks (\texttt{TextField}) dan sebuah tombol (\texttt{Button}) yang berlabel "Submit". Saat tombol diklik, teks yang dimasukkan dalam \texttt{TextField} akan diambil menggunakan metode \texttt{getText()} dan ditampilkan di konsol. Komponen ini ditempatkan dalam \texttt{VBox} dengan jarak antar elemen sebesar \texttt{10} piksel dan \texttt{setAlignment(Pos.CENTER)} agar tertata di tengah. \texttt{Scene} dengan ukuran \texttt{300x200} piksel kemudian ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan kombinasi \textbf{TextField} dan \textbf{Button}, pengguna dapat memasukkan data yang nantinya dapat diproses lebih lanjut, seperti validasi input atau penyimpanan dalam database.
+
+
 
 \subsection{ComboBox, ListView, dan TableView}
 
@@ -800,37 +946,61 @@ Komponen interaktif dalam JavaFX digunakan untuk menerima input dari pengguna da
 
 \texttt{ComboBox} menyediakan daftar pilihan dalam bentuk dropdown. Pengguna dapat memilih salah satu item dari daftar.
 
-\textbf{Contoh penggunaan ComboBox:}
-\begin{lstlisting}[style=JavaStyle, caption=Membuat ComboBox dalam JavaFX]
-	ComboBox<String> comboBox = new ComboBox<>();
-	comboBox.getItems().addAll("Pilihan 1", "Pilihan 2", "Pilihan 3");
-	comboBox.setValue("Pilihan 1");
+\textbf{Contoh penggunaan ComboBox dan Menangani Event:}
+\begin{lstlisting}[style=JavaStyle, caption=Membuat dan Menangani Event pada ComboBox dalam JavaFX]
+	public void start(Stage primaryStage) {
+		ComboBox<String> comboBox = new ComboBox<>();
+		comboBox.getItems().addAll("Pilihan 1", "Pilihan 2", "Pilihan 3");
+		comboBox.setValue("Pilihan 1");
+		
+		comboBox.setOnAction(e -> {
+			String pilihan = comboBox.getValue();
+			System.out.println("Dipilih: " + pilihan);
+		});
+		
+		VBox root = new VBox(10, comboBox);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("ComboBox dengan Event dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
 
-\textbf{Menangani Event pada ComboBox:}
-\begin{lstlisting}[style=JavaStyle, caption=Menampilkan Pilihan dari ComboBox]
-	comboBox.setOnAction(e -> {
-		String pilihan = comboBox.getValue();
-		System.out.println("Dipilih: " + pilihan);
-	});
-\end{lstlisting}
+Komponen \texttt{ComboBox} dalam JavaFX digunakan untuk menampilkan daftar pilihan dalam bentuk dropdown. Kode di atas membuat sebuah \texttt{ComboBox} dengan tiga opsi, yaitu "Pilihan 1", "Pilihan 2", dan "Pilihan 3", serta menetapkan nilai awal ke "Pilihan 1". Untuk menangani interaksi pengguna, metode \texttt{setOnAction()} diterapkan agar setiap kali pengguna memilih opsi dalam daftar, nilai yang dipilih akan diambil menggunakan \texttt{getValue()} dan ditampilkan di konsol. Komponen ini ditempatkan dalam \texttt{VBox} dengan jarak antar elemen sebesar \texttt{10} piksel serta padding sebesar \texttt{20} piksel untuk tata letak yang lebih rapi. Kemudian, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{ComboBox} dan event handler, aplikasi JavaFX dapat menawarkan antarmuka pengguna yang lebih interaktif untuk memilih opsi dari daftar yang tersedia.
+
+
 
 \subsubsection{ListView}
 
 \texttt{ListView} memungkinkan pengguna untuk memilih satu atau beberapa item dari daftar.
 
-\textbf{Contoh penggunaan ListView:}
-\begin{lstlisting}[style=JavaStyle, caption=Membuat ListView dalam JavaFX]
-	ListView<String> listView = new ListView<>();
-	listView.getItems().addAll("Item 1", "Item 2", "Item 3");
+\textbf{Contoh penggunaan ListView dan Menangani Event:}
+\begin{lstlisting}[style=JavaStyle, caption=Membuat dan Menangani Event pada ListView dalam JavaFX]
+	public void start(Stage primaryStage) {
+		ListView<String> listView = new ListView<>();
+		listView.getItems().addAll("Item 1", "Item 2", "Item 3");
+		
+		listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+			System.out.println("Dipilih: " + newVal);
+		});
+		
+		VBox root = new VBox(10, listView);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("ListView dengan Event dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
 
-\textbf{Menangani Event pada ListView:}
-\begin{lstlisting}[style=JavaStyle, caption=Mengambil Pilihan dari ListView]
-	listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-		System.out.println("Dipilih: " + newVal);
-	});
-\end{lstlisting}
+Komponen \texttt{ListView} dalam JavaFX digunakan untuk menampilkan daftar item dalam bentuk vertikal, memungkinkan pengguna memilih satu atau beberapa item. Kode di atas membuat sebuah \texttt{ListView} yang berisi tiga item: "Item 1", "Item 2", dan "Item 3". Untuk menangani interaksi pengguna, event listener ditambahkan menggunakan \texttt{selectedItemProperty().addListener()}, sehingga setiap kali pengguna memilih item baru, nilai yang dipilih akan diambil dan ditampilkan di konsol. \texttt{ListView} ditempatkan dalam \texttt{VBox} agar tata letaknya lebih rapi, dengan jarak antar elemen sebesar \texttt{10} piksel serta padding sebesar \texttt{20} piksel. Setelah itu, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{ListView} dan event handler, aplikasi JavaFX dapat memberikan daftar pilihan yang interaktif, seperti daftar menu, daftar tugas, atau daftar opsi dalam suatu aplikasi.
+
+
 
 \subsubsection{TableView}
 
@@ -838,16 +1008,30 @@ Komponen interaktif dalam JavaFX digunakan untuk menerima input dari pengguna da
 
 \textbf{Contoh penggunaan TableView:}
 \begin{lstlisting}[style=JavaStyle, caption=Membuat TableView dalam JavaFX]
-	TableView<Mahasiswa> tableView = new TableView<>();
-	
-	TableColumn<Mahasiswa, String> kolomNama = new TableColumn<>("Nama");
-	kolomNama.setCellValueFactory(new PropertyValueFactory<>("nama"));
-	
-	TableColumn<Mahasiswa, Integer> kolomUmur = new TableColumn<>("Umur");
-	kolomUmur.setCellValueFactory(new PropertyValueFactory<>("umur"));
-	
-	tableView.getColumns().addAll(kolomNama, kolomUmur);
+	public void start(Stage primaryStage) {
+		TableView<Mahasiswa> tableView = new TableView<>();
+		
+		TableColumn<Mahasiswa, String> kolomNama = new TableColumn<>("Nama");
+		kolomNama.setCellValueFactory(new PropertyValueFactory<>("nama"));
+		
+		TableColumn<Mahasiswa, Integer> kolomUmur = new TableColumn<>("Umur");
+		kolomUmur.setCellValueFactory(new PropertyValueFactory<>("umur"));
+		
+		tableView.getColumns().addAll(kolomNama, kolomUmur);
+		
+		VBox root = new VBox(10, tableView);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 400, 300);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh TableView dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{TableView} dalam JavaFX digunakan untuk menampilkan data dalam bentuk tabel dengan beberapa kolom. Kode di atas membuat sebuah \texttt{TableView} yang menampilkan daftar objek \texttt{Mahasiswa} dengan dua kolom: \texttt{"Nama"} dan \texttt{"Umur"}. Kolom pertama menggunakan kelas \texttt{TableColumn} dengan tipe data \texttt{String}, sementara kolom kedua menggunakan tipe data \texttt{Integer}. Data untuk setiap kolom dihubungkan dengan properti dalam kelas \texttt{Mahasiswa} menggunakan \texttt{PropertyValueFactory}. \texttt{TableView} ditempatkan dalam \texttt{VBox} agar tata letaknya lebih rapi, dengan jarak antar elemen sebesar \texttt{10} piksel serta padding sebesar \texttt{20} piksel. Setelah itu, \texttt{Scene} dengan ukuran \texttt{400x300} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{TableView}, aplikasi JavaFX dapat menampilkan data dalam bentuk tabel yang interaktif, misalnya untuk daftar mahasiswa, laporan transaksi, atau tampilan data yang dapat difilter dan diedit.
+
 
 \subsection{Menu dan Dialog}
 
@@ -857,15 +1041,28 @@ Komponen interaktif dalam JavaFX digunakan untuk menerima input dari pengguna da
 
 \textbf{Contoh penggunaan MenuBar:}
 \begin{lstlisting}[style=JavaStyle, caption=Membuat MenuBar dalam JavaFX]
-	MenuBar menuBar = new MenuBar();
-	
-	Menu menuFile = new Menu("File");
-	MenuItem menuItemBuka = new MenuItem("Buka");
-	MenuItem menuItemSimpan = new MenuItem("Simpan");
-	
-	menuFile.getItems().addAll(menuItemBuka, menuItemSimpan);
-	menuBar.getMenus().add(menuFile);
+	public void start(Stage primaryStage) {
+		MenuBar menuBar = new MenuBar();
+		
+		Menu menuFile = new Menu("File");
+		MenuItem menuItemBuka = new MenuItem("Buka");
+		MenuItem menuItemSimpan = new MenuItem("Simpan");
+		
+		menuFile.getItems().addAll(menuItemBuka, menuItemSimpan);
+		menuBar.getMenus().add(menuFile);
+		
+		VBox root = new VBox(menuBar);
+		Scene scene = new Scene(root, 400, 300);
+		
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh MenuBar dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{MenuBar} dalam JavaFX digunakan untuk membuat menu navigasi di bagian atas jendela aplikasi. Kode di atas membuat sebuah \texttt{MenuBar} dengan satu \texttt{Menu} bernama "File", yang berisi dua \texttt{MenuItem}, yaitu "Buka" dan "Simpan". Setiap item menu ditambahkan ke dalam \texttt{Menu} menggunakan metode \texttt{getItems().addAll()}, kemudian menu tersebut ditambahkan ke dalam \texttt{MenuBar}. \texttt{MenuBar} ditempatkan dalam \texttt{VBox} agar posisinya berada di bagian atas jendela aplikasi. Setelah itu, \texttt{Scene} dengan ukuran \texttt{400x300} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{MenuBar}, aplikasi JavaFX dapat memiliki menu navigasi yang memungkinkan pengguna mengakses berbagai fitur, seperti membuka file, menyimpan data, atau mengatur preferensi dalam aplikasi.
+
+
 
 \subsubsection{Dialog}
 
@@ -873,50 +1070,78 @@ JavaFX menyediakan berbagai jenis dialog seperti \texttt{Alert} dan \texttt{Text
 
 \textbf{Contoh penggunaan Alert untuk pesan informasi:}
 \begin{lstlisting}[style=JavaStyle, caption=Menampilkan Dialog Alert]
-	Alert alert = new Alert(Alert.AlertType.INFORMATION);
-	alert.setTitle("Informasi");
-	alert.setHeaderText(null);
-	alert.setContentText("Operasi Berhasil!");
-	alert.showAndWait();
+	public void start(Stage primaryStage) {
+		Alert alert = new Alert(Alert.AlertType.INFORMATION);
+		alert.setTitle("Informasi");
+		alert.setHeaderText(null);
+		alert.setContentText("Operasi Berhasil!");
+		alert.showAndWait();
+		
+		primaryStage.setTitle("Contoh Alert dalam JavaFX");
+		primaryStage.setWidth(300);
+		primaryStage.setHeight(200);
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{Alert} dalam JavaFX digunakan untuk menampilkan dialog pesan kepada pengguna. Kode di atas membuat sebuah dialog \texttt{Alert} dengan tipe \texttt{INFORMATION}, yang berfungsi untuk memberikan informasi kepada pengguna. Judul dialog ditentukan dengan \texttt{setTitle("Informasi")}, sedangkan isi pesan diatur dengan \texttt{setContentText("Operasi Berhasil!")}. Metode \texttt{showAndWait()} digunakan agar dialog tetap ditampilkan hingga pengguna menutupnya. Selain itu, jendela utama aplikasi (\texttt{Stage}) tetap ditampilkan dengan ukuran \texttt{300x200} piksel. Dengan menggunakan \textbf{Alert}, aplikasi JavaFX dapat menampilkan pesan konfirmasi, peringatan, atau kesalahan kepada pengguna untuk meningkatkan pengalaman interaksi dengan sistem.
+
+
 
 \textbf{Contoh penggunaan TextInputDialog untuk meminta input:}
 \begin{lstlisting}[style=JavaStyle, caption=Menggunakan TextInputDialog]
-	TextInputDialog dialog = new TextInputDialog("Default");
-	dialog.setTitle("Input Dialog");
-	dialog.setHeaderText("Masukkan Nama:");
-	dialog.setContentText("Nama:");
-	
-	Optional<String> hasil = dialog.showAndWait();
-	hasil.ifPresent(nama -> System.out.println("Nama yang dimasukkan: " + nama));
+	public void start(Stage primaryStage) {
+		TextInputDialog dialog = new TextInputDialog("Default");
+		dialog.setTitle("Input Dialog");
+		dialog.setHeaderText("Masukkan Nama:");
+		dialog.setContentText("Nama:");
+		
+		Optional<String> hasil = dialog.showAndWait();
+		hasil.ifPresent(nama -> System.out.println("Nama yang dimasukkan: " + nama));
+		
+		primaryStage.setTitle("Contoh TextInputDialog dalam JavaFX");
+		primaryStage.setWidth(300);
+		primaryStage.setHeight(200);
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{TextInputDialog} dalam JavaFX digunakan untuk menampilkan dialog yang memungkinkan pengguna memasukkan teks. Kode di atas membuat sebuah \texttt{TextInputDialog} dengan nilai awal "Default" dan menampilkan pesan "Masukkan Nama:". Metode \texttt{showAndWait()} digunakan untuk menampilkan dialog dan menunggu input dari pengguna. Jika pengguna memasukkan teks dan menekan tombol konfirmasi, hasilnya diambil menggunakan \texttt{Optional<String>} dan ditampilkan di konsol dengan \texttt{ifPresent()}. Selain itu, jendela utama (\texttt{Stage}) tetap ditampilkan dengan ukuran \texttt{300x200} piksel. Dengan menggunakan \textbf{TextInputDialog}, aplikasi JavaFX dapat meminta input pengguna secara langsung, seperti nama pengguna, kata sandi, atau parameter lain yang dibutuhkan untuk pemrosesan lebih lanjut.
+
 
 \subsubsection{File Chooser}
 
 \texttt{FileChooser} memungkinkan pengguna untuk memilih file dari sistem.
 
-\textbf{Contoh penggunaan FileChooser:}
-\begin{lstlisting}[style=JavaStyle, caption=Memilih File dengan FileChooser]
-	FileChooser fileChooser = new FileChooser();
-	fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File Teks", "*.txt"));
-	File file = fileChooser.showOpenDialog(primaryStage);
-	if (file != null) {
-		System.out.println("File dipilih: " + file.getAbsolutePath());
+\textbf{Contoh penggunaan TextInputDialog untuk meminta input:}
+\begin{lstlisting}[style=JavaStyle, caption=Menggunakan TextInputDialog]
+	public void start(Stage primaryStage) {
+		TextInputDialog dialog = new TextInputDialog("Default");
+		dialog.setTitle("Input Dialog");
+		dialog.setHeaderText("Masukkan Nama:");
+		dialog.setContentText("Nama:");
+		
+		Optional<String> hasil = dialog.showAndWait();
+		hasil.ifPresent(nama -> System.out.println("Nama yang dimasukkan: " + nama));
+		
+		primaryStage.setTitle("Contoh TextInputDialog dalam JavaFX");
+		primaryStage.setWidth(300);
+		primaryStage.setHeight(200);
+		primaryStage.show();
 	}
 \end{lstlisting}
 
----
+Komponen \texttt{TextInputDialog} dalam JavaFX digunakan untuk menampilkan dialog yang meminta input teks dari pengguna. Kode di atas membuat sebuah \texttt{TextInputDialog} dengan nilai awal "Default" dan menampilkan pesan "Masukkan Nama:". Metode \texttt{showAndWait()} digunakan untuk menampilkan dialog dan menunggu pengguna memasukkan input. Jika pengguna mengonfirmasi input, hasilnya diperoleh dalam objek \texttt{Optional<String>} dan dieksekusi dengan \texttt{ifPresent()}, yang mencetak teks yang dimasukkan ke dalam konsol. Selain itu, jendela utama (\texttt{Stage}) tetap ditampilkan dengan ukuran \texttt{300x200} piksel. Dengan memahami berbagai komponen interaktif yang disediakan oleh JavaFX, pengembangan antarmuka pengguna dapat dilakukan dengan lebih mudah dan interaktif. Setiap komponen memiliki fungsinya masing-masing dan dapat dikombinasikan untuk membangun aplikasi yang lebih kompleks.
 
-Dengan memahami berbagai komponen interaktif yang disediakan oleh JavaFX, pengembangan antarmuka pengguna dapat dilakukan dengan lebih mudah dan interaktif. Setiap komponen memiliki fungsinya masing-masing dan dapat dikombinasikan untuk membangun aplikasi yang lebih kompleks.
 
 \subsection{Menangani Event dengan Event Handler}
 
 Event handler dalam JavaFX digunakan untuk menangani interaksi pengguna dengan elemen antarmuka pengguna. JavaFX mendukung berbagai jenis event, seperti klik tombol, pergerakan mouse, dan input dari keyboard. Event dalam JavaFX terdiri dari tiga komponen utama:
 
 \begin{itemize}
-	\item \textbf{Event Source} – Elemen UI yang menghasilkan event, seperti tombol atau bidang teks.
-	\item \textbf{Event Handler} – Metode atau fungsi yang menangani event.
-	\item \textbf{Event Listener} – Mekanisme yang menghubungkan event dengan event handler.
+\item \textbf{Event Source} – Elemen UI yang menghasilkan event, seperti tombol atau bidang teks.
+\item \textbf{Event Handler} – Metode atau fungsi yang menangani event.
+\item \textbf{Event Listener} – Mekanisme yang menghubungkan event dengan event handler.
 \end{itemize}
 
 \subsubsection{Menangani Event pada Button}
@@ -925,9 +1150,23 @@ Event handler dalam JavaFX digunakan untuk menangani interaksi pengguna dengan e
 
 \textbf{Contoh menangani event pada Button:}
 \begin{lstlisting}[style=JavaStyle, caption=Menangani klik tombol dalam JavaFX]
-	Button btnKlik = new Button("Klik Saya");
-	btnKlik.setOnAction(e -> System.out.println("Tombol diklik!"));
+	public void start(Stage primaryStage) {
+		Button btnKlik = new Button("Klik Saya");
+		btnKlik.setOnAction(e -> System.out.println("Tombol diklik!"));
+		
+		VBox root = new VBox(10, btnKlik);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Menangani Event pada Button");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{Button} dalam JavaFX digunakan untuk menangani interaksi pengguna melalui klik. Kode di atas membuat sebuah tombol dengan label "Klik Saya" dan menetapkan event handler menggunakan metode \texttt{setOnAction()}. Ketika tombol ditekan, aksi yang didefinisikan dalam ekspresi lambda akan dijalankan, yaitu mencetak pesan \texttt{"Tombol diklik!"} ke konsol. Tombol ditempatkan dalam \texttt{VBox} agar tertata rapi di tengah layar dengan jarak antar elemen sebesar \texttt{10} piksel serta padding sebesar \texttt{20} piksel untuk tampilan yang lebih terstruktur. Kemudian, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan memahami cara menangani event pada \textbf{Button}, pengembang dapat menciptakan berbagai aksi interaktif dalam aplikasi JavaFX, seperti navigasi antar halaman, validasi input, atau pemanggilan fungsi lain berdasarkan interaksi pengguna.
+
 
 \subsubsection{Menangani Event pada Mouse dan Keyboard}
 
@@ -935,16 +1174,44 @@ JavaFX mendukung event mouse dan keyboard untuk menangani interaksi lebih lanjut
 
 \textbf{Contoh menangani event mouse:}
 \begin{lstlisting}[style=JavaStyle, caption=Menggunakan event mouse dalam JavaFX]
-	Label lbl = new Label("Arahkan kursor ke sini");
-	lbl.setOnMouseEntered(e -> lbl.setText("Mouse masuk!"));
-	lbl.setOnMouseExited(e -> lbl.setText("Mouse keluar!"));
+	public void start(Stage primaryStage) {
+		Label lbl = new Label("Arahkan kursor ke sini");
+		lbl.setOnMouseEntered(e -> lbl.setText("Mouse masuk!"));
+		lbl.setOnMouseExited(e -> lbl.setText("Mouse keluar!"));
+		
+		VBox root = new VBox(10, lbl);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Menangani Event Mouse dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Komponen \texttt{Label} dalam JavaFX dapat digunakan untuk menangani interaksi dengan pengguna melalui event mouse. Kode di atas membuat sebuah \texttt{Label} dengan teks awal "Arahkan kursor ke sini". Event handler ditambahkan menggunakan metode \texttt{setOnMouseEntered()} dan \texttt{setOnMouseExited()}, yang masing-masing mengubah teks menjadi "Mouse masuk!" saat kursor diarahkan ke label dan "Mouse keluar!" saat kursor meninggalkan area label. Komponen ini ditempatkan dalam \texttt{VBox} agar tertata rapi di tengah layar dengan jarak antar elemen sebesar \texttt{10} piksel serta padding sebesar \texttt{20} piksel. Setelah itu, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan memahami cara menangani event mouse pada \textbf{Label}, pengembang dapat membuat aplikasi JavaFX yang lebih interaktif, seperti menampilkan tooltip, mengubah warna elemen saat dihover, atau menerapkan efek animasi berdasarkan interaksi pengguna.
+
+
 
 \textbf{Contoh menangani event keyboard:}
 \begin{lstlisting}[style=JavaStyle, caption=Menggunakan event keyboard dalam JavaFX]
-	Scene scene = new Scene(new StackPane(), 300, 200);
-	scene.setOnKeyPressed(e -> System.out.println("Tombol ditekan: " + e.getCode()));
+	public void start(Stage primaryStage) {
+		StackPane root = new StackPane();
+		Scene scene = new Scene(root, 300, 200);
+		
+		scene.setOnKeyPressed(e -> System.out.println("Tombol ditekan: " + e.getCode()));
+		
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Menangani Event Keyboard dalam JavaFX");
+		primaryStage.show();
+		
+		root.requestFocus(); // Pastikan StackPane menerima input keyboard
+	}
 \end{lstlisting}
+
+Event keyboard dalam JavaFX dapat ditangani menggunakan metode \texttt{setOnKeyPressed()} yang diterapkan pada \texttt{Scene}. Kode di atas menangkap setiap tombol yang ditekan oleh pengguna dan mencetak kode tombol ke dalam konsol menggunakan \texttt{e.getCode()}. Agar event keyboard dapat diterima dengan baik, metode \texttt{requestFocus()} dipanggil pada \texttt{StackPane} untuk memastikan bahwa elemen utama memiliki fokus saat aplikasi dijalankan. \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan memahami cara menangani event keyboard dalam \textbf{JavaFX}, pengembang dapat menciptakan fitur seperti navigasi menggunakan tombol panah, input perintah berbasis teks, atau pintasan keyboard untuk meningkatkan pengalaman pengguna dalam aplikasi.
+
 
 \subsubsection{Menggunakan Event Filter}
 
@@ -952,20 +1219,30 @@ Event filter memungkinkan penanganan event sebelum event mencapai komponen yang 
 
 \textbf{Contoh menggunakan Event Filter:}
 \begin{lstlisting}[style=JavaStyle, caption=Menangani event sebelum mencapai target]
-	scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
-		System.out.println("Klik terdeteksi di seluruh Scene!");
-	});
+	public void start(Stage primaryStage) {
+		StackPane root = new StackPane();
+		Scene scene = new Scene(root, 300, 200);
+		
+		scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+			System.out.println("Klik terdeteksi di seluruh Scene!");
+		});
+		
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Menggunakan Event Filter dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
 
-Dengan event handler dan filter, JavaFX dapat menangani berbagai interaksi pengguna secara fleksibel.
+Dalam JavaFX, event dapat ditangani menggunakan \texttt{Event Handler} atau \texttt{Event Filter}. Perbedaan utama antara keduanya adalah bahwa \texttt{Event Filter} dapat menangkap event sebelum mencapai target utama, sehingga dapat digunakan untuk mencegah atau memodifikasi perilaku event sebelum diproses lebih lanjut. Kode di atas menambahkan \texttt{Event Filter} ke \texttt{Scene} dengan metode \texttt{addEventFilter(MouseEvent.MOUSE\_CLICKED, e -> \{\})}, yang akan menangkap setiap klik mouse yang terjadi di dalam \texttt{Scene} dan mencetak pesan \texttt{"Klik terdeteksi di seluruh Scene!"} ke dalam konsol. Dengan menggunakan \textbf{Event Filter}, pengembang dapat mengontrol alur event secara lebih fleksibel, misalnya untuk mencegah event tertentu, menerapkan validasi sebelum event mencapai target, atau menangani interaksi yang lebih kompleks dalam aplikasi JavaFX.
+
 
 \subsection{Menggunakan Binding dan Properties di JavaFX}
 
 JavaFX menyediakan sistem \textit{binding} yang memungkinkan properti suatu elemen UI terhubung langsung dengan data tanpa harus diperbarui secara manual. JavaFX mendukung dua jenis binding utama:
 
 \begin{itemize}
-	\item \textbf{Unidirectional Binding} – Satu arah, di mana properti hanya diperbarui dari sumber ke target.
-	\item \textbf{Bidirectional Binding} – Dua arah, di mana perubahan pada salah satu properti akan memperbarui properti lain secara otomatis.
+\item \textbf{Unidirectional Binding} – Satu arah, di mana properti hanya diperbarui dari sumber ke target.
+\item \textbf{Bidirectional Binding} – Dua arah, di mana perubahan pada salah satu properti akan memperbarui properti lain secara otomatis.
 \end{itemize}
 
 \subsubsection{Unidirectional Binding}
@@ -974,13 +1251,25 @@ Binding satu arah menghubungkan properti antara dua elemen.
 
 \textbf{Contoh Unidirectional Binding:}
 \begin{lstlisting}[style=JavaStyle, caption=Menghubungkan Label dengan TextField]
-	TextField txtInput = new TextField();
-	Label lblOutput = new Label();
-	
-	lblOutput.textProperty().bind(txtInput.textProperty());
+	public void start(Stage primaryStage) {
+		TextField txtInput = new TextField();
+		Label lblOutput = new Label();
+		
+		lblOutput.textProperty().bind(txtInput.textProperty());
+		
+		VBox root = new VBox(10, txtInput, lblOutput);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh Unidirectional Binding dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
 
-Pada contoh di atas, teks dalam \texttt{Label} akan selalu diperbarui mengikuti teks dalam \texttt{TextField}.
+Dalam JavaFX, \texttt{Unidirectional Binding} memungkinkan suatu properti untuk secara otomatis mengikuti perubahan nilai properti lain tanpa memerlukan intervensi manual. Kode di atas mengimplementasikan binding satu arah (\textit{unidirectional}) antara \texttt{TextField} dan \texttt{Label} menggunakan metode \texttt{bind()}. Setiap kali teks dalam \texttt{TextField} diperbarui oleh pengguna, nilai dari \texttt{Label} akan secara otomatis mengikuti perubahan tersebut tanpa perlu menggunakan event listener tambahan. Kedua komponen ditempatkan dalam \texttt{VBox} agar tertata rapi, dengan jarak antar elemen sebesar \texttt{10} piksel dan padding sebesar \texttt{20} piksel untuk memastikan tampilan yang lebih bersih. Setelah itu, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan memahami konsep \textbf{Unidirectional Binding}, pengembang dapat membangun antarmuka yang lebih dinamis dan responsif dalam aplikasi JavaFX, seperti pembaruan otomatis nilai tampilan tanpa harus menangani perubahan secara manual melalui event listener.
+
 
 \subsubsection{Bidirectional Binding}
 
@@ -988,11 +1277,25 @@ Binding dua arah memastikan bahwa perubahan pada satu elemen akan diperbarui sec
 
 \textbf{Contoh Bidirectional Binding:}
 \begin{lstlisting}[style=JavaStyle, caption=Menghubungkan dua TextField secara bidirectional]
-	TextField txt1 = new TextField();
-	TextField txt2 = new TextField();
-	
-	txt1.textProperty().bindBidirectional(txt2.textProperty());
+	public void start(Stage primaryStage) {
+		TextField txt1 = new TextField();
+		TextField txt2 = new TextField();
+		
+		txt1.textProperty().bindBidirectional(txt2.textProperty());
+		
+		VBox root = new VBox(10, txt1, txt2);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh Bidirectional Binding dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
+
+Dalam JavaFX, \texttt{Bidirectional Binding} memungkinkan dua properti untuk saling memperbarui satu sama lain secara otomatis. Kode di atas menghubungkan dua \texttt{TextField} dengan metode \texttt{bindBidirectional()}, sehingga setiap perubahan teks dalam salah satu \texttt{TextField} akan secara otomatis diperbarui pada \texttt{TextField} lainnya. Hal ini menghilangkan kebutuhan untuk menangani perubahan secara manual menggunakan event listener. Kedua \texttt{TextField} ditempatkan dalam \texttt{VBox} dengan jarak antar elemen sebesar \texttt{10} piksel dan padding sebesar \texttt{20} piksel untuk menjaga tampilan tetap rapi. Setelah itu, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan memahami konsep \textbf{Bidirectional Binding}, pengembang dapat membangun antarmuka yang lebih interaktif dan efisien dalam JavaFX, misalnya untuk sinkronisasi data input antar form atau elemen UI lainnya.
+
 
 \subsubsection{Menggunakan Properti dalam JavaFX}
 
@@ -1000,88 +1303,185 @@ JavaFX menyediakan kelas properti yang memungkinkan pembaruan otomatis ketika ni
 
 \textbf{Contoh menggunakan SimpleStringProperty:}
 \begin{lstlisting}[style=JavaStyle, caption=Penggunaan SimpleStringProperty]
-	StringProperty nama = new SimpleStringProperty("Budi");
-	
-	nama.addListener((obs, oldVal, newVal) -> {
-		System.out.println("Nama berubah dari " + oldVal + " menjadi " + newVal);
-	});
-	
-	nama.set("Andi");
+	public void start(Stage primaryStage) {
+		StringProperty nama = new SimpleStringProperty("Budi");
+		
+		nama.addListener((obs, oldVal, newVal) -> {
+			System.out.println("Nama berubah dari " + oldVal + " menjadi " + newVal);
+		});
+		
+		nama.set("Andi");
+		
+		Label lblNama = new Label();
+		lblNama.textProperty().bind(nama);
+		
+		VBox root = new VBox(10, lblNama);
+		root.setAlignment(Pos.CENTER);
+		root.setPadding(new Insets(20));
+		
+		Scene scene = new Scene(root, 300, 200);
+		primaryStage.setScene(scene);
+		primaryStage.setTitle("Contoh SimpleStringProperty dalam JavaFX");
+		primaryStage.show();
+	}
 \end{lstlisting}
 
-Dengan menggunakan binding dan properti, data dalam JavaFX dapat diperbarui secara otomatis tanpa perlu pemrograman manual yang kompleks.
+Dalam JavaFX, \texttt{SimpleStringProperty} adalah salah satu properti yang dapat diamati (\textit{observable property}) yang digunakan untuk menyimpan nilai string dan mendeteksi perubahan nilainya secara real-time. Kode di atas mendefinisikan sebuah \texttt{SimpleStringProperty} bernama \texttt{nama} dengan nilai awal "Budi". Kemudian, listener ditambahkan menggunakan \texttt{addListener()} untuk mencatat perubahan nilai properti, sehingga ketika nilai properti diubah menjadi "Andi" dengan \texttt{set()}, listener akan mencetak perubahan tersebut ke konsol. Properti \texttt{nama} juga dihubungkan (\textit{binding}) ke teks pada sebuah \texttt{Label}, sehingga ketika nilai properti berubah, teks pada label secara otomatis diperbarui. Komponen ini ditempatkan dalam \texttt{VBox} untuk tata letak yang rapi, dengan jarak antar elemen sebesar \texttt{10} piksel dan padding sebesar \texttt{20} piksel. Setelah itu, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan memahami \textbf{SimpleStringProperty}, pengembang dapat membangun aplikasi JavaFX yang lebih responsif dan dinamis, dengan data yang secara otomatis diperbarui di berbagai elemen UI tanpa perlu menangani perubahan secara manual.
+
 
 \subsection{Animasi dan Efek Visual dalam JavaFX}
 
 JavaFX mendukung berbagai animasi dan efek visual yang dapat digunakan untuk meningkatkan tampilan antarmuka pengguna. Animasi dalam JavaFX menggunakan kelas dari paket \texttt{javafx.animation}, seperti:
 
 \begin{itemize}
-	\item \textbf{FadeTransition} – Mengubah transparansi elemen.
-	\item \textbf{TranslateTransition} – Menggerakkan elemen.
-	\item \textbf{ScaleTransition} – Mengubah ukuran elemen.
-	\item \textbf{RotateTransition} – Memutar elemen.
-	\item \textbf{SequentialTransition} dan \textbf{ParallelTransition} – Mengelola beberapa animasi secara berurutan atau bersamaan.
+\item \textbf{FadeTransition} – Mengubah transparansi elemen.
+\item \textbf{TranslateTransition} – Menggerakkan elemen.
+\item \textbf{ScaleTransition} – Mengubah ukuran elemen.
+\item \textbf{RotateTransition} – Memutar elemen.
+\item \textbf{SequentialTransition} dan \textbf{ParallelTransition} – Mengelola beberapa animasi secara berurutan atau bersamaan.
 \end{itemize}
 
 \subsubsection{FadeTransition (Efek Transparansi)}
 
 \textbf{Contoh FadeTransition:}
 \begin{lstlisting}[style=JavaStyle, caption=Mengubah transparansi elemen]
+public void start(Stage primaryStage) {
 	Label lblFade = new Label("Fade Effect");
+	
 	FadeTransition fade = new FadeTransition(Duration.seconds(2), lblFade);
 	fade.setFromValue(1.0);
 	fade.setToValue(0.1);
 	fade.setCycleCount(Timeline.INDEFINITE);
 	fade.setAutoReverse(true);
 	fade.play();
+	
+	VBox root = new VBox(10, lblFade);
+	root.setAlignment(Pos.CENTER);
+	root.setPadding(new Insets(20));
+	
+	Scene scene = new Scene(root, 300, 200);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh FadeTransition dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
+\texttt{FadeTransition} dalam JavaFX digunakan untuk mengubah transparansi (\textit{opacity}) suatu elemen secara bertahap. Kode di atas menerapkan animasi perubahan transparansi pada sebuah label menggunakan \texttt{FadeTransition}. Animasi ini mengubah tingkat transparansi label dari \texttt{1.0} (sepenuhnya terlihat) ke \texttt{0.1} (hampir transparan) dalam durasi \texttt{2} detik. Efek ini diatur agar berjalan terus-menerus dengan \texttt{setCycleCount(Timeline.INDEFINITE)} dan kembali ke tingkat transparansi awal menggunakan \texttt{setAutoReverse(true)}. Label ditempatkan dalam \texttt{VBox} agar tertata rapi dan berada di tengah layar. Kemudian, \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{FadeTransition}, efek animasi ini dapat diterapkan dalam berbagai skenario, seperti transisi antar tampilan, efek muncul dan menghilang, atau untuk meningkatkan pengalaman visual dalam aplikasi JavaFX.
+
 
 \subsubsection{TranslateTransition (Animasi Perpindahan)}
 
 \textbf{Contoh TranslateTransition:}
 \begin{lstlisting}[style=JavaStyle, caption=Menggerakkan objek dalam JavaFX]
+public void start(Stage primaryStage) {
 	Rectangle rect = new Rectangle(100, 100, Color.BLUE);
+	
 	TranslateTransition translate = new TranslateTransition(Duration.seconds(2), rect);
 	translate.setByX(200);
 	translate.setCycleCount(Timeline.INDEFINITE);
 	translate.setAutoReverse(true);
 	translate.play();
+	
+	StackPane root = new StackPane(rect);
+	root.setPadding(new Insets(20));
+	
+	Scene scene = new Scene(root, 400, 200);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh TranslateTransition dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
+\texttt{TranslateTransition} dalam JavaFX digunakan untuk menggerakkan suatu elemen secara horizontal, vertikal, atau keduanya. Kode di atas menerapkan animasi pergerakan pada sebuah persegi berukuran \texttt{100x100} piksel dengan warna biru menggunakan \texttt{TranslateTransition}. Animasi ini menggeser persegi sejauh \texttt{200} piksel pada sumbu \texttt{X} selama \texttt{2} detik. Efek ini diatur agar berjalan terus-menerus dengan \texttt{setCycleCount(Timeline.INDEFINITE)} dan akan kembali ke posisi semula secara otomatis menggunakan \texttt{setAutoReverse(true)}. Persegi ditempatkan dalam \texttt{StackPane} agar tetap berada di tengah layar, kemudian \texttt{Scene} dengan ukuran \texttt{400x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{TranslateTransition}, efek animasi pergerakan dapat diterapkan pada berbagai elemen UI, seperti objek yang melayang, elemen yang muncul dari sisi layar, atau efek navigasi yang lebih dinamis dalam aplikasi JavaFX.
+
 
 \subsubsection{ScaleTransition (Efek Perbesaran)}
 
 \textbf{Contoh ScaleTransition:}
 \begin{lstlisting}[style=JavaStyle, caption=Mengubah ukuran elemen dalam JavaFX]
+public void start(Stage primaryStage) {
 	Button btnScale = new Button("Perbesar");
+	
 	ScaleTransition scale = new ScaleTransition(Duration.seconds(1), btnScale);
 	scale.setToX(1.5);
 	scale.setToY(1.5);
 	scale.setCycleCount(Timeline.INDEFINITE);
 	scale.setAutoReverse(true);
 	scale.play();
+	
+	StackPane root = new StackPane(btnScale);
+	root.setPadding(new Insets(20));
+	
+	Scene scene = new Scene(root, 300, 200);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh ScaleTransition dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
+\texttt{ScaleTransition} dalam JavaFX digunakan untuk mengubah ukuran suatu elemen secara dinamis. Kode di atas menerapkan efek perubahan ukuran pada sebuah tombol menggunakan \texttt{ScaleTransition}. Animasi ini mengubah skala tombol hingga \texttt{1.5} kali ukuran aslinya dalam durasi \texttt{1} detik. Efek ini diatur agar berjalan terus-menerus dengan \texttt{setCycleCount(Timeline.INDEFINITE)} dan bergantian antara membesar dan kembali ke ukuran semula menggunakan \texttt{setAutoReverse(true)}. Tombol ditempatkan di dalam \texttt{StackPane} agar tetap berada di tengah layar, lalu \texttt{Scene} dengan ukuran \texttt{300x200} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{ScaleTransition}, efek perubahan ukuran dapat digunakan untuk menciptakan interaksi visual yang lebih menarik dalam aplikasi JavaFX, seperti efek hover, perbesaran objek saat dipilih, atau animasi pembukaan elemen UI.
 
 \subsubsection{RotateTransition (Efek Rotasi)}
 
 \textbf{Contoh RotateTransition:}
 \begin{lstlisting}[style=JavaStyle, caption=Memutar elemen dalam JavaFX]
+public void start(Stage primaryStage) {
 	Circle circle = new Circle(50, Color.RED);
+	
 	RotateTransition rotate = new RotateTransition(Duration.seconds(2), circle);
 	rotate.setByAngle(360);
 	rotate.setCycleCount(Timeline.INDEFINITE);
 	rotate.play();
+	
+	StackPane root = new StackPane(circle);
+	root.setPadding(new Insets(20));
+	
+	Scene scene = new Scene(root, 300, 300);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh RotateTransition dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
+
+\texttt{RotateTransition} dalam JavaFX digunakan untuk memberikan efek rotasi pada suatu elemen grafis. Kode di atas menerapkan animasi rotasi pada sebuah lingkaran merah dengan radius 50 piksel menggunakan \texttt{RotateTransition}. Animasi ini mengubah sudut rotasi lingkaran sebesar \texttt{360} derajat selama \texttt{2} detik, kemudian diatur agar terus berulang tanpa henti menggunakan \texttt{setCycleCount(Timeline.INDEFINITE)}. Lingkaran ditempatkan dalam \texttt{StackPane} untuk memastikan posisinya tetap berada di tengah layar. Setelah itu, \texttt{Scene} dengan ukuran \texttt{300x300} piksel dibuat dan ditampilkan dalam \texttt{Stage} utama. Dengan menggunakan \textbf{RotateTransition}, efek rotasi dapat diterapkan untuk memperkaya tampilan antarmuka grafis, seperti pada ikon yang berputar, elemen dekoratif, atau animasi interaktif dalam aplikasi JavaFX.
 
 \subsubsection{Menggabungkan Animasi dengan SequentialTransition}
 
 \textbf{Contoh penggunaan SequentialTransition:}
 \begin{lstlisting}[style=JavaStyle, caption=Menggabungkan beberapa animasi dalam JavaFX]
+public void start(Stage primaryStage) {
+	Circle circle = new Circle(50, Color.RED);
+	
+	FadeTransition fade = new FadeTransition(Duration.seconds(1), circle);
+	fade.setFromValue(1.0);
+	fade.setToValue(0.3);
+	
+	TranslateTransition translate = new TranslateTransition(Duration.seconds(1), circle);
+	translate.setByX(100);
+	
+	ScaleTransition scale = new ScaleTransition(Duration.seconds(1), circle);
+	scale.setToX(1.5);
+	scale.setToY(1.5);
+	
+	RotateTransition rotate = new RotateTransition(Duration.seconds(1), circle);
+	rotate.setByAngle(360);
+	
 	SequentialTransition seqTransition = new SequentialTransition(fade, translate, scale, rotate);
 	seqTransition.setCycleCount(Timeline.INDEFINITE);
 	seqTransition.play();
+	
+	StackPane root = new StackPane(circle);
+	root.setPadding(new Insets(20));
+	
+	Scene scene = new Scene(root, 400, 300);
+	primaryStage.setScene(scene);
+	primaryStage.setTitle("Contoh SequentialTransition dalam JavaFX");
+	primaryStage.show();
+}
 \end{lstlisting}
 
-Dengan menggunakan sistem animasi JavaFX, antarmuka pengguna dapat dibuat lebih dinamis dan menarik.
+\textbf{SequentialTransition} dalam JavaFX digunakan untuk menjalankan beberapa animasi secara berurutan pada suatu elemen. Kode ini menerapkan animasi pada sebuah lingkaran merah dengan radius 50 piksel menggunakan empat jenis animasi, yaitu \texttt{FadeTransition} untuk mengubah transparansi, \texttt{TranslateTransition} untuk menggeser posisi, \texttt{ScaleTransition} untuk memperbesar ukuran, dan \texttt{RotateTransition} untuk memutar objek. Semua animasi tersebut digabungkan menggunakan \texttt{SequentialTransition}, sehingga dijalankan secara berurutan dan berulang tanpa henti. Lingkaran ditempatkan dalam \texttt{StackPane} agar tetap berada di tengah layar, lalu \texttt{Scene} dengan ukuran 400x300 piksel dibuat dan ditampilkan pada \texttt{Stage} utama. Penggunaan \textbf{SequentialTransition} memungkinkan pembuatan animasi kompleks dalam JavaFX, seperti efek transisi dan pergerakan dinamis dalam antarmuka pengguna.
+
 
 
 

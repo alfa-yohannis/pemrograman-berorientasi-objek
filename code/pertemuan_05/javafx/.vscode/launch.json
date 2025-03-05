@@ -1,0 +1,20 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Current File",
+      "request": "launch",
+      "mainClass": "${file}",
+      "vmArgs": "--module-path /data1/programs/javafx-sdk-21.0.5/lib --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.swt,javafx.web --class-path /data1/programs/birt-runtime-4.17.0-202409160710/ReportEngine/lib/*.jar"
+    },
+    {
+      "type": "java",
+      "name": "Main",
+      "request": "launch",
+      "mainClass": "org.example.Main",
+      "projectName": "app",
+      "vmArgs": "--module-path /data1/programs/javafx-sdk-21.0.5/lib --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.swt,javafx.web --class-path /data1/programs/birt-runtime-4.17.0-202409160710/ReportEngine/lib/*.jar"
+    }
+  ]
+}

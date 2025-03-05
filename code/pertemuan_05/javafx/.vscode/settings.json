@@ -1,0 +1,16 @@
+{
+  "java.compile.nullAnalysis.mode": "automatic",
+  "java.debug.settings.onBuildFailureProceed": true,
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.project.referencedLibraries": [
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.base.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.controls.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.fxml.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.graphics.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.media.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.swing.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx-swt.jar",
+    "/data1/programs/javafx-sdk-21.0.5/lib/javafx.web.jar",
+    "/data1/programs/birt-runtime-4.17.0-202409160710/ReportEngine/lib/*.jar"
+  ]
+}

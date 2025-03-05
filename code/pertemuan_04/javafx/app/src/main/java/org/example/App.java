@@ -30,19 +30,6 @@ public class App extends Application {
         primaryStage.setTitle("Hello JavaFX");
         primaryStage.setScene(scene);
         primaryStage.show();
-
-        // VBox vbox = new VBox();
-        // vbox.setSpacing(10); // Jarak antar elemen
-        // vbox.setPadding(new Insets(20)); // Padding di dalam layout
-
-        // Label lbl = new Label("Nama:");
-        // TextField txtNama = new TextField();
-        // Button btnSubmit = new Button("Kirim");
-
-        // vbox.getChildren().addAll(lbl, txtNama, btnSubmit);
-        // Scene scene = new Scene(vbox, 300, 200);
-        // primaryStage.setScene(scene);
-        // primaryStage.show();
     }
 
     @Override

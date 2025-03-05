@@ -1,8 +1,14 @@
 \chapter{JavaFX Lanjut}
 
-\section{Memperbaiki Struktur dengan MVC}
+\section{Pola Desain MVC}
 
 Model-View-Controller (MVC) adalah pola desain yang digunakan untuk memisahkan logika bisnis, tampilan, dan kontrol aliran data dalam aplikasi. Penerapan MVC dalam JavaFX memungkinkan pengembangan aplikasi yang lebih modular, mudah dipelihara, dan fleksibel dalam pengelolaan data serta tampilan.
+
+\begin{itemize}
+	\item \textbf{Model} – Merepresentasikan data dan logika bisnis aplikasi.
+	\item \textbf{View} – Bertanggung jawab untuk menampilkan data ke pengguna.
+	\item \textbf{Controller} – Mengelola interaksi antara View dan Model.
+\end{itemize}
 
 \subsection{Struktur Proyek Berbasis MVC}
 
@@ -10,20 +16,21 @@ Untuk menerapkan MVC dalam JavaFX, struktur proyek harus dirancang agar setiap k
 
 \begin{lstlisting}[style=JavaStyle, caption=Struktur Direktori dalam JavaFX MVC]
 	src/
-	├── main/
-	│   ├── java/
-	│   │   ├── com.example/
-	│   │   │   ├── MainApp.java
-	│   │   │   ├── controllers/
-	│   │   │   │   ├── MahasiswaController.java
-	│   │   │   ├── models/
-	│   │   │   │   ├── Mahasiswa.java
-	│   │   │   ├── views/
-	│   │   │   │   ├── mahasiswa.fxml
-	│   ├── resources/
-	│   │   ├── styles/
-	│   │   │   ├── style.css
+	|-- main/
+	|   |-- java/
+	|   |   |-- com.example/
+	|   |   |   |-- MainApp.java
+	|   |   |   |-- controllers/
+	|   |   |   |   |-- MahasiswaController.java
+	|   |   |   |-- models/
+	|   |   |   |   |-- Mahasiswa.java
+	|   |   |   |-- views/
+	|   |   |   |   |-- mahasiswa.fxml
+	|   |-- resources/
+	|   |   |-- styles/
+	|   |   |   |-- style.css
 \end{lstlisting}
+
 
 Pada struktur di atas:
 \begin{itemize}
