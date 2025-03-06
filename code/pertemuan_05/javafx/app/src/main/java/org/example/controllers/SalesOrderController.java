@@ -1,10 +1,20 @@
 package org.example.controllers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.example.Main;
 import org.example.helpers.IForm;
+import org.example.models.Item;
+import org.example.models.Order;
+import org.example.models.OrderDetail;
+import org.example.models.OrderDetailPK;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+import org.hibernate.query.Query;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -27,46 +37,54 @@ import javafx.stage.Stage;
 
 public class SalesOrderController implements IForm {
 
-    @FXML private TextField txtCode;
-	@FXML
-	private TextField txtDate;
-	@FXML
-	private TextField txtTotal;
-    @FXML private TextArea txtNote;
-    @FXML private TableView<OrderItem> table;
-    @FXML private TableColumn<OrderItem, Integer> colLine;
-    @FXML private TableColumn<OrderItem, String> colCode, colName;
-    @FXML private TableColumn<OrderItem, Double> colPrice, colQuantity, colTotal;
-    @FXML private Button btnAddItem, btnRemoveItem, btnConfirm;
+    @FXML
+    private TextField txtCode;
+    @FXML
+    private TextField txtDate;
+    @FXML
+    private TextField txtTotal;
+    @FXML
+    private TextArea txtNote;
+    @FXML
+    private TableView<OrderItem> table;
+    @FXML
+    private TableColumn<OrderItem, Integer> colLine;
+    @FXML
+    private TableColumn<OrderItem, String> colCode, colName;
+    @FXML
+    private TableColumn<OrderItem, Double> colPrice, colQuantity, colTotal;
+    @FXML
+    private Button btnAddItem, btnRemoveItem, btnConfirm;
 
     private ObservableList<OrderItem> orderItems = FXCollections.observableArrayList();
     private boolean isAddMode = false;
-    
-	private static String currentCode;
 
-	public void initialize() {
-	    colLine.setCellValueFactory(cellData -> cellData.getValue().lineProperty().asObject());
-	    colCode.setCellValueFactory(cellData -> cellData.getValue().itemCodeProperty());
-	    colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
-	    colPrice.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
-	    
-	    // Set colQuantity as editable
-	    colQuantity.setCellValueFactory(cellData -> cellData.getValue().quantityProperty().asObject());
-	    colQuantity.setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.DoubleStringConverter()));
-	    colQuantity.setOnEditCommit(event -> {
-	        OrderItem orderItem = event.getRowValue();
-	        double newQuantity = event.getNewValue();
-	        orderItem.setQuantity(newQuantity); // Update quantity in OrderItem
-	        calculateTotal(); // Recalculate total after quantity change
-	    });
-	    
-	    colTotal.setCellValueFactory(cellData -> cellData.getValue().totalProperty().asObject());
+    private static String currentCode;
 
-	    table.setItems(orderItems);
-	    table.setEditable(true); // Enable editing in the table
+    public void initialize() {
+        colLine.setCellValueFactory(cellData -> cellData.getValue().lineProperty().asObject());
+        colCode.setCellValueFactory(cellData -> cellData.getValue().itemCodeProperty());
+        colName.setCellValueFactory(cellData -> cellData.getValue().nameProperty());
+        colPrice.setCellValueFactory(cellData -> cellData.getValue().priceProperty().asObject());
 
-	    displayLastOrder();
-	}
+        // Set colQuantity as editable
+        colQuantity.setCellValueFactory(cellData -> cellData.getValue().quantityProperty().asObject());
+        colQuantity
+                .setCellFactory(TextFieldTableCell.forTableColumn(new javafx.util.converter.DoubleStringConverter()));
+        colQuantity.setOnEditCommit(event -> {
+            OrderItem orderItem = event.getRowValue();
+            double newQuantity = event.getNewValue();
+            orderItem.setQuantity(newQuantity); // Update quantity in OrderItem
+            calculateTotal(); // Recalculate total after quantity change
+        });
+
+        colTotal.setCellValueFactory(cellData -> cellData.getValue().totalProperty().asObject());
+
+        table.setItems(orderItems);
+        table.setEditable(true); // Enable editing in the table
+
+        displayLastOrder();
+    }
 
     @FXML
     private void newOrder() {
@@ -82,81 +100,122 @@ public class SalesOrderController implements IForm {
 
     @FXML
     private void displayFirstOrder() {
-        try {
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(
-                    "SELECT * FROM `order` WHERE code = (SELECT MIN(code) FROM `order`)");
-            displayOrder(statement);
-        } catch (SQLException e) {
+        try (Session session = Main.getSessionFactory().openSession()) {
+            Query<Order> query = session.createQuery(
+                    "FROM Order o WHERE o.code = (SELECT MIN(o2.code) FROM Order o2)", Order.class);
+            Order firstOrder = query.uniqueResult();
+
+            if (firstOrder != null) {
+                displayOrder(firstOrder.getCode());
+            } else {
+                System.out.println("No orders found.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
     private void displayPrevOrder() {
-        try {
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(
-            	    "select * from `order` t1 where t1.code = (select max(code)  from `order` t2 where t2.code < ?) limit 1;");
-            statement.setString(1, txtCode.getText());
-            displayOrder(statement);
-        } catch (SQLException e) {
+        try (Session session = Main.getSessionFactory().openSession()) {
+            Query<Order> query = session.createQuery(
+                    "FROM Order o WHERE o.code = (SELECT MAX(o2.code) FROM Order o2 WHERE o2.code < :currentCode)",
+                    Order.class);
+            query.setParameter("currentCode", txtCode.getText());
+
+            Order prevOrder = query.uniqueResult();
+
+            if (prevOrder != null) {
+                displayOrder(prevOrder.getCode());
+            } else {
+                System.out.println("No previous order found.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
     private void displayNextOrder() {
-        try {
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(
-            	    "select * from `order` t1 where t1.code = (select min(code)  from `order` t2 where t2.code > ?) limit 1;");
-            statement.setString(1, txtCode.getText());
-            displayOrder(statement);
-        } catch (SQLException e) {
+        try (Session session = Main.getSessionFactory().openSession()) {
+            Query<Order> query = session.createQuery(
+                    "FROM Order o WHERE o.code = (SELECT MIN(o2.code) FROM Order o2 WHERE o2.code > :currentCode)",
+                    Order.class);
+            query.setParameter("currentCode", txtCode.getText());
+
+            Order nextOrder = query.uniqueResult();
+
+            if (nextOrder != null) {
+                displayOrder(nextOrder.getCode());
+            } else {
+                System.out.println("No next order found.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @FXML
     private void displayLastOrder() {
-        try {
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(
-                    "SELECT * FROM `order` WHERE code = (SELECT MAX(code) FROM `order`)");
-            displayOrder(statement);
-        } catch (SQLException e) {
+        try (Session session = Main.getSessionFactory().openSession()) {
+            Query<Order> query = session.createQuery(
+                    "FROM Order o WHERE o.code = (SELECT MAX(o2.code) FROM Order o2)",
+                    Order.class);
+
+            Order lastOrder = query.uniqueResult();
+
+            if (lastOrder != null) {
+                displayOrder(lastOrder.getCode());
+            } else {
+                System.out.println("No orders found.");
+            }
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void displayOrder(PreparedStatement statement) throws SQLException {
-        ResultSet resultSet = statement.executeQuery();
-        if (resultSet.next()) {
-            currentCode = resultSet.getString("code");
-            txtCode.setText(currentCode);
-            txtDate.setText(resultSet.getString("date"));
-            txtNote.setText(resultSet.getString("note"));
-            loadOrderItems(currentCode);
+    private void displayOrder(String orderCode) {
+        try (Session session = Main.getSessionFactory().openSession()) {
+            Order order = session.get(Order.class, orderCode);
 
-            isAddMode = false;
-            enableDisableElements();
-        } 
-        resultSet.close();
-        statement.close();
+            if (order != null) {
+                currentCode = order.getCode();
+                txtCode.setText(currentCode);
+                txtDate.setText(order.getDate().toString());
+                txtNote.setText(order.getNote());
+                loadOrderItems(currentCode);
+
+                isAddMode = false;
+                enableDisableElements();
+            } else {
+                System.out.println("Order not found.");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadOrderItems(String code) {
         orderItems.clear();
-        try {
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(
-                    "SELECT line, itemcode, name, price, quantity, (quantity * price) AS total FROM `order_detail` WHERE code = ?");
-            statement.setString(1, code);
-            ResultSet rs = statement.executeQuery();
-            while (rs.next()) {
-                orderItems.add(new OrderItem(rs.getInt("line"), rs.getString("itemcode"),
-                        rs.getString("name"), rs.getDouble("price"), rs.getDouble("quantity")));
+        try (Session session = Main.getSessionFactory().openSession()) {
+            Query<OrderDetail> query = session.createQuery(
+                    "FROM OrderDetail od WHERE od.order.code = :orderCode",
+                    OrderDetail.class);
+            query.setParameter("orderCode", code);
+
+            List<OrderDetail> orderDetails = query.getResultList();
+
+            for (OrderDetail od : orderDetails) {
+                orderItems.add(new OrderItem(
+                        od.getId().getLine(),
+                        od.getItemCode(),
+                        od.getName(),
+                        od.getPrice(),
+                        od.getQuantity()));
             }
-            rs.close();
-            statement.close();
+
             calculateTotal();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -207,7 +266,6 @@ public class SalesOrderController implements IForm {
         }
     }
 
-    
     @FXML
     private void removeItem() {
         if (isAddMode) {
@@ -222,63 +280,74 @@ public class SalesOrderController implements IForm {
     @FXML
     private void confirmOrder() {
         if (isAddMode) {
-            try {
-                // Step 1: Get the maximum existing order code and generate a new code
-                PreparedStatement maxCodeStmt = MainController.CONNECTION.prepareStatement("SELECT MAX(code) AS code FROM `order`;");
-                ResultSet maxCodeResultSet = maxCodeStmt.executeQuery();
-                String maxCode = null;
-                if (maxCodeResultSet.next()) {
-                    maxCode = maxCodeResultSet.getString("code");
-                }
-                String newCode = maxCode != null ? String.valueOf(Integer.parseInt(maxCode) + 1) : "1";
-                maxCodeResultSet.close();
-                maxCodeStmt.close();
+            try (Session session = Main.getSessionFactory().openSession()) {
+                Transaction transaction = session.beginTransaction();
 
-                // Step 2: Insert the new order record with the generated code
-                PreparedStatement orderStmt = MainController.CONNECTION.prepareStatement(
-                        "INSERT INTO `order` (code, note) VALUES (?, ?);");
-                orderStmt.setString(1, newCode);
-                orderStmt.setString(2, txtNote.getText());
-                orderStmt.executeUpdate();
-                orderStmt.close();
+                // Step 1: Generate a new order code
+                String maxCode = session.createQuery("SELECT MAX(o.code) FROM Order o", String.class).uniqueResult();
+                String newCode = (maxCode != null) ? String.valueOf(Integer.parseInt(maxCode) + 1) : "1";
 
-                // Step 3: Insert each OrderItem into the order_detail table
+                // Step 2: Create and save new Order entity
+                Order newOrder = new Order();
+                newOrder.setCode(newCode);
+                newOrder.setNote(txtNote.getText());
+                newOrder.setDate(LocalDateTime.now());
+                session.persist(newOrder);
+
+                // Step 3: Process Order Items in Batch
+                List<OrderDetail> orderDetails = new ArrayList<>();
+                List<String> itemCodes = new ArrayList<>();
+
                 for (OrderItem item : orderItems) {
-                    PreparedStatement detailStmt = MainController.CONNECTION.prepareStatement(
-                            "INSERT INTO `order_detail` (code, line, itemcode, name, price, quantity) VALUES (?, ?, ?, ?, ?, ?);");
-                    detailStmt.setString(1, newCode);
-                    detailStmt.setInt(2, item.getLine());
-                    detailStmt.setString(3, item.getItemCode());
-                    detailStmt.setString(4, item.getName());
-                    detailStmt.setDouble(5, item.getPrice());
-                    detailStmt.setDouble(6, item.getQuantity());
-                    detailStmt.executeUpdate();
-                    detailStmt.close();
-
-                    // Step 4: Update the stock quantity in the item table
-                    PreparedStatement updateStockStmt = MainController.CONNECTION.prepareStatement(
-                            "UPDATE item SET quantity = quantity - ? WHERE code = ?;");
-                    updateStockStmt.setDouble(1, item.getQuantity());
-                    updateStockStmt.setString(2, item.getItemCode());
-                    updateStockStmt.executeUpdate();
-                    updateStockStmt.close();
+                    OrderDetail orderDetail = new OrderDetail(
+                            new OrderDetailPK(newCode, item.getLine()),
+                            newOrder,
+                            item.getItemCode(),
+                            item.getName(),
+                            item.getPrice(),
+                            item.getQuantity());
+                    orderDetails.add(orderDetail);
+                    itemCodes.add(item.getItemCode());
                 }
 
-                // Step 5: Finalize the order and update the UI
+                // Bulk insert OrderDetail
+                for (OrderDetail orderDetail : orderDetails) {
+                    session.persist(orderDetail);
+                }
+
+                // Step 4: Update Item Stock in Bulk
+                List<Item> itemsToUpdate = session.createQuery(
+                        "FROM Item i WHERE i.code IN :codes", Item.class)
+                        .setParameter("codes", itemCodes)
+                        .list();
+
+                Map<String, Item> itemMap = itemsToUpdate.stream()
+                        .collect(Collectors.toMap(Item::getCode, item -> item));
+
+                for (OrderItem item : orderItems) {
+                    Item itemEntity = itemMap.get(item.getItemCode());
+                    if (itemEntity != null) {
+                        itemEntity.setQuantity(itemEntity.getQuantity() - item.getQuantity());
+                        session.merge(itemEntity);
+                    }
+                }
+
+                // Step 5: Commit transaction
+                transaction.commit();
+
+                // Finalize Order Process
                 isAddMode = false;
                 enableDisableElements();
-                displayLastOrder(); // Display the last order to confirm the save
+                displayLastOrder(); // Display last order to confirm save
 
-                // Show a success alert
-                Alert alert = new Alert(Alert.AlertType.INFORMATION, "Order saved successfully.");
-                alert.showAndWait();
+                // Show success message
+                new Alert(Alert.AlertType.INFORMATION, "Order saved successfully.").showAndWait();
 
-            } catch (SQLException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
-	
 
     private void calculateTotal() {
         double total = orderItems.stream().mapToDouble(OrderItem::getTotal).sum();
@@ -299,7 +368,7 @@ public class SalesOrderController implements IForm {
         txtTotal.clear();
         orderItems.clear();
     }
-    
+
     public class OrderItem {
         private final SimpleIntegerProperty line;
         private final SimpleStringProperty itemCode;
@@ -383,14 +452,14 @@ public class SalesOrderController implements IForm {
             total.set(price.get() * quantity.get());
         }
 
-    	public void setLine(int i) {
-    		line.set(i);
-    		
-    	}
+        public void setLine(int i) {
+            line.set(i);
+
+        }
     }
 
-	@Override
-	public String getDocumentCode() {
-		return txtCode.getText();
-	}	
+    @Override
+    public String getDocumentCode() {
+        return txtCode.getText();
+    }
 }

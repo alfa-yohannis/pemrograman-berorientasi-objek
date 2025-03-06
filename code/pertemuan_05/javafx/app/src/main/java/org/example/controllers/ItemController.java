@@ -1,10 +1,11 @@
 package org.example.controllers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
+import org.example.Main;
 import org.example.helpers.IForm;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,7 +17,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.util.converter.DoubleStringConverter;
 
-public class ItemController implements IForm{
+public class ItemController implements IForm {
 
 	@FXML
 	private TableView<Item> table;
@@ -75,62 +76,62 @@ public class ItemController implements IForm{
 
 		// Load items into the table
 		loadItems();
-		
+
 		items.add(new Item("", "", 0.0, 0.0));
 	}
 
 	private void loadItems() {
-		try {
-			String query = "SELECT code, name, price, quantity FROM item";
-			PreparedStatement statement = MainController.CONNECTION.prepareStatement(query);
-			ResultSet resultSet = statement.executeQuery();
-			items.clear();
+    try (Session session = Main.getSessionFactory().openSession()) {
+        List<org.example.models.Item> itemList = session.createQuery("FROM Item", org.example.models.Item.class).list();
 
-			while (resultSet.next()) {
-				String code = resultSet.getString("code");
-				String name = resultSet.getString("name");
-				double price = resultSet.getDouble("price");
-				double quantity = resultSet.getDouble("quantity");
+        // Convert Hibernate Item entity to JavaFX Item
+        items.setAll(itemList.stream()
+            .map(item -> new Item(item.getCode(), item.getName(), item.getPrice(), item.getQuantity()))
+            .toList());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
-				items.add(new Item(code, name, price, quantity));
+
+private void handleTableEdit(Item item, String column) {
+	try (Session session = Main.getSessionFactory().openSession()) {
+			Transaction transaction = session.beginTransaction();
+
+			// Fetch the existing Hibernate entity
+			org.example.models.Item existingItem = session.get(org.example.models.Item.class, item.getCode());
+
+			if (existingItem == null) {
+					// Convert JavaFX Item to Hibernate Item and insert
+					org.example.models.Item newItem = new org.example.models.Item();
+					newItem.setCode(item.getCode());
+					newItem.setName(item.getName());
+					newItem.setPrice(item.getPrice());
+					newItem.setQuantity(item.getQuantity());
+
+					session.persist(newItem);
+			} else {
+					// Update only the modified field
+					switch (column) {
+							case "code" -> existingItem.setCode(item.getCode());
+							case "name" -> existingItem.setName(item.getName());
+							case "price" -> existingItem.setPrice(item.getPrice());
+							case "quantity" -> existingItem.setQuantity(item.getQuantity());
+					}
+					session.merge(existingItem);
 			}
 
-			resultSet.close();
-			statement.close();
-		} catch (SQLException e) {
+			transaction.commit();
+
+			// Add an empty row if needed
+			if (items.isEmpty() || !"".equals(items.get(items.size() - 1).getCode().trim())) {
+					items.add(new Item("", "", 0.0, 0.0));
+			}
+	} catch (Exception e) {
 			e.printStackTrace();
-		}
 	}
+}
 
-	private void handleTableEdit(Item item, String column) {
-		try {
-			String query = "UPDATE item SET code = ?, name = ?, price = ?, quantity = ? WHERE code = ?";
-			PreparedStatement statement = MainController.CONNECTION.prepareStatement(query);
-			statement.setString(1, item.getCode());
-			statement.setString(2, item.getName());
-			statement.setDouble(3, item.getPrice());
-			statement.setDouble(4, item.getQuantity());
-			statement.setString(5, item.getCode());
-
-			if (statement.executeUpdate() == 0) {
-				query = "INSERT INTO item(code, name, price, quantity) VALUES(?, ?, ?, ?)";
-				statement = MainController.CONNECTION.prepareStatement(query);
-				statement.setString(1, item.getCode());
-				statement.setString(2, item.getName());
-				statement.setDouble(3, item.getPrice());
-				statement.setDouble(4, item.getQuantity());
-				
-			}
-			
-			if (items.size() == 0 || !"".equals(items.get(items.size() - 1).code.get().trim())) {
-				items.add(new Item("", "", 0.0, 0.0));
-			}
-
-			statement.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
 
 	@FXML
 	private void closeWindow() {
@@ -201,6 +202,6 @@ public class ItemController implements IForm{
 
 	@Override
 	public String getDocumentCode() {
-		return null	;
+		return null;
 	}
 }

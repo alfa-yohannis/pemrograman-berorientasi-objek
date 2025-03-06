@@ -1,12 +1,10 @@
 package org.example.controllers;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Types;
-import java.util.ArrayList;
 import java.util.List;
+
+import org.example.Main;
+import org.hibernate.Session;
+import org.hibernate.query.NativeQuery;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -27,59 +25,45 @@ public class SelectFormController {
     private ObservableList<Object[]> tableData = FXCollections.observableArrayList();
     private OnSelectListener onSelectListener;
     private String baseQuery;
-    private List<Integer> columnTypes = new ArrayList<>(); // Store column types for dynamic filtering
 
     public void initialize() {
         // Initialization logic can be left empty or used for other setup if needed
     }
 
     public void loadTableData(String query) {
-        baseQuery = query; // Store the base query for future searches
-        executeQuery(baseQuery); // Load initial data
+        baseQuery = query; // Store base query
+        executeQuery(baseQuery);
     }
 
     private void executeQuery(String query) {
-        try {
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(query);
-            ResultSet resultSet = statement.executeQuery();
-            ResultSetMetaData metadata = resultSet.getMetaData();
-            int colCount = metadata.getColumnCount();
+        try (Session session = Main.getSessionFactory().openSession()) {
+            NativeQuery<Object[]> nativeQuery = session.createNativeQuery(query, Object[].class);
+            List<Object[]> resultList = nativeQuery.list();
 
-            // Clear existing columns, data, and column types
+            // Clear table columns and existing data
             table.getColumns().clear();
             tableData.clear();
-            columnTypes.clear();
 
-            // Create columns dynamically based on ResultSetMetaData
-            for (int i = 1; i <= colCount; i++) {
-                final int colIndex = i - 1;
-                String colName = metadata.getColumnName(i);
-                int colType = metadata.getColumnType(i);
+            if (!resultList.isEmpty()) {
+                Object[] firstRow = resultList.get(0);
+                int columnCount = firstRow.length;
 
-                // Store the column type for later use in search filters
-                columnTypes.add(colType);
-
-                TableColumn<Object[], String> column = new TableColumn<>(colName);
-                column.setCellValueFactory(cellData ->
-                        new SimpleStringProperty(cellData.getValue()[colIndex] != null ? cellData.getValue()[colIndex].toString() : "")
-                );
-
-                table.getColumns().add(column);
-            }
-
-            // Populate table data
-            while (resultSet.next()) {
-                Object[] row = new Object[colCount];
-                for (int i = 1; i <= colCount; i++) {
-                    row[i - 1] = resultSet.getObject(i);
+                // Dynamically create columns
+                for (int i = 0; i < columnCount; i++) {
+                    final int colIndex = i;
+                    TableColumn<Object[], String> column = new TableColumn<>("Column " + (i + 1));
+                    column.setCellValueFactory(cellData ->
+                            new SimpleStringProperty(
+                                    cellData.getValue()[colIndex] != null ? cellData.getValue()[colIndex].toString() : ""
+                            ));
+                    table.getColumns().add(column);
                 }
-                tableData.add(row);
+
+                tableData.setAll(resultList);
             }
-            resultSet.close();
-            statement.close();
 
             table.setItems(tableData);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -88,83 +72,21 @@ public class SelectFormController {
     private void onFind() {
         String searchText = textField.getText().trim();
         if (searchText.isEmpty()) {
-            // If search text is empty, reload the original query
             executeQuery(baseQuery);
             return;
         }
 
-        // Build search query dynamically based on column types
-        StringBuilder searchQuery = new StringBuilder(baseQuery + " WHERE ");
-        List<String> conditions = new ArrayList<>();
-        List<Object> params = new ArrayList<>();
+        String searchQuery = baseQuery + " WHERE ";
+        searchQuery += " CONCAT_WS(' ', * ) LIKE :searchText"; // Assumes search on all columns
 
-        try {
-            for (int i = 0; i < columnTypes.size(); i++) {
-                int colType = columnTypes.get(i);
-                
-                switch (colType) {
-                    case Types.VARCHAR:
-                    case Types.CHAR:
-                    case Types.LONGVARCHAR:
-                        // For text columns, use LIKE
-                        conditions.add("column" + (i + 1) + " LIKE ?");
-                        params.add("%" + searchText + "%");
-                        break;
+        try (Session session = Main.getSessionFactory().openSession()) {
+            NativeQuery<Object[]> query = session.createNativeQuery(searchQuery);
+            query.setParameter("searchText", "%" + searchText + "%");
 
-                    case Types.INTEGER:
-                    case Types.BIGINT:
-                    case Types.DECIMAL:
-                    case Types.NUMERIC:
-                    case Types.FLOAT:
-                    case Types.DOUBLE:
-                        // For numeric columns, use '=' if input can be parsed to a number
-                        try {
-                            double numericValue = Double.parseDouble(searchText);
-                            conditions.add("column" + (i + 1) + " = ?");
-                            params.add(numericValue);
-                        } catch (NumberFormatException ignored) {
-                            // Skip numeric columns if the search text is not a number
-                        }
-                        break;
-
-                    default:
-                        // Other types can be handled as needed
-                        break;
-                }
-            }
-
-            if (conditions.isEmpty()) {
-                // If no valid conditions were built, return without executing the query
-                return;
-            }
-
-            // Join all conditions with "OR" and execute the search query
-            searchQuery.append(String.join(" OR ", conditions));
-            PreparedStatement statement = MainController.CONNECTION.prepareStatement(searchQuery.toString());
-
-            // Set parameters in the statement
-            for (int i = 0; i < params.size(); i++) {
-                statement.setObject(i + 1, params.get(i));
-            }
-
-            ResultSet resultSet = statement.executeQuery();
-            ResultSetMetaData metadata = resultSet.getMetaData();
-            int colCount = metadata.getColumnCount();
-
-            tableData.clear();
-            while (resultSet.next()) {
-                Object[] row = new Object[colCount];
-                for (int i = 1; i <= colCount; i++) {
-                    row[i - 1] = resultSet.getObject(i);
-                }
-                tableData.add(row);
-            }
-
-            resultSet.close();
-            statement.close();
-
+            List<Object[]> resultList = query.list();
+            tableData.setAll(resultList);
             table.setItems(tableData);
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -192,4 +114,3 @@ public class SelectFormController {
         void select(Object[] values);
     }
 }
-	

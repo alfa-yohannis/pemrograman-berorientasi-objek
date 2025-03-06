@@ -1,0 +1,1918 @@
+\documentclass[aspectratio=169, table]{beamer}
+
+%\usepackage[beamertheme=./praditatheme]{Pradita}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor} % for color
+\usepackage{colortbl} % for table color
+\usepackage{listings}
+
+% Define Java language style for listings
+\lstdefinestyle{JavaStyle}{
+	language=Java,
+	basicstyle=\ttfamily\tiny,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinestyle{sql}{
+	language=sql,
+	keywords={use, insert, into, values, select, from,
+		update, set, delete, create, where, join, left, right, inner, order, by, primary, key},
+	ndkeywords={max, min, varchar, int},
+	ndkeywordstyle=\color{purple}\bfseries,
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\lstdefinelanguage{bash} {
+	keywords={},
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={iex},
+	ndkeywordstyle=\color{purple}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	tabsize=2,
+	comment=[l]{\#},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{purple}\ttfamily,
+	showstringspaces=false
+}
+
+\lstdefinestyle{XmlStyle} {
+	language=xml,
+	keywords={},
+	basicstyle=\ttfamily\scriptsize,
+	keywordstyle=\color{blue}\bfseries,
+	ndkeywords={iex},
+	ndkeywordstyle=\color{purple}\bfseries,
+	sensitive=true,
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	breaklines=true,
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	tabsize=2,
+	comment=[l]{\#},
+	morecomment=[s]{<!--}{-->},
+	commentstyle=\color{gray}\ttfamily,
+	stringstyle=\color{purple}\ttfamily,
+	showstringspaces=false
+}
+
+\lstdefinelanguage{css}{
+	basicstyle=\ttfamily\footnotesize,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{red},
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{//},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+}
+
+\usetheme{Pradita}
+
+\subtitle{IF220303 - Object-oriented Programming}
+
+\title{\Huge Introduction to JavaFX\\\vspace{20pt}}
+\date[Serial]{\scriptsize {PRU/SPMI/FR-BM-18/0222}}
+\author[Pradita]{\small {\textbf{Alfa Yohannis}}}
+
+\begin{document}
+	
+	\frame{\titlepage}
+	
+\begin{frame}[fragile]
+	\frametitle{Contents}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\tableofcontents[sections={1-2}]
+		
+		\column{0.5\textwidth}
+		\tableofcontents[sections={3}]
+	\end{columns}
+\end{frame}
+
+
+\section{Introduction to JavaFX}
+
+\subsection{History and Evolution of JavaFX}
+
+\begin{frame}{History and Evolution of JavaFX}
+	\vspace{20pt}
+	\textbf{Introduction to JavaFX}
+	\begin{itemize}
+		\item Introduced by Sun Microsystems in 2007 as a platform for developing rich and flexible GUI applications.
+		\item Initially used JavaFX Script before transitioning to a standard Java API in version 2.0.
+	\end{itemize}
+	
+	\textbf{Changes by Oracle}
+	\begin{itemize}
+		\item After Oracle acquired Sun Microsystems in 2010, JavaFX underwent significant changes.
+		\item Since Java 8, JavaFX has been integrated into the JDK, replacing Swing as the primary GUI solution.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{JavaFX as an Open-Source Project}
+	\vspace{20pt}
+	\textbf{Changes since Java 11}
+	\begin{itemize}
+		\item JavaFX is no longer included in the standard JDK distribution as of Java 11.
+		\item It has been developed separately as an open-source project under OpenJFX.
+	\end{itemize}
+	
+	\textbf{Implications and Flexibility}
+	\begin{itemize}
+		\item Allows greater flexibility in application development, as JavaFX is not always required.
+		\item Users can manage JavaFX dependencies independently through modules or external libraries.
+	\end{itemize}
+\end{frame}
+
+\subsection{Installing JavaFX: Manual Installation}
+
+\begin{frame}{Installing JavaFX}
+	\vspace{20pt}
+	Before developing and testing JavaFX applications, JavaFX must be installed and properly configured in the development environment.
+	Since version 11, JavaFX is no longer included in the JDK, so it must be downloaded and configured separately.
+	
+	\textbf{Maual Installation Steps:}
+	\begin{enumerate}
+		\item Download the JavaFX SDK from the official website:  
+		\texttt{https://gluonhq.com/products/javafx/}.
+		\item Extract the downloaded file to a directory of your choice.
+		\item Add the JavaFX path to the project configuration.
+	\end{enumerate}
+\end{frame}
+
+
+
+\subsection{Initializing a Gradle Project for JavaFX}
+\label{gradle_javafx}
+
+\begin{frame}[fragile]{Initializing a Gradle Project for JavaFX}
+	\vspace{20pt}
+	Gradle is a build automation tool commonly used in JavaFX development to efficiently manage dependencies and the build system.  
+	The first step in using Gradle for JavaFX is to initialize a Gradle project and configure it to support JavaFX.
+	
+	To create a JavaFX-based Gradle project, use the following command in the terminal or command prompt:
+	
+	\begin{lstlisting}[language=bash, caption=Initializing a Gradle Project]
+		mkdir my-javafx-project
+		cd my-javafx-project
+		gradle init --type java-application
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Gradle Project Structure After Initialization}
+	\vspace{20pt}
+	After running this command, Gradle will generate a project structure with the following main directories:
+	
+	\begin{lstlisting}[language=bash, caption=Gradle Project Structure]
+		my-javafx-project/
+		|- app/
+		|   |- src/
+		|   |   |- main/
+		|   |   |   |- java/
+		|   |   |   |   |- org/example/
+		|   |   |   |   |   |- App.java
+		|   |   |- test/
+		|   |   |   |- java/
+		|   |   |   |   |- org/example/
+		|   |   |   |   |   |- AppTest.java
+		|- build.gradle
+		|- gradlew
+		|- gradlew.bat
+		|- settings.gradle
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}{Explanation of the Project Structure}
+	\vspace{20pt}
+	\textbf{Directory and File Descriptions:}
+	\begin{itemize}
+		\item \texttt{app/src/main/java/} – Stores the application source code.
+		\item \texttt{app/src/test/java/} – Contains unit tests.
+		\item \texttt{build.gradle} – The main configuration file for the Gradle project.
+		\item \texttt{gradlew} and \texttt{gradlew.bat} – Gradle wrapper scripts allowing the project to be built without requiring a global Gradle installation.
+	\end{itemize}
+
+		\textbf{Configure}. After creating the project, the next step is to configure \texttt{build.gradle} to support JavaFX. Below is the complete configuration for \texttt{build.gradle}.
+\end{frame}
+
+
+
+\begin{frame}[fragile]{build.gradle Configuration for JavaFX (Part 1)}
+	\vspace{20pt}
+	This configuration file sets up a JavaFX project using Gradle. It begins by adding the required plugins and defining the dependency repository.
+	\begin{itemize}
+		\item \textbf{Adds the JavaFX plugin} using \texttt{org.openjfx.javafxplugin}.
+		\item \textbf{Uses Maven Central} as the dependency repository.
+	\end{itemize}
+	\begin{lstlisting}[style=JavaStyle]
+		/*
+		* This file was generated by the Gradle 'init' task.
+		* Contains configuration for a JavaFX-based Gradle project.
+		*/
+		
+		plugins {
+			// Plugin for Java and JavaFX applications
+			id 'application'
+			id 'org.openjfx.javafxplugin' version '0.1.0'
+		}
+		
+		repositories {
+			// Use Maven Central to download dependencies
+			mavenCentral()
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{build.gradle Configuration for JavaFX (Part 2)}
+	\vspace{20pt}
+	The dependencies section specifies external libraries and testing frameworks required for the project.
+	\begin{itemize}
+		\item \textbf{Defines dependencies} such as JUnit (for testing) and Guava.
+		\item \textbf{Specifies the Java version} using the Gradle toolchain.
+	\end{itemize}
+	\begin{lstlisting}[style=JavaStyle]
+		dependencies {
+			// Add JUnit dependency for unit testing
+			testImplementation 'org.junit.jupiter:junit-jupiter'
+			testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+			
+			// Add Guava dependency as an example
+			implementation 'com.google.guava:guava:31.0.1-jre'
+		}
+		
+		// Configure Java version
+		java {
+			toolchain {
+				languageVersion = JavaLanguageVersion.of(21)
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{build.gradle Configuration for JavaFX (Part 3)}
+	\vspace{20pt}
+	This section configures the main application class, JavaFX modules, and test tasks.
+	\begin{itemize}
+		\item \textbf{Sets the main application class} (\texttt{mainClass}).
+		\item \textbf{Includes JavaFX version 21.0.1} with the \texttt{javafx.controls} module.
+		\item \textbf{Configures testing with JUnit Platform}.
+	\end{itemize}
+	\begin{lstlisting}[style=JavaStyle]
+		// Configure main application class
+		application {
+			mainClass = 'org.example.App'
+		}
+		
+		// JavaFX Configuration
+		javafx {
+			version = "21.0.1"
+			modules = [ 'javafx.controls' ]
+		}
+		
+		// Configure test task
+		tasks.named('test') {
+			useJUnitPlatform()
+		}
+	\end{lstlisting}
+\end{frame}
+
+
+\subsubsection{3. Running a JavaFX Application with Gradle}
+
+\begin{frame}[fragile]{Running a JavaFX Application with Gradle}
+	\vspace{20pt}
+	After completing the configuration, the application can be executed using the following command:
+	
+	\begin{lstlisting}[language=bash, caption=Running a JavaFX application with Gradle]
+		./gradlew run
+	\end{lstlisting}
+	
+	If using Windows, use the following command instead:
+	
+	\begin{lstlisting}[language=bash, caption=Running a Gradle project on Windows]
+		gradlew.bat run
+	\end{lstlisting}
+	
+	This command will compile the source code and run the main application defined in \texttt{mainClass}.
+\end{frame}
+
+\begin{frame}{Hello World using JavaFX}
+	\vspace{20pt}
+	After successfully creating the project, the first step in application development is to create a \textit{Hello World} program.  
+	This program will display a simple window with the label "Hello, JavaFX!".
+	
+	\bigskip
+	JavaFX uses the \texttt{Application} class as the entry point for execution.  
+	The \texttt{start()} method must be implemented to define the initial UI of the application.
+	
+	\bigskip
+	To implement this, update the file \texttt{app/src/main/java/org/example/App.java}  
+	and ensure the necessary JavaFX components are properly configured.
+\end{frame}
+
+
+\begin{frame}[fragile]{Hello World Program using JavaFX}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		import javafx.application.Application;
+		import javafx.scene.Scene;
+		import javafx.scene.control.Label;
+		import javafx.scene.layout.StackPane;
+		import javafx.stage.Stage;
+		
+		public class HelloWorld extends Application {
+			@Override
+			public void start(Stage primaryStage) {
+				Label label = new Label("Hello, JavaFX!");
+				StackPane root = new StackPane(label);
+				Scene scene = new Scene(root, 300, 200);
+				
+				primaryStage.setTitle("Hello JavaFX");
+				primaryStage.setScene(scene);
+				primaryStage.show();
+			}
+			
+			public static void main(String[] args) {
+				launch(args);
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{3. Running the Hello World Program}
+
+\begin{frame}[fragile]{Running the Hello World Program}
+	\vspace{20pt}
+	After writing the code, the program can be executed using the following command in the terminal or via an IDE:
+	
+	\begin{lstlisting}[language=bash, caption=Running the Hello World program]
+		java --module-path "path/to/javafx-sdk/lib" --add-modules javafx.controls,javafx.fxml -jar HelloWorld.jar
+	\end{lstlisting}
+	
+	If using IntelliJ IDEA or Eclipse, simply press the \texttt{Run} button to execute the program.
+	
+	Running this code will display an application window with the message "Hello, JavaFX!", indicating that JavaFX has been correctly configured and is ready for further development.
+\end{frame}
+
+\begin{frame}[fragile]{Advantages of JavaFX over Swing and AWT}
+	\vspace{20pt}
+	JavaFX offers various advantages over its predecessors, the Abstract Window Toolkit (AWT) and Swing. Some of the key benefits include:
+	
+	\bigskip
+	\textbf{Support for Scene Graph and Visual Effects}  
+	JavaFX uses a \textit{Scene Graph} to manage user interface components.  
+	This approach is more flexible compared to the hierarchical component-based model used by Swing.  
+	Additionally, JavaFX supports modern visual effects such as transparency, shadows, and animations with high performance.
+	
+	\bigskip
+	\textbf{Example: Adding a Shadow Effect to a Button}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		Button btn = new Button("Click Me");
+		DropShadow shadow = new DropShadow();
+		btn.setEffect(shadow);
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Integration with CSS and FXML}
+	\vspace{25pt}
+	\begin{columns}[t]
+		\begin{column}{0.5\textwidth}
+			JavaFX allows separation between presentation and business logic by supporting CSS for styling components.  
+			This provides greater flexibility in designing user interfaces without modifying Java code.
+			
+			\bigskip
+			\textbf{Example: Styling JavaFX Components with CSS}
+			
+			\begin{lstlisting}[language=css]
+				.button {
+					-fx-background-color: #3498db;
+					-fx-text-fill: white;
+				}
+			\end{lstlisting}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			JavaFX supports FXML, an XML-based format that allows designing user interfaces declaratively.  
+			With FXML, UI development can be done separately from the program logic.
+			
+			\bigskip
+			\textbf{Example: Simple FXML File}
+			
+			\begin{lstlisting}[style=XmlStyle]
+				<Button text="Click Me" fx:id="btnClick" onAction="#handleButtonClick"/>
+			\end{lstlisting}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}{\LARGE{JavaFX: Performance, Multi-Touch, and Architecture}}
+	\vspace{20pt}
+	JavaFX offers several advantages in terms of performance and modern device support:
+	
+	\bigskip
+	\textbf{Better Performance}  
+	JavaFX uses hardware acceleration for rendering graphics, making it more efficient than Swing in handling complex visual elements.
+	
+	\bigskip
+	\textbf{Multi-Touch and Sensor Support}  
+	JavaFX supports \textit{multi-touch}, \textit{gesture}, and other sensors, making it more suitable for modern devices such as tablets and touchscreens.
+	
+	\bigskip
+	\textbf{JavaFX Architecture and Key Components}  
+	JavaFX has a modular architecture that allows for more flexible GUI application development.
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Scene Graph and Stage in JavaFX}
+	\vspace{25pt}
+	\begin{columns}[t]
+		\begin{column}{0.5\textwidth}
+			The Scene Graph is a hierarchical structure used to organize elements in a JavaFX application.  
+			Each UI element is called a \textit{Node}, which can be components like buttons, labels, or image fields.
+			
+			\bigskip
+			\textbf{Example of using Scene Graph:}
+			
+			\begin{lstlisting}[style=JavaStyle]
+				VBox root = new VBox();
+				Button btn = new Button("Click Me");
+				Label lbl = new Label("Welcome");
+				root.getChildren().addAll(lbl, btn);
+				Scene scene = new Scene(root, 400, 300);
+			\end{lstlisting}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			The \textit{Stage} represents the main window in a JavaFX application,  
+			while the \textit{Scene} is a container that organizes UI elements.
+			
+			\bigskip
+			\textbf{Example of using Stage and Scene:}
+			
+			\begin{lstlisting}[style=JavaStyle]
+				@Override
+				public void start(Stage primaryStage) {
+					VBox root = new VBox();
+					Scene scene = new Scene(root, 400, 300);
+					primaryStage.setScene(scene);
+					primaryStage.setTitle("JavaFX Application");
+					primaryStage.show();
+				}
+			\end{lstlisting}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Layout Manager in JavaFX}
+	\vspace{20pt}
+	JavaFX provides various types of \textit{layout managers} to flexibly arrange UI components, including:
+	\begin{itemize}
+		\item \textbf{VBox} and \textbf{HBox}: Arrange elements vertically or horizontally.
+		\item \textbf{GridPane}: Organize elements in a grid structure.
+		\item \textbf{BorderPane}: Divide the display area into five sections (top, bottom, left, right, center).
+		\item \textbf{StackPane}: Stack elements on top of each other.
+	\end{itemize}
+	
+	\bigskip
+	\textbf{Example of using GridPane in JavaFX:}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		GridPane grid = new GridPane();
+		grid.add(new Label("Name:"), 0, 0);
+		grid.add(new TextField(), 1, 0);
+		grid.add(new Button("Submit"), 1, 1);
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{Event Handling and Binding in JavaFX}
+	\begin{columns}
+		\begin{column}{0.5\textwidth}
+			JavaFX follows the \textit{event-driven programming} paradigm,  
+			where every user interaction with the UI can be handled through event mechanisms.
+			
+			\bigskip
+			\textbf{Example of handling an event on a button:}
+			
+			\begin{lstlisting}[style=JavaStyle]
+				btn.setOnAction(e -> System.out.println("Button clicked!"));
+			\end{lstlisting}
+		\end{column}
+		\begin{column}{0.5\textwidth}
+			JavaFX provides a \textit{binding} system that allows a UI element's properties  
+			to be directly linked to data changes.
+			
+			\bigskip
+			\textbf{Example of binding in JavaFX:}
+			
+			\begin{lstlisting}[style=JavaStyle]
+				TextField textField = new TextField();
+				Label label = new Label();
+				label.textProperty().bind(textField.textProperty());
+			\end{lstlisting}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Basic Concepts of JavaFX: Scene Graph}
+	\vspace{20pt}
+	JavaFX uses the \textit{Scene Graph} as a hierarchical model to represent the user interface.  
+	Each UI element, such as buttons, labels, or image fields, is called a \textit{Node}.  
+	All elements are arranged in a tree structure where each element has a parent  
+	and can have multiple children.
+	
+	\bigskip
+	The Scene Graph structure always has one main element called the \textit{root node},  
+	which serves as the starting point of the entire UI hierarchy.  
+	Each element in the Scene Graph can be modified, moved, or assigned visual effects dynamically.
+
+\end{frame}
+
+
+\begin{frame}[fragile]{Scene Graph Explanation}
+	\vspace{20pt}	
+	\begin{lstlisting}[style=JavaStyle]
+		VBox root = new VBox(); // Root node
+		Label lbl = new Label("Welcome");
+		Button btn = new Button("Click Me");
+		root.getChildren().addAll(lbl, btn); // Adding elements to root
+		Scene scene = new Scene(root, 400, 300);
+	\end{lstlisting}
+	In the example above:
+	\begin{itemize}
+		\item \texttt{VBox} is used as the main element (root node).
+		\item It contains two child elements: \texttt{Label} and \texttt{Button}.
+		\item With this model, UI changes can be easily managed without restructuring the entire code.
+	\end{itemize}
+\end{frame}
+
+\subsection{JavaFX Application Lifecycle}
+
+\begin{frame}[fragile]{JavaFX Application Lifecycle}
+	\vspace{20pt}
+	A JavaFX application follows a lifecycle consisting of several main stages.  
+	JavaFX uses the \texttt{Application} class as the main entry point for all GUI-based applications.
+	
+	\bigskip
+	The primary lifecycle stages in JavaFX include:
+	\begin{itemize}
+		\item \textbf{\texttt{init()}}: Called before the user interface is created.  
+		Typically used to initialize variables or data required for the application.
+		\item \textbf{\texttt{start(Stage primaryStage)}}: The main method used to display the UI,  
+		set up the Scene and main Stage.
+		\item \textbf{\texttt{stop()}}: Called when the application is stopped.  
+		Used for resource cleanup or saving data before closing the application.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]
+	\frametitle{JavaFX Application Lifecycle}
+	\begin{columns}[t]
+		\begin{column}{0.55\textwidth}
+			\vspace{20pt}
+			\begin{lstlisting}[style=JavaStyle]
+				public class MainApp extends Application {
+					@Override
+					public void init() {
+						System.out.println("Initializing application");
+					}
+					
+					@Override
+					public void start(Stage primaryStage) {
+						VBox root = new VBox();
+						Scene scene = new Scene(root, 400, 300);
+						primaryStage.setScene(scene);
+						primaryStage.setTitle("JavaFX Application");
+						primaryStage.show();
+					}
+					
+					@Override
+					public void stop() {
+						System.out.println("Application stopped");
+					}
+					
+					public static void main(String[] args) {
+						launch(args);
+					}
+				}
+			\end{lstlisting}
+		\end{column}
+		\begin{column}{0.45\textwidth}
+			In this code:
+			\begin{itemize}
+				\item \texttt{init()} is called before the UI is displayed.
+				\item \texttt{start()} sets up the main window and UI.
+				\item \texttt{stop()} performs cleanup on closure.
+				\item \texttt{launch(args)} in \texttt{main()} starts the application.
+			\end{itemize}
+		\end{column}
+	\end{columns}
+\end{frame}
+
+
+
+\subsection{Event-Driven Programming in JavaFX}
+
+\begin{frame}[fragile]{Event-Driven Programming in JavaFX}
+	\vspace{20pt}
+	JavaFX follows the \textit{Event-Driven Programming} paradigm,  
+	where every user interaction with the UI is handled through an event mechanism.  
+	In this model, each UI component can respond to various types of events,  
+	such as button clicks, mouse movements, or keyboard input.
+	
+	\bigskip
+	Every event in JavaFX is managed through three main components:
+	\begin{itemize}
+		\item \textbf{Event Source} – The UI element that generates an event, such as a button or text field.
+		\item \textbf{Event Handler} – A method or function that processes the event.
+		\item \textbf{Event Listener} – The mechanism that connects the event to the event handler.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Handling Button Click Event}
+	\vspace{20pt}
+	JavaFX allows handling user interactions through event-driven programming.  
+	One common event is a button click, which can be handled using the \texttt{setOnAction()} method.
+	
+	\bigskip
+	\begin{lstlisting}[style=JavaStyle]
+		Button btn = new Button("Click Me");
+		btn.setOnAction(e -> System.out.println("Button clicked!"));
+	\end{lstlisting}
+	
+	\bigskip
+	In the example above:
+	\begin{itemize}
+		\item The \texttt{setOnAction()} method is used to attach an event handler.
+		\item When the button is clicked, the event handler executes and prints a message to the console.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Advanced Event Handling in JavaFX}
+	\vspace{20pt}
+	JavaFX provides powerful mechanisms for handling user interactions,  
+	including standard event handlers and event filters.
+	
+	\bigskip
+	\textbf{Types of Event Handling in JavaFX:}
+	\begin{itemize}
+		\item \textbf{Event Handlers} – Methods like \texttt{setOnAction()}, \texttt{setOnMouseClicked()},  
+		and others allow handling specific user interactions.
+		\item \textbf{Event Filters} – The \texttt{addEventFilter()} method processes events  
+		before they reach the intended UI component.
+	\end{itemize}
+	
+	\bigskip
+	\begin{lstlisting}[style=JavaStyle]
+		scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+			System.out.println("Click detected across the entire Scene!");
+		});
+	\end{lstlisting}
+	
+\end{frame}
+
+\section{Design Patterns in JavaFX Development}
+
+\subsection{Model-View-Controller (MVC) in JavaFX}
+
+\begin{frame}[fragile]{Model-View-Controller (MVC) in JavaFX}
+	\vspace{20pt}
+	The Model-View-Controller (MVC) design pattern is widely used in software development  
+	to separate business logic, presentation, and data flow control within an application.  
+	JavaFX supports MVC implementation effectively, enabling more modular and maintainable UI development.
+	
+	\bigskip
+	\textbf{Main Components of MVC in JavaFX:}
+	\begin{itemize}
+		\item \textbf{Model} – Represents the application’s data and business logic.
+		\item \textbf{View} – Responsible for displaying data to users.
+		\item \textbf{Controller} – Manages interactions between the View and Model.
+	\end{itemize}
+	
+	\bigskip
+	This separation allows for: easier testing and debugging, more scalable and maintainable applications, better separation of concerns in UI development.
+\end{frame}
+
+
+\begin{frame}[fragile]{Implementing the Model in JavaFX}
+	\vspace{20pt}
+	In JavaFX, the Model represents the application's data and business logic.  
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class Student {
+			private StringProperty name = new SimpleStringProperty();
+			private IntegerProperty age = new SimpleIntegerProperty();
+			
+			public Student(String name, int age) {
+				this.name.set(name);
+				this.age.set(age);
+			}
+			
+			public StringProperty nameProperty() { return name; }
+			public IntegerProperty ageProperty() { return age; }
+		}
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item The class \texttt{Student} represents the Model with \texttt{name} and \texttt{age} properties.
+		\item These properties use \textit{Property Binding}, allowing them to be directly linked to the UI.
+		\item This enables dynamic updates between the UI and data without manual event handling.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing the View in JavaFX}
+	\vspace{20pt}
+	In JavaFX, the View is responsible for presenting data to the user.  
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class StudentView {
+			private TableView<Student> table = new TableView<>();
+			
+			public Parent getView() {
+				TableColumn<Student, String> nameColumn = new TableColumn<>("Name");
+				nameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
+				
+				TableColumn<Student, Integer> ageColumn = new TableColumn<>("Age");
+				ageColumn.setCellValueFactory(data -> data.getValue().ageProperty().asObject());
+				
+				table.getColumns().addAll(nameColumn, ageColumn);
+				return new VBox(table);
+			}
+		}
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item The View defines a table layout using \texttt{TableView} to display a list of students.
+		\item It binds each column to the corresponding properties in the \texttt{Student} model.
+		\item This setup ensures that the UI updates automatically when data changes.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Implementing the Controller in JavaFX}
+	\vspace{20pt}
+	In JavaFX, the Controller manages the interaction between the Model and View.  
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class StudentController {
+			private StudentView view;
+			private ObservableList<Student> data = FXCollections.observableArrayList();
+			
+			public StudentController(StudentView view) {
+				this.view = view;
+				data.add(new Student("John", 20));
+				data.add(new Student("Emma", 21));
+				view.getTable().setItems(data);
+			}
+		}
+	\end{lstlisting}
+	
+	\begin{itemize}
+		\item The Controller connects the View with the Model.
+		\item It initializes the data list with sample students.
+		\item The data is then set into the \texttt{TableView} in the View.
+		\item This allows the UI to reflect changes dynamically.
+	\end{itemize}
+\end{frame}
+
+\subsection{Separation of Business Logic and UI}
+
+\begin{frame}[fragile]{Separation of Business Logic and UI}
+	\vspace{20pt}
+	In JavaFX application development, separating business logic from the UI  
+	is essential for ensuring code flexibility and readability.  
+	This approach prevents mixing UI code with data management and business operations.
+	
+	\bigskip
+	\textbf{Approaches for Achieving Separation:}
+	\begin{itemize}
+		\item Using separate classes to handle business logic.
+		\item Defining the UI structure with FXML.
+		\item Utilizing \textit{Binding} and \textit{Listeners} to connect the UI with data.
+	\end{itemize}
+	
+	\bigskip
+	By following these principles, applications become more modular,  
+	maintainable, and scalable.
+\end{frame}
+
+
+\begin{frame}[fragile]{Using FXML for UI Definition}
+	\vspace{20pt}
+	JavaFX supports FXML, an XML-based format that allows for UI definition  
+	without embedding business logic. This approach enhances flexibility  
+	and separation of concerns.
+	
+	\begin{lstlisting}[style=XmlStyle]
+		<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.StudentController">
+		<Label text="Name:"/>
+		<TextField fx:id="txtName"/>
+		<Button text="Add" onAction="#addStudent"/>
+		</GridPane>
+	\end{lstlisting}
+	
+	This FXML file defines the UI structure independently, allowing modifications  
+	without altering the underlying logic. The UI is controlled by \texttt{StudentController},  
+	ensuring a clear separation between presentation and business logic.
+\end{frame}
+
+
+\begin{frame}[fragile]{Controller Handling UI Events and Benefits of Separation}
+	\vspace{20pt}
+	JavaFX follows the MVC pattern, ensuring a clear separation between UI and business logic.  
+	The Controller manages UI interactions, while the View remains independent.
+
+	\begin{lstlisting}[style=JavaStyle]
+		public class StudentController {
+			@FXML private TextField txtName;
+			private ObservableList<Student> data = FXCollections.observableArrayList();
+			
+			@FXML
+			private void addStudent() {
+				String name = txtName.getText();
+				data.add(new Student(name, 18));
+				txtName.clear();
+			}
+		}
+	\end{lstlisting}
+
+	\begin{itemize}
+		\item The View (FXML) can be updated without modifying business logic.
+		\item Enhances maintainability, modularity, and testability.
+		\item UI logic remains separate from data processing, improving scalability.
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Dependency Injection in JavaFX}
+
+\begin{frame}[fragile]{Dependency Injection in JavaFX}
+	\vspace{20pt}
+	Dependency Injection (DI) is a technique used to manage dependencies between components  
+	in an application, improving flexibility and easing testing.
+	
+	\bigskip
+	\textbf{Popular Dependency Injection Frameworks for JavaFX:}
+	\begin{itemize}
+		\item \textbf{Guice} – A lightweight DI framework developed by Google.
+		\item \textbf{Spring} – A widely used framework for dependency management in Java applications.
+		\item \textbf{CDI (Contexts and Dependency Injection)} – A Java EE standard for DI.
+	\end{itemize}
+	
+	\bigskip
+	By leveraging DI, JavaFX applications can achieve better modularity,  
+	improving code maintainability and testability.
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Dependency Injection with Guice}
+	\vspace{20pt}
+	Guice simplifies dependency management in JavaFX, making code more modular and testable.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class StudentService {
+			public List<Student> getStudents() {
+				return List.of(new Student("Andi", 22), new Student("Lina", 23));
+			}
+		}
+		
+		public class StudentController {
+			@Inject
+			private StudentService studentService;
+			
+			public void displayStudents() {
+				studentService.getStudents().forEach(s -> System.out.println(s.getName()));
+			}
+		}
+	\end{lstlisting}
+	
+	Guice automatically injects \texttt{StudentService} into \texttt{StudentController},  
+	enhancing separation of concerns and easing testing.
+\end{frame}
+
+\begin{frame}[fragile]{Benefits of Dependency Injection in JavaFX}
+	\vspace{20pt}
+	Dependency Injection enhances JavaFX application architecture by:
+	\begin{itemize}
+		\item Reducing direct dependencies between components.
+		\item Facilitating unit testing by enabling isolated object testing.
+		\item Increasing flexibility, allowing implementation changes  
+		without modifying core logic.
+	\end{itemize}
+	
+	This results in a more modular, extensible, and maintainable application structure.
+\end{frame}
+
+
+\section{Building a JavaFX Application}
+
+\subsection{Setting Up a JavaFX Project}
+
+\begin{frame}[fragile]{Setting Up a JavaFX Project and Application Structure}
+	\vspace{20pt}
+	To create a JavaFX application, follow the steps in the Hello World section  
+	(Subsections \ref{gradle_javafx} and \ref{hello_world_menggunakan_javafx}).
+	
+	A JavaFX application consists of several key components:
+	\begin{itemize}
+		\item \textbf{Main Application Class} – The application's entry point.
+		\item \textbf{Stage} – Represents the application's main window.
+		\item \textbf{Scene} – A container for organizing UI elements.
+		\item \textbf{Layout} – Defines the structure of UI components.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{JavaFX Main Class}
+	\vspace{20pt}
+	The main class serves as the entry point for a JavaFX application.  
+	\texttt{launch(args)} initializes the JavaFX runtime and starts the UI.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class MainApp extends Application {
+			@Override
+			public void start(Stage primaryStage) {
+				VBox root = new VBox();
+				Scene scene = new Scene(root, 400, 300);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX Application");
+				primaryStage.show();
+			}
+			
+			public static void main(String[] args) {
+				launch(args);
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+
+\subsection{Using Scene and Stage}
+
+\begin{frame}[fragile]{Scene and Stage in JavaFX}
+	\vspace{20pt}
+	Every JavaFX application has at least one \texttt{Stage} and one \texttt{Scene}.  
+	\texttt{Stage} represents the main application window, while \texttt{Scene} contains and organizes UI elements.
+
+	\begin{lstlisting}[style=JavaStyle]
+		public void start(Stage primaryStage) {
+			primaryStage.setTitle("JavaFX Application");
+			primaryStage.setWidth(600);
+			primaryStage.setHeight(400);
+			primaryStage.setResizable(false);
+			primaryStage.show();
+		}
+	\end{lstlisting}
+	
+	\texttt{Stage} can be customized with properties such as size, title, and display mode,  
+	providing control over the application's main window behavior.
+\end{frame}
+
+
+\subsubsection{2. Scene in JavaFX}
+
+\begin{frame}[fragile]{Scene in JavaFX}
+	\vspace{20pt}
+	\texttt{Scene} is a container that holds layouts and UI elements in a JavaFX application.  
+	A \texttt{Scene} must always be assigned to a \texttt{Stage} before it can be displayed.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public void start(Stage primaryStage) {
+			VBox root = new VBox();
+			Scene scene = new Scene(root, 600, 400);
+			
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("JavaFX Application");
+			primaryStage.show();
+		}
+	\end{lstlisting}
+	
+	This example creates a \texttt{VBox}-based \texttt{Scene} and assigns it to the primary \texttt{Stage}.
+\end{frame}
+
+
+\subsubsection{3. Switching Scenes in JavaFX}
+
+\begin{frame}[fragile]{Switching Scenes in JavaFX}
+	\vspace{20pt}
+	Applications often require multiple scenes. JavaFX allows dynamic scene switching within a \texttt{Stage}.
+	
+	\begin{lstlisting}[style=JavaStyle, caption=Switching Scenes in JavaFX]
+		public void start(Stage primaryStage) {
+			Button btnSwitch = new Button("Switch Scene");
+			
+			btnSwitch.setOnAction(e -> {
+				StackPane newRoot = new StackPane(new Label("New Scene"));
+				Scene newScene = new Scene(newRoot, 600, 400);
+				primaryStage.setScene(newScene);
+			});
+			
+			VBox root = new VBox(btnSwitch);
+			Scene scene = new Scene(root, 600, 400);
+			
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("JavaFX - Scene Switching");
+			primaryStage.show();
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsubsection{4. Stage Display Modes}
+
+\begin{frame}[fragile]{Stage Display Modes in JavaFX}
+	\vspace{20pt}
+	JavaFX supports multiple display modes for the Stage:
+	\begin{itemize}
+		\item \textbf{Normal Mode} – Resizable window.
+		\item \textbf{FullScreen Mode} – Fullscreen display.
+		\item \textbf{Transparent Stage} – Transparent background.
+	\end{itemize}
+	
+	\begin{lstlisting}[style=JavaStyle, caption=Enabling Fullscreen Mode in JavaFX]
+		primaryStage.setFullScreen(true);
+	\end{lstlisting}
+	
+	Understanding Scene and Stage concepts allows for more flexible and  
+	structured JavaFX application development.
+\end{frame}
+
+\subsection{Understanding Layout Managers in JavaFX}
+
+\begin{frame}[fragile]{Layout Managers in JavaFX}
+	\vspace{20pt}
+	Layout Managers in JavaFX automatically arrange the position and size of UI components.  
+	JavaFX provides various layout types to meet different design requirements.
+	
+	\begin{itemize}
+		\item \textbf{VBox and HBox} – Arranges elements vertically or horizontally.
+		\item \textbf{GridPane} – Organizes elements in a grid structure.
+		\item \textbf{BorderPane} – Divides the display into five regions (top, bottom, left, right, center).
+		\item \textbf{StackPane} – Stacks elements on top of each other.
+	\end{itemize}
+	
+	VBox (\textit{Vertical Box}) and HBox (\textit{Horizontal Box}) are simple layouts  
+	used to arrange elements in a single direction:
+	\begin{itemize}
+		\item \textbf{VBox} – Arranges elements in a single vertical column.
+		\item \textbf{HBox} – Arranges elements in a single horizontal row.
+	\end{itemize}
+\end{frame}
+
+
+\begin{frame}[fragile]{Using VBox and HBox Layouts}
+	\vspace{20pt}
+	\begin{columns}[t]
+		\column{.5\textwidth}
+		\textbf{VBox Example:}
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				VBox vbox = new VBox();
+				vbox.setSpacing(10);
+				vbox.setPadding(new Insets(20));
+				
+				Label lbl = new Label("Name:");
+				TextField txtName = new TextField();
+				Button btnSubmit = new Button("Submit");
+				
+				vbox.getChildren().addAll(lbl, txtName, btnSubmit);
+				
+				Scene scene = new Scene(vbox, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX VBox Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{.5\textwidth}
+		\textbf{HBox Example:}
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				HBox hbox = new HBox();
+				hbox.setSpacing(10);
+				hbox.setPadding(new Insets(20));
+				
+				Button btn1 = new Button("Button 1");
+				Button btn2 = new Button("Button 2");
+				
+				hbox.getChildren().addAll(btn1, btn2);
+				
+				Scene scene = new Scene(hbox, 300, 100);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX HBox Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+
+\subsubsection{GridPane}
+
+\begin{frame}[fragile]{GridPane in JavaFX}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{GridPane Overview} \\
+		GridPane arranges elements in a grid (rows and columns).  
+		Each element is positioned by specifying its row and column index.
+		
+		\textbf{Advantages:}
+		\begin{itemize}
+			\item Flexible for table-based layouts.
+			\item Elements can span multiple rows or columns.
+			\item Suitable for forms or complex UI structures.
+		\end{itemize}
+		
+		\column{0.5\textwidth}
+		\begin{lstlisting}[style=JavaStyle]
+			GridPane grid = new GridPane();
+			grid.setPadding(new Insets(10));
+			grid.setHgap(10); // Horizontal gap
+			grid.setVgap(10); // Vertical gap
+			
+			Label lblName = new Label("Name:");
+			TextField txtName = new TextField();
+			Label lblEmail = new Label("Email:");
+			TextField txtEmail = new TextField();
+			Button btnSubmit = new Button("Submit");
+			
+			// Adding elements to GridPane (column, row)
+			grid.add(lblName, 0, 0);
+			grid.add(txtName, 1, 0);
+			grid.add(lblEmail, 0, 1);
+			grid.add(txtEmail, 1, 1);
+			grid.add(btnSubmit, 1, 2);
+			
+			Scene scene = new Scene(grid, 300, 200);
+			primaryStage.setScene(scene);
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{BorderPane and StackPane in JavaFX}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{BorderPane Overview} \\
+		BorderPane divides the UI into five sections:
+		\begin{itemize}
+			\item \textbf{Top} – Top section.
+			\item \textbf{Bottom} – Bottom section.
+			\item \textbf{Left} – Left section.
+			\item \textbf{Right} – Right section.
+			\item \textbf{Center} – Center section.
+		\end{itemize}
+		BorderPane is useful for layouts with menus and content areas.
+		
+		\column{0.5\textwidth}
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				BorderPane borderPane = new BorderPane();
+				
+				Label lblHeader = new Label("Application Title");
+				Button btnLeft = new Button("Left Menu");
+				Button btnRight = new Button("Right Menu");
+				TextArea txtArea = new TextArea("Main Content");
+				
+				borderPane.setTop(lblHeader);
+				borderPane.setLeft(btnLeft);
+				borderPane.setRight(btnRight);
+				borderPane.setCenter(txtArea);
+				
+				Scene scene = new Scene(borderPane, 400, 300);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX BorderPane Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{StackPane in JavaFX}
+	\vspace{20pt}
+	\textbf{StackPane} stacks elements on top of each other.  
+	Elements added later appear above previous elements.
+		\begin{lstlisting}[style=JavaStyle, caption=Stacking elements with StackPane]
+		StackPane stackPane = new StackPane();
+		
+		Rectangle rect = new Rectangle(100, 100, Color.BLUE);
+		Label lbl = new Label("Text on top");
+		
+		stackPane.getChildren().addAll(rect, lbl);
+		
+		Scene scene = new Scene(stackPane, 200, 200);
+		primaryStage.setScene(scene);
+	\end{lstlisting}
+\end{frame}
+
+
+\begin{frame}[fragile]{Comparison of JavaFX Layout Managers}
+	\vspace{20pt}
+	\begin{table}[h]
+		\centering
+		\definecolor{black}{rgb}{0,0,0} % Explicitly define black if not already defined
+		\renewcommand{\arraystretch}{1.2} % Adjust row height
+		\arrayrulecolor{black} % Explicitly set the border color to black
+		\begin{tabular}{|p{3cm}|p{5cm}|p{4cm}|}
+			\hline
+			\rowcolor{gray!20} \textbf{Layout} & \textbf{Characteristics} & \textbf{Best for} \\
+			\hline
+			\textbf{VBox} & Arranges elements vertically & Forms, component lists \\
+			\hline
+			\textbf{HBox} & Arranges elements horizontally & Toolbars, horizontal menus \\
+			\hline
+			\textbf{GridPane} & Table-like structure (grid) & Forms, table-like layouts \\
+			\hline
+			\textbf{BorderPane} & Divides UI into five regions & Applications with menus \\
+			\hline
+			\textbf{StackPane} & Stacks elements on top of each other & Overlays, visual effects \\
+			\hline
+		\end{tabular}
+	\end{table}
+\end{frame}
+
+
+\begin{frame}[fragile]{Interactive Components in JavaFX}
+	\vspace{20pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		JavaFX provides various UI components:
+		\begin{itemize}
+			\item \texttt{Label}, \texttt{Button}, \texttt{TextField}
+			\item \texttt{ComboBox}, \texttt{ListView}, \texttt{TableView}
+			\item Menus and dialogs for enhanced interaction
+		\end{itemize}
+		
+		\column{0.5\textwidth}
+		\textbf{Creating a Label in JavaFX}
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Label lblTitle = new Label("Welcome to JavaFX");
+				lblTitle.setFont(new Font("Arial", 16));
+				lblTitle.setTextFill(Color.BLUE);
+				
+				VBox root = new VBox(lblTitle);
+				root.setAlignment(Pos.CENTER);
+				Scene scene = new Scene(root, 400, 200);
+				
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX Label Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Button and TextField in JavaFX}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{Button} is an interactive component that responds to user actions.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Button btnClick = new Button("Click Me");
+				btnClick.setOnAction(e -> 
+				System.out.println("Button clicked!"));
+				
+				VBox root = new VBox(10, btnClick);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX Button Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{TextField} allows users to enter a single-line text input.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				TextField txtInput = new TextField();
+				Button btnSubmit = new Button("Submit");
+				
+				btnSubmit.setOnAction(e -> {
+					String input = txtInput.getText();
+					System.out.println("Input: " + input);
+				});
+				
+				VBox root = new VBox(10, txtInput, btnSubmit);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("JavaFX TextField Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\subsection{ComboBox, ListView, and TableView}
+
+\begin{frame}[fragile]{ComboBox and ListView in JavaFX}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{ComboBox} provides a dropdown list for users to select one item.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				ComboBox<String> comboBox = new ComboBox<>();
+				comboBox.getItems().addAll("Option 1", 
+				"Option 2", "Option 3");
+				comboBox.setValue("Option 1");
+				
+				comboBox.setOnAction(e -> {
+					String selected = comboBox.getValue();
+					System.out.println("Selected: " + selected);
+				});
+				
+				VBox root = new VBox(10, comboBox);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("ComboBox Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{ListView} allows users to select one or multiple items.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				ListView<String> listView = new ListView<>();
+				listView.getItems().addAll("Item 1", 
+				"Item 2", "Item 3");
+				
+				listView.getSelectionModel()
+				.selectedItemProperty()
+				.addListener((obs, oldVal, newVal) -> {
+					System.out.println("Selected: " + newVal);
+				});
+				
+				VBox root = new VBox(10, listView);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("ListView Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{TableView and Menu in JavaFX}
+	\vspace{30pt}
+	\begin{columns}[t]
+		\column{0.55\textwidth}
+		\textbf{TableView} displays data in a tabular format with rows and columns.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				TableView<Student> tableView = new TableView<>();
+				
+				TableColumn<Student, String> nameCol = 
+				new TableColumn<>("Name");
+				nameCol.setCellValueFactory(
+				new PropertyValueFactory<>("name"));
+				
+				TableColumn<Student, Integer> ageCol = 
+				new TableColumn<>("Age");
+				ageCol.setCellValueFactory(
+				new PropertyValueFactory<>("age"));
+				
+				tableView.getColumns().addAll(nameCol, ageCol);
+				
+				VBox root = new VBox(10, tableView);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 400, 300);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("TableView Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.45\textwidth}
+		\textbf{MenuBar} creates a navigation menu at the top of the application.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				MenuBar menuBar = new MenuBar();
+				
+				Menu menuFile = new Menu("File");
+				MenuItem itemOpen = new MenuItem("Open");
+				MenuItem itemSave = new MenuItem("Save");
+				
+				menuFile.getItems().addAll(itemOpen, itemSave);
+				menuBar.getMenus().add(menuFile);
+				
+				VBox root = new VBox(menuBar);
+				Scene scene = new Scene(root, 400, 300);
+				
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("MenuBar Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Dialog and Input Dialog in JavaFX}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{Alert} displays messages to users for notifications or confirmations.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Alert alert = new Alert(Alert.AlertType.INFORMATION);
+				alert.setTitle("Information");
+				alert.setHeaderText(null);
+				alert.setContentText("Operation Successful!");
+				alert.showAndWait();
+				
+				primaryStage.setTitle("Alert Example");
+				primaryStage.setWidth(300);
+				primaryStage.setHeight(200);
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{TextInputDialog} prompts users to enter text input.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				TextInputDialog dialog = new TextInputDialog("Default");
+				dialog.setTitle("Input Dialog");
+				dialog.setHeaderText("Enter Your Name:");
+				dialog.setContentText("Name:");
+				
+				Optional<String> result = dialog.showAndWait();
+				result.ifPresent(name -> 
+				System.out.println("Entered Name: " + name));
+				
+				primaryStage.setTitle("TextInputDialog Example");
+				primaryStage.setWidth(300);
+				primaryStage.setHeight(200);
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{File Chooser in JavaFX}
+	\vspace{30pt}
+	\textbf{FileChooser} allows users to select files from the system.
+	\begin{lstlisting}[style=JavaStyle]
+		public void start(Stage primaryStage) {
+			FileChooser fileChooser = new FileChooser();
+			fileChooser.setTitle("Open File");
+			fileChooser.getExtensionFilters().add(
+			new FileChooser.ExtensionFilter("Text Files", "*.txt")
+			);
+			
+			Button btnOpen = new Button("Open File");
+			btnOpen.setOnAction(e -> {
+				File file = fileChooser.showOpenDialog(primaryStage);
+				if (file != null) {
+					System.out.println("Selected File: " + file.getAbsolutePath());
+				}
+			});
+			
+			VBox root = new VBox(10, btnOpen);
+			root.setAlignment(Pos.CENTER);
+			root.setPadding(new Insets(20));
+			
+			Scene scene = new Scene(root, 300, 200);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("FileChooser Example in JavaFX");
+			primaryStage.show();
+		}
+	\end{lstlisting}
+\end{frame}
+
+
+\subsection{Handling Events with Event Handlers}
+
+\begin{frame}[fragile]{Event Handling in JavaFX}
+	\vspace{20pt}
+	JavaFX uses event handlers to handle user interactions with UI components. Events in JavaFX consist of three main components:
+	\begin{itemize}
+		\item \textbf{Event Source} – The UI element that generates an event, such as a button or text field.
+		\item \textbf{Event Handler} – The method or function that processes the event.
+		\item \textbf{Event Listener} – The mechanism that connects an event to an event handler.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Handling Button, Mouse, and Keyboard Events}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{Button Events} are handled using \texttt{setOnAction()}.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Button btnClick = new Button("Click Me");
+				btnClick.setOnAction(e -> 
+				System.out.println("Button clicked!"));
+				
+				VBox root = new VBox(10, btnClick);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("Handling Button Events");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{Mouse Events} allow handling hover actions.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Label lbl = new Label("Hover over here");
+				lbl.setOnMouseEntered(e -> 
+				lbl.setText("Mouse entered!"));
+				lbl.setOnMouseExited(e -> 
+				lbl.setText("Mouse exited!"));
+				
+				VBox root = new VBox(10, lbl);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("Mouse Events in JavaFX");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{\LARGE{Handling Keyboard Events and Event Filters}}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{Keyboard Events} allow capturing key presses.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				StackPane root = new StackPane();
+				Scene scene = new Scene(root, 300, 200);
+				
+				scene.setOnKeyPressed(e -> 
+				System.out.println("Key Pressed: " + e.getCode()));
+				
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("Keyboard Events in JavaFX");
+				primaryStage.show();
+				
+				root.requestFocus(); // Ensure focus
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{Event Filters} handle events before reaching components.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				StackPane root = new StackPane();
+				Scene scene = new Scene(root, 300, 200);
+				
+				scene.addEventFilter(MouseEvent.MOUSE_CLICKED, e -> {
+					System.out.println("Click detected in Scene!");
+				});
+				
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("Using Event Filters in JavaFX");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\subsection{Using Binding and Properties in JavaFX}
+
+\begin{frame}[fragile]{Binding and Properties in JavaFX}
+	\vspace{20pt}
+	JavaFX provides a \textit{binding} system that allows UI element properties to be directly linked to data without requiring manual updates. JavaFX supports two main types of binding:
+	\begin{itemize}
+		\item \textbf{Unidirectional Binding} – One-way binding, where the property updates from source to target.
+		\item \textbf{Bidirectional Binding} – Two-way binding, where changes in one property automatically update another.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{Unidirectional vs. Bidirectional Binding}
+	\vspace{10pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{Unidirectional Binding}  
+		One-way binding connects properties between two elements.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				TextField txtInput = new TextField();
+				Label lblOutput = new Label();
+				
+				lblOutput.textProperty().bind(txtInput.textProperty());
+				
+				VBox root = new VBox(10, txtInput, lblOutput);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("Unidirectional Binding");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{Bidirectional Binding}  
+		Two-way binding ensures that changes in one element automatically update the other.
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				TextField txt1 = new TextField();
+				TextField txt2 = new TextField();
+				
+				txt1.textProperty().bindBidirectional(txt2.textProperty());
+				
+				VBox root = new VBox(10, txt1, txt2);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("Bidirectional Binding");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+
+\begin{frame}[fragile]{Using Properties in JavaFX}
+	\vspace{30pt}
+	JavaFX provides property classes that automatically update when their values change.
+	\begin{lstlisting}[style=JavaStyle]
+		public void start(Stage primaryStage) {
+			StringProperty name = new SimpleStringProperty("Budi");
+			
+			name.addListener((obs, oldVal, newVal) -> {
+				System.out.println("Name changed from " + oldVal + " to " + newVal);
+			});
+			
+			name.set("Andi");
+			
+			Label lblName = new Label();
+			lblName.textProperty().bind(name);
+			
+			VBox root = new VBox(10, lblName);
+			root.setAlignment(Pos.CENTER);
+			root.setPadding(new Insets(20));
+			
+			Scene scene = new Scene(root, 300, 200);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("SimpleStringProperty in JavaFX");
+			primaryStage.show();
+		}
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Animations and Visual Effects in JavaFX}
+
+\begin{frame}[fragile]{Animations and Visual Effects in JavaFX}
+	\vspace{20pt}
+	JavaFX supports various animations and visual effects to enhance the user interface. Animations in JavaFX are handled using the \texttt{javafx.animation} package, which includes:
+	\begin{itemize}
+		\item \textbf{FadeTransition} – Adjusts the transparency of an element.
+		\item \textbf{TranslateTransition} – Moves an element.
+		\item \textbf{ScaleTransition} – Changes the size of an element.
+		\item \textbf{RotateTransition} – Rotates an element.
+		\item \textbf{SequentialTransition} and \textbf{ParallelTransition} – Manage multiple animations sequentially or simultaneously.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{FadeTransition vs. TranslateTransition}
+	\vspace{30pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{FadeTransition (Transparency Effect)}  
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Label lblFade = new Label("Fade Effect");
+				
+				FadeTransition fade = new FadeTransition(Duration.seconds(2), lblFade);
+				fade.setFromValue(1.0);
+				fade.setToValue(0.1);
+				fade.setCycleCount(Timeline.INDEFINITE);
+				fade.setAutoReverse(true);
+				fade.play();
+				
+				VBox root = new VBox(10, lblFade);
+				root.setAlignment(Pos.CENTER);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("FadeTransition Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{TranslateTransition (Movement)}  
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Rectangle rect = new Rectangle(100, 100, Color.BLUE);
+				
+				TranslateTransition translate = new TranslateTransition(Duration.seconds(2), rect);
+				translate.setByX(200);
+				translate.setCycleCount(Timeline.INDEFINITE);
+				translate.setAutoReverse(true);
+				translate.play();
+				
+				StackPane root = new StackPane(rect);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 400, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("TranslateTransition Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{ScaleTransition vs. RotateTransition}
+	\vspace{30pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{ScaleTransition (Scaling Effect)}  
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Button btnScale = new Button("Enlarge");
+				
+				ScaleTransition scale = new ScaleTransition(Duration.seconds(1), btnScale);
+				scale.setToX(1.5);
+				scale.setToY(1.5);
+				scale.setCycleCount(Timeline.INDEFINITE);
+				scale.setAutoReverse(true);
+				scale.play();
+				
+				StackPane root = new StackPane(btnScale);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 200);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("ScaleTransition Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+		
+		\column{0.5\textwidth}
+		\textbf{RotateTransition (Rotation Effect)}  
+		\begin{lstlisting}[style=JavaStyle]
+			public void start(Stage primaryStage) {
+				Rectangle rect = new Rectangle(100, 50, Color.BLUE);
+				
+				RotateTransition rotate = new RotateTransition(Duration.seconds(2), rect);
+				rotate.setByAngle(360);
+				rotate.setCycleCount(Timeline.INDEFINITE);
+				rotate.play();
+				
+				StackPane root = new StackPane(rect);
+				root.setPadding(new Insets(20));
+				
+				Scene scene = new Scene(root, 300, 300);
+				primaryStage.setScene(scene);
+				primaryStage.setTitle("RotateTransition Example");
+				primaryStage.show();
+			}
+		\end{lstlisting}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{\LARGE{Combining Animations with SequentialTransition}}
+	\vspace{25pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public void start(Stage primaryStage) {
+			Circle circle = new Circle(50, Color.RED);
+			
+			FadeTransition fade = new FadeTransition(Duration.seconds(1), circle);
+			fade.setFromValue(1.0);
+			fade.setToValue(0.3);
+			
+			TranslateTransition translate = new TranslateTransition(Duration.seconds(1), circle);
+			translate.setByX(100);
+			
+			ScaleTransition scale = new ScaleTransition(Duration.seconds(1), circle);
+			scale.setToX(1.5);
+			scale.setToY(1.5);
+			
+			RotateTransition rotate = new RotateTransition(Duration.seconds(1), circle);
+			rotate.setByAngle(360);
+			
+			SequentialTransition seqTransition = new SequentialTransition(fade, translate, scale, rotate);
+			seqTransition.setCycleCount(Timeline.INDEFINITE);
+			seqTransition.play();
+			
+			StackPane root = new StackPane(circle);
+			root.setPadding(new Insets(20));
+			
+			Scene scene = new Scene(root, 400, 300);
+			primaryStage.setScene(scene);
+			primaryStage.setTitle("SequentialTransition Example in JavaFX");
+			primaryStage.show();
+		}
+	\end{lstlisting}
+\end{frame}
+
+\end{document}

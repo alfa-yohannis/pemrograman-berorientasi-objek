@@ -3,8 +3,6 @@ package org.example.controllers;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 
 import org.eclipse.birt.core.framework.Platform;
 import org.eclipse.birt.report.engine.api.EngineConfig;
@@ -36,17 +34,11 @@ public class MainController {
 	private MenuItem menuItemOpenSalesOrder;
 	@FXML
 	private BorderPane centerPane;
-	public static Connection CONNECTION;
 
 	private IForm currentForm;
 
 	public void initialize() {
-		try {
-			Class.forName("com.mysql.cj.jdbc.Driver");
-			CONNECTION = DriverManager.getConnection("jdbc:mysql://localhost:3306/pradita", "alfa", "1234");
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		System.out.println("Main Controller Initialized");
 	}
 
 	@FXML
@@ -99,7 +91,8 @@ public class MainController {
 
 				IReportEngine engine = factory.createReportEngine(config);
 
-				IReportRunnable design = engine.openReportDesign("/data2/projects/pemrograman-berorientasi-objek/code/pertemuan_05/javafx/app/build/resources/main/test.rptdesign");
+				IReportRunnable design = engine.openReportDesign(
+						"/data2/projects/pemrograman-berorientasi-objek/code/pertemuan_05/javafx/app/build/resources/main/test.rptdesign");
 				IRunAndRenderTask task = engine.createRunAndRenderTask(design);
 				task.setParameterValue("order_code", currentForm.getDocumentCode());
 				PDFRenderOption options = new PDFRenderOption();

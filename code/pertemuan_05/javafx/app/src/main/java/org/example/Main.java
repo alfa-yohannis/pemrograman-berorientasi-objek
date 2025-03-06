@@ -1,7 +1,8 @@
 package org.example;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -11,12 +12,15 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-    public static Connection CONNECTION;
+    private static SessionFactory sessionFactory;
+    private static Session session;
 
     public static void main(String[] args) {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            CONNECTION = DriverManager.getConnection("jdbc:mysql://localhost:3306/pradita", "alfa", "1234");
+            // Initialize Hibernate SessionFactory
+            sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();
+            session = sessionFactory.openSession();
+
             launch(args);
         } catch (Exception e) {
             e.printStackTrace();
@@ -35,11 +39,22 @@ public class Main extends Application {
     @Override
     public void stop() {
         try {
-            if (CONNECTION != null && !CONNECTION.isClosed()) {
-                CONNECTION.close();
+            if (session != null && session.isOpen()) {
+                session.close();
+            }
+            if (sessionFactory != null) {
+                sessionFactory.close();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static Session getSession() {
+        return session;
+    }
+
+    public static SessionFactory getSessionFactory() {
+        return sessionFactory;
     }
 }
