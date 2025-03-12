@@ -9,28 +9,29 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controllers.SelectFormController">
-    
+<BorderPane xmlns="http://javafx.com/javafx/21.0.1" xmlns:fx="http://javafx.com/fxml/1"
+    fx:controller="org.example.controllers.SelectFormController" stylesheets="@styles.css">
+
     <!-- Top Find Section -->
     <top>
-        <HBox spacing="10" style="-fx-padding: 10px;">
-            <Label text="Find:" style="-fx-font-size: 14px;" />
-            <TextField fx:id="textField" />
-            <Button text="Find" onAction="#onFind" />
+        <HBox spacing="10" styleClass="search-box">
+            <Label text="Find:" styleClass="label-title" />
+            <TextField fx:id="textField" styleClass="text-field" />
+            <Button text="Find" onAction="#onFind" styleClass="btn-primary" />
         </HBox>
     </top>
 
     <!-- Table in Center -->
     <center>
-        <TableView fx:id="table" style="-fx-padding: 10px;">
-        </TableView>
+        <TableView fx:id="table" styleClass="data-table">
+</TableView>
     </center>
 
     <!-- Bottom Buttons -->
     <bottom>
-        <HBox spacing="10" style="-fx-padding: 10px; -fx-alignment: center;">
-            <Button text="Cancel" onAction="#onCancel" />
-            <Button text="Select" onAction="#onSelect" />
+        <HBox spacing="10" styleClass="button-container">
+            <Button text="Cancel" onAction="#onCancel" styleClass="btn-secondary" />
+            <Button text="Select" onAction="#onSelect" styleClass="btn-primary" />
         </HBox>
     </bottom>
 

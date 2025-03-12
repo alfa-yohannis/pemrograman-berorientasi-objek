@@ -17,22 +17,69 @@ Sebelum melakukan pengembangan dan pengujian aplikasi JavaFX, JavaFX harus diins
 JavaFX sejak versi 11 tidak lagi disertakan dalam JDK, sehingga perlu diunduh dan dikonfigurasi secara terpisah.
 
 \begin{enumerate}
-\item Unduh JavaFX SDK dari situs resmi \texttt{https://gluonhq.com/products/javafx/}.
+\item Unduh JavaFX SDK dari situs resmi \texttt{https://gluonhq.com/products/javafx}.
 \item Ekstrak file yang telah diunduh ke dalam direktori pilihan.
 \item Tambahkan path JavaFX ke dalam konfigurasi proyek.
 \end{enumerate}
+
+\subsection{Instalasi Gradle}
+Ikuti pentunjuk instalasi sesuai dengan sistem operasi pada tautan berikut \url{https://gradle.org/install}. Download yang binary, jadi source code tidak perlu dikompilasi lagi, kemudian set \textit{environment variables} \texttt{PATH} sesuai dengan sistem operasi yang dipakai.
 
 \subsection{Inisialisasi Proyek Gradle untuk JavaFX}
 \label{gradle_javafx}
 
 Gradle adalah alat otomatisasi pembangunan yang sering digunakan dalam pengembangan JavaFX untuk mengelola dependensi dan build system secara efisien. Langkah pertama dalam menggunakan Gradle untuk JavaFX adalah menginisialisasi proyek Gradle dan mengonfigurasinya agar mendukung JavaFX.
 
+
+
 \subsubsection{1. Membuat Proyek Gradle melalui Console}
 
 Untuk membuat proyek JavaFX berbasis Gradle, gunakan perintah berikut di terminal atau command prompt:
 
 \begin{lstlisting}[language=bash, caption=Menginisialisasi proyek Gradle]
+# buar direktori baru
+mkdir my-javafx-project
+
+#pindah ke dalam direktori tersebut
+cd my-javafx-project
+
+# inisialisasi gradle project untuk Java
 gradle init --type java-application
+
+# Gradle akan meminta untuk memberikan beberapa input. Jawab pertanyaan-pertanyaan tersebut seperti berikut.
+
+Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+
+Enter target Java version (min: 7, default: 21): 21
+
+Project name (default: dummy): dummy
+
+Select application structure:
+1: Single application project
+2: Application and library project
+Enter selection (default: Single application project) [1..2] 1
+
+Select build script DSL:
+1: Kotlin
+2: Groovy
+Enter selection (default: Kotlin) [1..2] 2
+
+Select test framework:
+1: JUnit 4
+2: TestNG
+3: Spock
+4: JUnit Jupiter
+Enter selection (default: JUnit Jupiter) [1..4] 4
+
+Generate build using new APIs and behavior (some features may change in the next minor release)? (default: no) [yes, no] no
+
+
+> Task :init
+Learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.13/samples/sample_building_java_applications.html
+
+BUILD SUCCESSFUL in 32s
+1 actionable task: 1 executed
+
 \end{lstlisting}
 
 Setelah perintah ini dijalankan, Gradle akan membuat struktur proyek dengan direktori utama berikut:

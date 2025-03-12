@@ -1,0 +1,55 @@
+	/* Mengatur tampilan latar belakang */
+	.root {
+		-fx-background-color: #f4f4f4;
+	}
+	
+	/* Mengatur tampilan kotak pencarian */
+	.search-box {
+		-fx-padding: 10px;
+		-fx-background-color: #e3e3e3;
+		-fx-border-color: #cccccc;
+		-fx-border-radius: 5px;
+	}
+	
+	/* Gaya untuk label judul */
+	.label-title {
+		-fx-font-size: 14px;
+		-fx-font-weight: bold;
+	}
+	
+	/* Gaya untuk input teks */
+	.text-field {
+		-fx-pref-width: 200px;
+		-fx-padding: 5px;
+		-fx-border-color: #888888;
+	}
+	
+	/* Gaya tombol utama */
+	.btn-primary {
+		-fx-background-color: #4CAF50;
+		-fx-text-fill: white;
+		-fx-font-weight: bold;
+		-fx-padding: 8px 15px;
+		-fx-border-radius: 5px;
+	}
+	
+	/* Gaya tombol sekunder */
+	.btn-secondary {
+		-fx-background-color: #f44336;
+		-fx-text-fill: white;
+		-fx-font-weight: bold;
+		-fx-padding: 8px 15px;
+		-fx-border-radius: 5px;
+	}
+	
+	/* Gaya tabel */
+	.data-table {
+		-fx-border-color: #bbbbbb;
+		-fx-border-radius: 5px;
+	}
+	
+	/* Gaya container tombol */
+	.button-container {
+		-fx-padding: 10px;
+		-fx-alignment: center;
+	}

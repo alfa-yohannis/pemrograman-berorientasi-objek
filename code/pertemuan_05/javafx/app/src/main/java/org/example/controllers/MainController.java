@@ -23,6 +23,8 @@ import javafx.scene.layout.BorderPane;
 public class MainController {
 
 	@FXML
+	private BorderPane centerPane;
+	@FXML
 	private MenuItem menuItemPrint;
 	@FXML
 	private MenuItem menuItemClose;
@@ -32,8 +34,6 @@ public class MainController {
 	private MenuItem menuItemAbout;
 	@FXML
 	private MenuItem menuItemOpenSalesOrder;
-	@FXML
-	private BorderPane centerPane;
 
 	private IForm currentForm;
 
@@ -42,7 +42,7 @@ public class MainController {
 	}
 
 	@FXML
-	private void openItem() {
+	public void openItem() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Item.fxml"));
 			Parent itemFormRoot = loader.load();
@@ -55,7 +55,7 @@ public class MainController {
 	}
 
 	@FXML
-	private void openSalesOrder() {
+	public void openSalesOrder() {
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/SalesOrder.fxml"));
 			Parent salesOrderRoot = loader.load();
@@ -68,7 +68,7 @@ public class MainController {
 	}
 
 	@FXML
-	private void showAbout() {
+	public void showAbout() {
 		Alert alert = new Alert(Alert.AlertType.INFORMATION);
 		alert.setTitle("About");
 		alert.setHeaderText("Order Form Application");
@@ -126,4 +126,53 @@ public class MainController {
 		alert.setContentText(message);
 		alert.showAndWait();
 	}
+
+	public MenuItem getMenuItemOpenSalesOrder() {
+		return menuItemOpenSalesOrder;
+	}
+
+	public void setMenuItemOpenSalesOrder(MenuItem menuItemOpenSalesOrder) {
+		this.menuItemOpenSalesOrder = menuItemOpenSalesOrder;
+	}
+
+	public MenuItem getMenuItemOpenItem() {
+		return menuItemOpenItem;
+	}
+
+	public void setMenuItemOpenItem(MenuItem menuItemOpenItem) {
+		this.menuItemOpenItem = menuItemOpenItem;
+	}
+
+	public MenuItem getMenuItemPrint() {
+		return menuItemPrint;
+	}
+
+	public void setMenuItemPrint(MenuItem menuItemPrint) {
+		this.menuItemPrint = menuItemPrint;
+	}
+
+	public MenuItem getMenuItemClose() {
+		return menuItemClose;
+	}
+
+	public void setMenuItemClose(MenuItem menuItemClose) {
+		this.menuItemClose = menuItemClose;
+	}
+
+	public MenuItem getMenuItemAbout() {
+		return menuItemAbout;
+	}
+
+	public void setMenuItemAbout(MenuItem menuItemAbout) {
+		this.menuItemAbout = menuItemAbout;
+	}
+
+	public BorderPane getCenterPane() {
+		return centerPane;
+	}
+
+	public void setCenterPane(BorderPane centerPane) {
+		this.centerPane = centerPane;
+	}
+
 }
