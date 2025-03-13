@@ -1,0 +1,85 @@
+@startuml
+' Define Classes with attributes and methods
+class Person <<Entity>> {
+  -name: String
+  -age: int
+  +getName(): String
+  +setName(name: String): void
+}
+
+class Student <<Entity>> {
+  -studentId: String
+  +getStudentId(): String
+}
+
+class Teacher <<Entity>> {
+  -teacherId: String
+  +getTeacherId(): String
+}
+
+class Course <<Entity>> {
+  -courseCode: String
+  -courseName: String
+  +getCourseInfo(): String
+}
+
+class University <<Entity>> {
+  -name: String
+  +getUniversityName(): String
+}
+
+' Abstract Class
+abstract class Staff <<Abstract>> {
+  -staffId: String
+  +getStaffId(): String
+}
+
+' Interface
+interface Payable <<Interface>> {
+  +calculateSalary(): float
+}
+
+' Enumeration
+enum CourseType <<Enumeration>> {
+  MANDATORY
+  ELECTIVE
+}
+
+' Relationships
+Person <|-- Student  
+Person <|-- Teacher  
+Staff <|-- Teacher   
+Teacher ..|> Payable 
+
+University "1" o-- "many" Course  : Offers  
+Student "many" -- "many" Course   : Enrolled  
+Teacher "1" --* "many" Course    : Teaches  
+Student "1" ..> University       : StudiesAt  
+
+' Adding Notes
+note right of Person
+  Represents a general person entity.
+  Can be either a Student or a Teacher.
+end note
+
+note right of Student
+  Represents a student enrolled in courses.
+  Each student has a unique ID.
+end note
+
+note right of Teacher
+  Represents a teacher who teaches courses.
+  Inherits from both Person and Staff.
+end note
+
+note right of University
+  Represents an educational institution.
+  Offers multiple courses.
+end note
+
+note right of Payable
+  Interface for salary calculation.
+  Implemented by Teacher.
+end note
+
+@enduml

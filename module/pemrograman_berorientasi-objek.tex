@@ -38,6 +38,38 @@
 	%	showstringspaces=false
 }
 
+\lstdefinelanguage{puml}{
+	basicstyle=\ttfamily\footnotesize,
+	keywords={@startuml, @enduml, class, String, abstract, interface, Person, note, of, end, enum},
+	ndkeywords={right, left},
+	morekeywords={\{,\}, <!-- },
+	emph={=,!,?}, emphstyle=\color{red}\bfseries,
+	keywordstyle=\color{blue},
+	commentstyle=\color{gray},
+	stringstyle=\color{teal},
+	ndkeywordstyle=\color{purple}\bfseries,
+	breaklines=true,
+	showstringspaces=false,
+	tabsize=2,
+	captionpos=b,
+	numbers=left,
+	numberstyle=\tiny\color{gray},
+	frame=lines,
+	backgroundcolor=\color{lightgray!10},
+	comment=[l]{\'},
+	morecomment=[s]{/*}{*/},
+	commentstyle=\color{gray}\ttfamily,
+%	string=[s]{'}{'},
+	morestring=[s]{"}{"},
+	%	stringstyle=\color{teal}\ttfamily,
+	%	showstringspaces=false
+	literate=
+	{\{}{{\textcolor{red}{\{}}}1
+	{\}}{{\textcolor{red}{\}}}}1
+	{:}{{\textcolor{red}{:}}}1
+	{=}{{\textcolor{red}{=}}}1
+}
+
 \lstdefinelanguage{css}{
 	basicstyle=\ttfamily\footnotesize,
 	keywordstyle=\color{blue},
@@ -170,6 +202,8 @@
 	\include{Pertemuan03.tex}
 	\include{Pertemuan04.tex}
 	\include{Pertemuan05.tex}
+	\include{Pertemuan06.tex}
+	\include{Pertemuan07.tex}
 	
 	
 \end{document}

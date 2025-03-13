@@ -1,0 +1,57 @@
+@startuml
+
+' Force vertical layout
+left to right direction
+
+' Define components inside the package
+package "Application Services" {
+  component "Business Logic" <<Component>> as BL
+  component "Authentication Service" <<Component>> as Auth
+  component "Logging Service" <<Component>> as Log
+}
+
+' Define other components
+component "User Interface" <<Component>> as UI
+component "Database" <<Component>> as DB
+
+' Define interfaces
+interface "IUserService" <<Interface>> as IUserService
+interface "IDatabase" <<Interface>> as IDatabase
+interface "IAuthService" <<Interface>> as IAuthService
+interface "ILogService" <<Interface>> as ILogService
+
+' Component dependencies
+UI --> IUserService : Uses
+BL --> IDatabase : Reads/Writes Data
+BL --> IAuthService : Authenticates Users
+BL --> ILogService : Logs Transactions
+Auth o-- IAuthService : Provides Authentication
+DB o-- IDatabase : Provides Database Access
+Log o-- ILogService : Provides Logging
+
+' Notes explaining components
+note right of UI
+  Handles user interactions.
+  Sends requests to Business Logic.
+end note
+
+note right of BL
+  Implements business rules.
+  Manages application logic.
+end note
+
+note right of DB
+  Stores and retrieves data.
+  Serves as the persistence layer.
+end note
+
+note right of Auth
+  Provides authentication mechanisms.
+  Ensures secure access to the system.
+end note
+
+note right of Log
+  Manages logging and system monitoring.
+end note
+
+@enduml

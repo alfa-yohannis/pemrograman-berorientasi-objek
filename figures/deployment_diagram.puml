@@ -1,0 +1,45 @@
+@startuml
+
+' Force vertical layout
+left to right direction
+
+' Define Nodes
+node "Web Server" <<Device>> as WebServer
+node "Application Server" <<Device>> as AppServer
+node "Database Server" <<Device>> as DBServer
+
+' Define Execution Environment
+node "JVM" <<ExecutionEnvironment>> as JVM {
+    component "Business Logic" <<Component>> as BL
+    component "Authentication Module" <<Component>> as Auth
+}
+
+' Define Artifacts
+artifact "Web App" <<Artifact>> as WebApp
+artifact "Database Schema" <<Artifact>> as DBSchema
+
+' Define Database
+database "MySQL Database" <<Database>> as MySQLDB
+
+' Relationships
+WebServer -right-> WebApp : Deploys
+WebApp -right-> AppServer : Communicates
+AppServer -down-> JVM : Runs inside
+BL -down-> MySQLDB : Reads/Writes Data
+Auth -right-> MySQLDB : Validates Users
+DBServer -right-> MySQLDB : Hosts
+
+' Notes
+note right of WebServer
+  Hosts the front-end web application
+end note
+
+note right of AppServer
+  Runs the business logic and authentication module
+end note
+
+note right of MySQLDB
+  Stores application data
+end note
+
+@enduml

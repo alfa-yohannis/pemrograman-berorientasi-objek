@@ -58,6 +58,40 @@ cd my-java-project
 \item Jalankan perintah berikut untuk menginisialisasi proyek Java dengan Gradle:
 \begin{lstlisting}[language=bash]
 gradle init --type java-application
+
+# Gradle akan meminta untuk memberikan beberapa input. Jawab pertanyaan-pertanyaan tersebut seperti berikut.
+
+Starting a Gradle Daemon, 1 incompatible Daemon could not be reused, use --status for details
+
+Enter target Java version (min: 7, default: 21): 21
+
+Project name (default: dummy): dummy
+
+Select application structure:
+1: Single application project
+2: Application and library project
+Enter selection (default: Single application project) [1..2] 1
+
+Select build script DSL:
+1: Kotlin
+2: Groovy
+Enter selection (default: Kotlin) [1..2] 2
+
+Select test framework:
+1: JUnit 4
+2: TestNG
+3: Spock
+4: JUnit Jupiter
+Enter selection (default: JUnit Jupiter) [1..4] 4
+
+Generate build using new APIs and behavior (some features may change in the next minor release)? (default: no) [yes, no] no
+
+
+> Task :init
+Learn more about Gradle by exploring our Samples at https://docs.gradle.org/8.13/samples/sample_building_java_applications.html
+
+BUILD SUCCESSFUL in 32s
+1 actionable task: 1 executed
 \end{lstlisting}
 \end{enumerate}
 
@@ -1819,7 +1853,7 @@ Berkas \texttt{Main.fxml} digunakan untuk mendefinisikan antarmuka utama dalam a
 Berikut adalah kode sumber dari \texttt{Main.fxml}:
 
 \begin{lstlisting}[style=XmlStyle]
-	<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 	
 	<?import javafx.scene.control.Menu?>
 	<?import javafx.scene.control.MenuBar?>
