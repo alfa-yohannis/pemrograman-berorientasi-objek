@@ -1,5 +1,4 @@
 @startuml
-title UML Sequence Diagram Demonstrating All Features
 
 actor User
 participant "Login Service" as LS
