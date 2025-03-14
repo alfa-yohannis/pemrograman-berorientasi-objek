@@ -67,7 +67,69 @@ Beberapa keunggulan yang membuat PlantUML banyak digunakan dalam pemodelan peran
 	\item \textbf{Ringan dan Mudah Digunakan} – Tidak memerlukan antarmuka grafis, cukup menuliskan skrip dalam format teks.
 \end{itemize}
 
+\section{Instalasi dan Penggunaan PlantUML}
 
+PlantUML adalah alat berbasis teks yang digunakan untuk membuat diagram UML dengan cara yang cepat dan efisien. Diagram dapat dibuat dengan mendefinisikan struktur dalam format teks menggunakan sintaks yang sederhana. PlantUML dapat digunakan dalam berbagai cara, baik secara online maupun melalui integrasi dengan editor seperti Visual Studio Code.
+
+\subsection{Menggunakan PlantUML Secara Online}
+
+PlantUML menyediakan layanan \textbf{online editor} yang memungkinkan pengguna membuat diagram tanpa perlu menginstal perangkat lunak tambahan. Berikut langkah-langkah untuk menggunakannya secara online:
+
+\begin{enumerate}
+	\item Buka situs resmi PlantUML di \url{https://www.plantuml.com/plantuml/uml/}.
+	\item Ketik atau tempel kode diagram PlantUML ke dalam editor yang tersedia.
+	\item Klik tombol \textbf{Submit} atau gunakan kombinasi keyboard \texttt{Ctrl + Enter} untuk melihat hasil diagram.
+	\item Diagram dapat diunduh dalam format PNG atau SVG dengan mengklik tombol \textbf{Download}.
+\end{enumerate}
+
+Situs ini cocok digunakan bagi pengguna yang ingin mencoba PlantUML tanpa harus melakukan instalasi di komputer.
+
+\subsection{Menggunakan PlantUML di Visual Studio Code}
+
+Untuk pengguna yang ingin mengintegrasikan PlantUML dengan Visual Studio Code, berikut langkah-langkah instalasinya:
+
+\subsubsection{1. Instalasi Plugin PlantUML}
+\begin{enumerate}
+	\item Buka Visual Studio Code.
+	\item Klik menu \textbf{Extensions} atau tekan \texttt{Ctrl + Shift + X}.
+	\item Cari ekstensi \textbf{PlantUML} oleh \textit{jebbs}.
+	\item Klik \textbf{Install} untuk menginstal ekstensi tersebut.
+\end{enumerate}
+
+\subsubsection{2. Instalasi Java dan Graphviz (Opsional)}
+PlantUML memerlukan \textbf{Java} untuk berjalan secara lokal. Untuk memastikan kompatibilitas, lakukan langkah berikut:
+\begin{enumerate}
+	\item Unduh dan instal Java JDK dari \url{https://www.oracle.com/java/technologies/javase-jdk11-downloads.html}.
+	\item Tambahkan Java ke dalam variabel lingkungan sistem (\texttt{JAVA\_HOME}).
+	\item Unduh dan instal \textbf{Graphviz} dari \url{https://graphviz.gitlab.io/download/} jika ingin meningkatkan kualitas rendering diagram.
+\end{enumerate}
+
+\subsubsection{3. Membuat dan Menjalankan Diagram PlantUML di VS Code}
+Setelah ekstensi berhasil dipasang, pengguna dapat mulai membuat diagram:
+\begin{enumerate}
+	\item Buat file baru dengan ekstensi \texttt{.puml}, misalnya \texttt{diagram.puml}.
+	\item Tambahkan kode diagram berikut sebagai contoh:
+	\begin{lstlisting}[language=puml]
+		@startuml
+		Alice -> Bob: Hello Bob!
+		Bob --> Alice: Hi Alice!
+		@enduml
+	\end{lstlisting}
+	\item Untuk melihat pratinjau diagram, tekan \texttt{Alt + D} atau gunakan perintah \texttt{PlantUML: Preview Current Diagram}.
+	\item Diagram akan langsung ditampilkan dalam jendela pratinjau di VS Code.
+\end{enumerate}
+
+\subsection{Export Diagram PlantUML}
+PlantUML mendukung berbagai format ekspor, termasuk \textbf{PNG, SVG, EPS, dan PDF}. Diagram dapat diekspor menggunakan perintah:
+
+\begin{lstlisting}[language=bash]
+	java -jar plantuml.jar -tpng diagram.puml
+	java -jar plantuml.jar -tsvg diagram.puml
+\end{lstlisting}
+
+Untuk pengguna \textbf{VS Code}, diagram dapat diekspor langsung dengan klik kanan pada diagram dan memilih \textbf{Export Diagram}.
+
+PlantUML adalah alat yang fleksibel untuk membuat diagram UML dengan cepat menggunakan teks. Pengguna dapat memilih antara menggunakan \textbf{editor online} atau \textbf{plugin VS Code} untuk membuat diagram sesuai kebutuhan. Dengan sintaks sederhana dan dukungan berbagai format ekspor, PlantUML menjadi solusi yang efisien untuk mendokumentasikan sistem perangkat lunak secara visual.
 
 \section{Class Diagram}
 

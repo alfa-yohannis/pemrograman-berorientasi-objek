@@ -1,0 +1,73 @@
+@startuml
+
+start
+
+' Decision Node
+if (User logs in?) then (Yes)
+    :Validate Credentials;
+    if (Credentials valid?) then (Yes)
+        :Redirect to Dashboard;
+    else (No)
+        :Show error message;
+        stop
+    endif
+else (No)
+    :Redirect to Login Page;
+    stop
+endif
+
+' Fork Node - Parallel Execution
+fork
+    :Load User Data;
+fork again
+    :Load Notifications;
+fork again
+    :Load Recent Activity;
+end fork
+
+' Looping Construct
+repeat
+    :User interacts with the system;
+    floating note left
+        This is 
+        a simple 
+        activity 
+        diagram
+        showing 
+        the 
+        login 
+        process.
+    end note
+    if (Action requires confirmation?) then (Yes)
+        :Display confirmation dialog;
+    endif
+repeat while (User continues interaction) is (Yes)
+
+
+' Exception Handling
+partition "Error Handling" {
+    :Check for Errors;
+    if (Error Found?) then (Yes)
+        :Log Error;
+        ' Notes explaining components
+    note right
+    log to a file
+    end note
+        :Notify User;
+        stop
+    else (No)
+        :Proceed Normally;
+    endif
+}
+
+' Synchronization and Merging Flows
+fork
+    :Perform Background Processing;
+fork again
+    :Update UI in parallel;
+end fork
+
+' Final Node
+stop
+
+@enduml

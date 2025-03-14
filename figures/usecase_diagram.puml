@@ -1,0 +1,69 @@
+@startuml
+
+' skinparam linetype polyline
+' skinparam linetype ortho
+left to right direction
+' Define actors
+actor Customer
+actor Guest
+actor Admin
+actor "Third-Party Payment" as PaymentGateway
+
+' Define system boundary
+rectangle "E-Commerce System" {
+    
+    ' Primary use cases
+    usecase "Browse Products" as UC1
+    usecase "Add to Cart" as UC2
+    usecase "Checkout" as UC3
+    usecase "Make Payment" as UC4
+    usecase "Track Order" as UC5
+    usecase "Manage Orders" as UC6
+    usecase "Refund Request" as UC7
+    usecase "Apply Discount" as UC8
+    usecase "Generate Reports" as UC9
+    usecase "Manage Users" as UC10
+
+    ' Relationships
+    UC2 <|-- UC1 : "Requires"
+    UC3 <|-- UC2 : "Requires"
+    UC4 <|-- UC3 : "Requires"
+    
+    UC4 ..> PaymentGateway : "Processes Payment"
+    UC5 ..> UC6 : "Depends on"
+    UC7 .> UC6 : "Extends"
+    UC8 .> UC4 : "Extends"
+
+    ' Admin-specific use cases
+    UC9 .> UC6 : "Includes"
+    UC10 .> UC9 : "Includes"
+}
+
+' Assign actors to use cases
+Customer --> UC1
+Customer --> UC2
+Customer --> UC3
+Customer --> UC4
+Customer --> UC5
+Customer --> UC7
+Customer --> UC8
+
+Guest --> UC1
+Guest --> UC2 : "<<Limited Access>>"
+
+Admin --> UC6
+Admin --> UC9
+Admin --> UC10
+
+' Notes
+note right of Customer
+Customers can browse products,
+add items to cart, checkout, and track orders.
+end note
+
+note right of Admin
+Admins manage orders, generate reports, 
+and handle user accounts.
+end note
+
+@enduml

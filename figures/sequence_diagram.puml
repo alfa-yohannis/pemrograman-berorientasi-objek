@@ -1,0 +1,77 @@
+@startuml
+title UML Sequence Diagram Demonstrating All Features
+
+actor User
+participant "Login Service" as LS
+participant "Dashboard" as DB
+participant "Error Handler" as EH
+
+User -> LS: Enter credentials
+activate LS
+LS -> LS: Validate credentials
+
+alt Credentials valid?
+    LS -> DB: Request Dashboard Access
+    DB --> LS: Access Granted
+    LS --> User: Redirect to Dashboard
+    deactivate LS
+else Credentials invalid
+    LS -> EH: Log error
+    activate EH
+    note right of EH
+        Credentials validation failed.
+        Log the attempt for security.
+    end note
+    EH --> LS: Error Logged
+    EH -> User: Show error message
+    User --> EH: Acknowledge
+    deactivate EH
+    deactivate LS
+end alt
+
+== Parallel Execution ==
+par Load User Data
+    DB -> DB: Fetch user info
+    DB --> User: Send user info
+par Load Notifications
+    DB -> DB: Fetch notifications
+    DB --> User: Send notifications
+par Load Recent Activity
+    DB -> DB: Fetch recent activities
+    DB --> User: Send activities
+end par
+
+== Looping Construct ==
+loop User interacts
+    User -> DB: Perform action
+    DB --> User: Action Result
+    alt Action requires confirmation?
+        DB -> User: Display confirmation dialog
+        User --> DB: Confirm action
+    end alt
+end loop
+
+== Exception Handling ==
+group Error Handling
+    DB -> EH: Check for errors
+    activate EH
+    alt Error found
+        EH -> EH: Log Error
+        note right
+            The error is logged for auditing.
+        end note
+        EH --> DB: Error Logged
+        EH -> User: Notify about error
+        User --> EH: Acknowledge
+        deactivate EH
+    else No error
+        EH --> DB: Proceed normally
+    end alt
+end group
+
+User -> DB: Logout
+DB -> User: Confirm logout
+User --> DB: Acknowledged
+deactivate DB
+
+@enduml

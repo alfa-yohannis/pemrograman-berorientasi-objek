@@ -1,0 +1,66 @@
+@startuml
+ 
+[*] --> Browsing
+
+state Browsing {
+  [*] --> ViewingProducts
+  ViewingProducts --> AddingToCart : "Add to Cart"
+  AddingToCart --> ViewingProducts : "Continue Shopping"
+  AddingToCart --> Checkout : "Proceed to Checkout"
+}
+
+state Checkout {
+  [*] --> AddressSelection
+  AddressSelection --> PaymentSelection : "Next"
+  PaymentSelection --> OrderReview : "Next"
+  OrderReview --> OrderPlaced : "Place Order"
+  OrderReview --> AddressSelection : "Modify Address"
+  OrderReview --> PaymentSelection : "Modify Payment"
+}
+
+Browsing -r-> OrderProcessing
+
+state "Order Processing" as OrderProcessing {
+  [*] --> PaymentVerification
+  PaymentVerification --> FraudCheck : "Verify Payment"
+  PaymentVerification --> Declined : "Payment Declined"
+
+  state FraudCheck {
+    [*] --> InitialCheck
+    InitialCheck --> DetailedCheck : "Flagged Transaction"
+    DetailedCheck --> Approved : "Clear"
+    DetailedCheck --> Failed : "Fail"
+  }
+
+  FraudCheck --> Declined: "Decline"
+  FraudCheck --> Packaging : "Start Packaging"
+}
+
+OrderProcessing -r-> Shipping
+
+state "Shipping" as Shipping {
+  [*] --> WarehouseProcessing
+  WarehouseProcessing --> OutForDelivery : "Dispatch"
+  OutForDelivery --> Delivered : "Delivered"
+  OutForDelivery --> Returned : "Customer Rejected"
+}
+
+Shipping -r-> DeliveryProcess
+
+state "Concurrent Delivery & Notification" as DeliveryProcess {
+  
+  state fork_state <<fork>>
+  [*] -r-> fork_state 
+  fork_state --> OrderTracking
+  fork_state --> CustomerNotification
+
+  state join_state <<join>>
+  OrderTracking --> join_state
+  CustomerNotification --> join_state
+  Completed <-- join_state
+
+}
+
+DeliveryProcess -r-> [*]
+
+@enduml
