@@ -1,0 +1,674 @@
+\chapter{Prinsip Desain Berorientasi Objek (SOLID)}
+
+\section{Pendahuluan}
+
+Desain perangkat lunak berorientasi objek yang baik tidak hanya ditentukan oleh kemampuan untuk menyelesaikan masalah, tetapi juga oleh kemampuannya dalam menangani perubahan, mempertahankan kualitas kode, dan memudahkan kolaborasi tim pengembang. Seiring bertambahnya kompleksitas sistem, desain yang tidak terstruktur dapat menyebabkan kode sulit dipelihara, rentan terhadap bug saat mengalami perubahan, dan sulit diuji secara terpisah.
+
+Untuk mengatasi permasalahan tersebut, Robert C. Martin memperkenalkan lima prinsip desain berorientasi objek yang dikenal dengan akronim SOLID: \textit{Single Responsibility Principle}, \textit{Open/Closed Principle}, \textit{Liskov Substitution Principle}, \textit{Interface Segregation Principle}, dan \textit{Dependency Inversion Principle}. Prinsip-prinsip ini bertujuan untuk menghasilkan sistem yang modular, fleksibel terhadap perubahan, dan memiliki dependensi yang minimal antar komponen.
+
+Masing-masing prinsip memiliki fokus yang spesifik. SRP menekankan pentingnya memisahkan tanggung jawab dalam kelas, OCP mendorong ekstensi tanpa modifikasi, LSP memastikan substitusi subclass tanpa melanggar kontrak perilaku, ISP menghindari antarmuka gemuk yang membebani klien, dan DIP membalik ketergantungan dari detail implementasi ke arah abstraksi. Secara keseluruhan, SOLID membantu membentuk fondasi yang kuat untuk pengembangan perangkat lunak jangka panjang.
+
+Bab ini akan membahas kelima prinsip SOLID secara terstruktur, dimulai dari pengertian dasar, manfaat dan kekurangannya, serta contoh implementasi dan pelanggarannya dalam praktik. Pemahaman terhadap prinsip-prinsip ini tidak hanya membantu menghasilkan desain yang elegan, tetapi juga meningkatkan kualitas perangkat lunak dari segi keterkelolaan, skalabilitas, pengujian, serta efisiensi sumber daya dalam jangka panjang.
+
+
+\section{Single Responsibility Principle (SRP)}
+
+\subsection{Pengertian dan Konsep Dasar}
+Single Responsibility Principle (SRP) menyatakan bahwa sebuah kelas sebaiknya hanya memiliki satu alasan untuk berubah, yaitu hanya menangani satu tanggung jawab utama. Prinsip ini bertujuan untuk memisahkan fungsionalitas yang berbeda ke dalam kelas-kelas yang berbeda, sehingga setiap kelas hanya fokus pada satu aspek dari sistem. Dengan mengikuti SRP, struktur kode menjadi lebih modular, mudah dipahami, dan lebih mudah diuji secara unit.
+
+\subsection{Manfaat dan Kekurangan}
+Manfaat utama dari penerapan SRP adalah peningkatan keterbacaan dan pemeliharaan kode. Perubahan dalam satu tanggung jawab tidak akan berdampak pada bagian kode lain yang tidak terkait. Selain itu, pengujian unit dapat dilakukan lebih spesifik karena setiap kelas memiliki satu peran jelas. Namun, kekurangannya adalah potensi bertambahnya jumlah kelas dalam proyek, yang dapat meningkatkan kompleksitas manajemen struktur proyek.
+
+\subsection{Contoh Kasus 1}
+Salah satu contoh pelanggaran prinsip ini adalah ketika sebuah kelas tidak hanya bertanggung jawab untuk mengelola data tetapi juga menangani logika bisnis dan penyimpanan ke basis data. Sebagai contoh, sebuah kelas \texttt{Invoice} yang bertanggung jawab menghitung total belanja, mencetak faktur, dan menyimpan data ke file. Kelas ini memiliki lebih dari satu alasan untuk berubah: perubahan pada logika bisnis, format cetak, dan format penyimpanan akan mempengaruhi kelas yang sama.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran SRP}]
+	public class Invoice {
+		private List<Item> items;
+		
+		public double calculateTotal() {
+			// Hitung total harga
+		}
+		
+		public void printInvoice() {
+			// Cetak faktur ke printer
+		}
+		
+		public void saveToFile() {
+			// Simpan data faktur ke file
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan SRP}]
+	public class Invoice {
+		private List<Item> items;
+		
+		public double calculateTotal() {
+			// Hitung total harga
+		}
+	}
+	
+	public class InvoicePrinter {
+		public void print(Invoice invoice) {
+			// Cetak faktur ke printer
+		}
+	}
+	
+	public class InvoiceSaver {
+		public void saveToFile(Invoice invoice) {
+			// Simpan data faktur ke file
+		}
+	}
+\end{lstlisting}
+
+Dengan memisahkan tanggung jawab ke dalam kelas-kelas khusus seperti \texttt{InvoicePrinter} dan \texttt{InvoiceSaver}, kode menjadi lebih terorganisir dan sesuai dengan prinsip SRP.
+
+\subsection{Contoh Kasus 2}
+Contoh lain dari pelanggaran SRP adalah pada kelas \texttt{User}. Dalam beberapa implementasi, kelas ini tidak hanya menyimpan data pengguna, tetapi juga menangani validasi data dan pengiriman email. Ketiga tanggung jawab tersebut seharusnya dipisahkan agar perubahan pada satu aspek (misalnya format email) tidak memengaruhi logika validasi atau struktur data pengguna.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran SRP}]
+	public class User {
+		private String name;
+		private String email;
+		
+		public boolean isValidEmail() {
+			// Validasi format email
+		}
+		
+		public void sendWelcomeEmail() {
+			// Kirim email sambutan
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan SRP}]
+	public class User {
+		private String name;
+		private String email;
+		
+		public String getEmail() {
+			return email;
+		}
+	}
+	
+	public class EmailValidator {
+		public boolean isValid(String email) {
+			// Validasi format email
+		}
+	}
+	
+	public class EmailSender {
+		public void sendWelcomeEmail(String email) {
+			// Kirim email sambutan
+		}
+	}
+\end{lstlisting}
+
+Dengan memisahkan validasi dan pengiriman email ke dalam kelas \texttt{EmailValidator} dan \texttt{EmailSender}, maka setiap kelas memiliki satu tanggung jawab yang jelas. Hal ini membuat kode lebih modular, mudah diuji, dan tidak rentan terhadap perubahan yang tidak terkait langsung.
+
+\section{Open/Closed Principle (OCP)}
+
+\subsection{Pengertian dan Konsep Dasar}
+Open/Closed Principle (OCP) menyatakan bahwa entitas perangkat lunak seperti kelas, modul, atau fungsi harus terbuka untuk ekstensi tetapi tertutup untuk modifikasi. Prinsip ini pertama kali diperkenalkan oleh Bertrand Meyer dan kemudian menjadi bagian penting dalam prinsip SOLID. "Terbuka untuk ekstensi" berarti bahwa perilaku suatu entitas dapat ditingkatkan atau diperluas tanpa harus mengubah struktur atau kode yang sudah ada. "Tertutup untuk modifikasi" berarti bahwa kode sumber asli tidak perlu diubah untuk memenuhi kebutuhan baru.
+
+Penerapan OCP sangat erat kaitannya dengan penggunaan abstraksi, seperti antarmuka dan kelas abstrak, serta pola desain seperti *Strategy*, *Decorator*, dan *Factory Method*. Dengan menggunakan mekanisme tersebut, pengembang dapat menambahkan fungsionalitas baru dengan cara mewarisi atau mengimplementasikan abstraksi yang sudah ada tanpa menyentuh kode lama.
+
+\subsection{Manfaat dan Kekurangan}
+Penerapan Open/Closed Principle memberikan sejumlah manfaat signifikan. Pertama, prinsip ini meningkatkan stabilitas sistem karena perubahan kebutuhan baru tidak memerlukan perubahan terhadap bagian sistem yang sudah berjalan dengan baik. Kedua, kode menjadi lebih fleksibel dan mudah dikembangkan karena fungsionalitas dapat ditambahkan melalui ekstensi. Selain itu, OCP mendukung reuse dan modularitas dengan memisahkan perilaku ke dalam komponen-komponen yang dapat dikembangkan secara independen.
+
+Namun, kekurangan dari prinsip ini adalah adanya kompleksitas tambahan yang muncul akibat penggunaan abstraksi yang berlebihan. Dalam beberapa kasus, penerapan OCP dapat menghasilkan struktur kode yang terlalu banyak kelas atau antarmuka, terutama bila digunakan secara berlebihan pada sistem yang belum memerlukan fleksibilitas tinggi. Oleh karena itu, penerapan prinsip ini perlu dilakukan secara bertahap dan berdasarkan kebutuhan sistem yang berkembang.
+
+\subsection{Contoh Kasus 1}
+Sebuah contoh pelanggaran prinsip Open/Closed terjadi ketika logika program harus dimodifikasi setiap kali ada jenis baru dari sebuah entitas. Misalnya, pada sistem pembayaran, terdapat kelas \texttt{PaymentProcessor} yang menangani berbagai metode pembayaran seperti \texttt{CreditCard} dan \texttt{BankTransfer}. Jika ditambahkan metode baru seperti \texttt{EWallet}, maka kode di dalam \texttt{PaymentProcessor} harus diubah. Hal ini menunjukkan bahwa kelas tidak tertutup untuk modifikasi dan tidak mengikuti prinsip OCP.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran OCP}]
+	public class PaymentProcessor {
+		public void process(String paymentType) {
+			if (paymentType.equals("CreditCard")) {
+				// Proses pembayaran dengan kartu kredit
+			} else if (paymentType.equals("BankTransfer")) {
+				// Proses pembayaran dengan transfer bank
+			}
+		}
+	}
+\end{lstlisting}
+
+Jika sistem diperluas untuk mendukung metode baru seperti \texttt{EWallet}, maka kode \texttt{PaymentProcessor} harus dimodifikasi, yang bertentangan dengan prinsip OCP.
+
+Refaktorisasi dapat dilakukan dengan menggunakan abstraksi berupa antarmuka \texttt{PaymentMethod}. Dengan pendekatan ini, kelas \texttt{PaymentProcessor} tidak perlu diubah ketika metode pembayaran baru ditambahkan.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan OCP}]
+	public interface PaymentMethod {
+		void process();
+	}
+	
+	public class CreditCardPayment implements PaymentMethod {
+		public void process() {
+			// Proses pembayaran dengan kartu kredit
+		}
+	}
+	
+	public class BankTransferPayment implements PaymentMethod {
+		public void process() {
+			// Proses pembayaran dengan transfer bank
+		}
+	}
+	
+	public class PaymentProcessor {
+		public void process(PaymentMethod method) {
+			method.process();
+		}
+	}
+\end{lstlisting}
+
+Dengan pendekatan ini, penambahan metode baru seperti \texttt{EWalletPayment} cukup dilakukan dengan membuat kelas baru yang mengimplementasikan antarmuka \texttt{PaymentMethod}, tanpa perlu menyentuh kelas \texttt{PaymentProcessor}. Hal ini menunjukkan penerapan prinsip Open/Closed dengan baik.
+
+\subsection{Contoh Kasus 2}
+Contoh pelanggaran prinsip Open/Closed juga dapat ditemukan pada sistem notifikasi. Misalnya, sebuah kelas \texttt{NotificationService} mengirimkan pesan kepada pengguna melalui beberapa saluran seperti email dan SMS. Jika suatu saat dibutuhkan saluran baru seperti \texttt{PushNotification}, maka kode pada \texttt{NotificationService} harus dimodifikasi. Ini berarti kelas tidak tertutup untuk modifikasi dan melanggar prinsip OCP.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran OCP}]
+	public class NotificationService {
+		public void send(String channel, String message) {
+			if (channel.equals("email")) {
+				// Kirim email
+			} else if (channel.equals("sms")) {
+				// Kirim SMS
+			}
+		}
+	}
+\end{lstlisting}
+
+Untuk menambahkan saluran baru, seperti notifikasi melalui aplikasi, pengembang harus menambahkan blok kode baru dalam metode \texttt{send}, sehingga kode lama harus diubah.
+
+Refaktorisasi dapat dilakukan dengan membuat antarmuka \texttt{Notifier} dan mengimplementasikannya untuk setiap jenis saluran. Dengan pendekatan ini, \texttt{NotificationService} cukup memanggil metode \texttt{send} dari objek yang sesuai, tanpa mengetahui detail dari saluran yang digunakan.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan OCP}]
+	public interface Notifier {
+		void send(String message);
+	}
+	
+	public class EmailNotifier implements Notifier {
+		public void send(String message) {
+			// Kirim email
+		}
+	}
+	
+	public class SMSNotifier implements Notifier {
+		public void send(String message) {
+			// Kirim SMS
+		}
+	}
+	
+	public class NotificationService {
+		public void sendNotification(Notifier notifier, String message) {
+			notifier.send(message);
+		}
+	}
+\end{lstlisting}
+
+Dengan struktur ini, penambahan jenis notifikasi baru cukup dilakukan dengan membuat kelas baru seperti \texttt{PushNotifier} yang mengimplementasikan \texttt{Notifier}, tanpa perlu mengubah kode pada \texttt{NotificationService}. Ini menunjukkan bahwa sistem telah dirancang sesuai dengan prinsip Open/Closed.
+
+
+\section{Liskov Substitution Principle (LSP)}
+
+\subsection{Pengertian dan Konsep Dasar}
+Liskov Substitution Principle (LSP) adalah prinsip ketiga dari SOLID yang diperkenalkan oleh Barbara Liskov pada tahun 1987. Prinsip ini menyatakan bahwa objek dari subclass harus dapat menggantikan objek dari superclass tanpa mengubah kebenaran atau perilaku yang diharapkan dari program. Dalam konteks pemrograman berorientasi objek, ini berarti bahwa subclass harus mempertahankan kontrak yang ditetapkan oleh superclass, baik dari segi antarmuka maupun perilaku.
+
+Inti dari LSP adalah memastikan bahwa pewarisan tidak merusak fungsi program. Meskipun secara sintaksis subclass dapat digunakan di tempat superclass, tetapi jika perilaku yang dihasilkan tidak sesuai dengan harapan, maka pewarisan tersebut dianggap melanggar prinsip ini. LSP mendorong desain kelas yang bersifat substitutable secara logis, bukan hanya struktural.
+
+\subsection{Manfaat dan Kekurangan}
+Penerapan Liskov Substitution Principle membawa sejumlah manfaat penting. Pertama, prinsip ini meningkatkan keandalan sistem melalui jaminan bahwa substitusi antar kelas tidak akan menyebabkan perilaku yang tidak diinginkan. Hal ini mendukung pewarisan yang aman dan mendorong penggunaan polimorfisme secara efektif. Kedua, prinsip ini memperkuat kontrak antarkelas, sehingga dokumentasi, pengujian, dan pemeliharaan kode menjadi lebih konsisten dan dapat diprediksi.
+
+Namun, tantangan dalam menerapkan LSP adalah kebutuhan untuk menjaga kesesuaian perilaku antara superclass dan subclass, yang seringkali tidak hanya bersifat teknis tetapi juga konseptual. Jika subclass memperkenalkan perilaku yang menyimpang, maka ia bisa merusak sistem secara diam-diam. Selain itu, dalam upaya memaksakan substitusi, pengembang dapat terjebak dalam desain yang terlalu umum atau tidak realistis, terutama jika abstraksi awal tidak dirancang dengan matang.
+
+\subsection{Contoh Kasus 1}
+Salah satu contoh klasik dari pelanggaran prinsip Liskov Substitution adalah dalam pewarisan antara \texttt{Rectangle} dan \texttt{Square}. Secara logika, persegi (\texttt{Square}) adalah bentuk khusus dari persegi panjang (\texttt{Rectangle}), tetapi dari sudut pandang perilaku kelas, pewarisan ini dapat menyebabkan pelanggaran LSP.
+
+Jika kelas \texttt{Square} mewarisi dari \texttt{Rectangle} dan mengubah perilaku metode \texttt{setWidth} atau \texttt{setHeight}, maka objek \texttt{Square} tidak lagi bisa menggantikan objek \texttt{Rectangle} tanpa memengaruhi hasil program.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran LSP}]
+	public class Rectangle {
+		protected int width;
+		protected int height;
+		
+		public void setWidth(int width) {
+			this.width = width;
+		}
+		
+		public void setHeight(int height) {
+			this.height = height;
+		}
+		
+		public int getArea() {
+			return width * height;
+		}
+	}
+	
+	public class Square extends Rectangle {
+		@Override
+		public void setWidth(int width) {
+			this.width = width;
+			this.height = width;
+		}
+		
+		@Override
+		public void setHeight(int height) {
+			this.width = height;
+			this.height = height;
+		}
+	}
+\end{lstlisting}
+
+Jika sebuah fungsi mengharapkan objek \texttt{Rectangle} dan mengubah lebar dan tinggi secara terpisah, maka perilaku objek \texttt{Square} akan menyimpang dari yang diharapkan, sehingga terjadi pelanggaran terhadap prinsip LSP.
+
+\begin{lstlisting}[style=JavaStyle, caption={Fungsi yang melanggar substitusi LSP}]
+	public void resizeRectangle(Rectangle r) {
+		r.setWidth(5);
+		r.setHeight(10);
+		System.out.println("Expected area: 50, Actual area: " + r.getArea());
+	}
+\end{lstlisting}
+
+Jika objek \texttt{Square} digunakan sebagai parameter fungsi tersebut, maka hasil area tidak akan sesuai dengan ekspektasi.
+
+Solusi untuk masalah ini adalah dengan tidak menggunakan pewarisan langsung antara \texttt{Square} dan \texttt{Rectangle}, melainkan memisahkan keduanya dan mengandalkan abstraksi seperti antarmuka atau kelas dasar yang lebih umum.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor: hindari pewarisan langsung}]
+	public interface Shape {
+		int getArea();
+	}
+	
+	public class Rectangle implements Shape {
+		private int width;
+		private int height;
+		
+		public Rectangle(int width, int height) {
+			this.width = width;
+			this.height = height;
+		}
+		
+		public int getArea() {
+			return width * height;
+		}
+	}
+	
+	public class Square implements Shape {
+		private int side;
+		
+		public Square(int side) {
+			this.side = side;
+		}
+		
+		public int getArea() {
+			return side * side;
+		}
+	}
+\end{lstlisting}
+
+Dengan pemisahan ini, substitusi dapat dilakukan melalui antarmuka \texttt{Shape}, dan perilaku masing-masing bentuk tetap sesuai dengan ekspektasi, sehingga prinsip LSP dipenuhi.
+
+
+\subsection{Contoh Kasus 2}
+Contoh pelanggaran LSP juga dapat terjadi dalam desain sistem akun bank. Misalnya, kita memiliki kelas \texttt{BankAccount} yang mendukung operasi penarikan dana, dan kemudian kita membuat subclass \texttt{FixedDepositAccount} yang tidak mengizinkan penarikan dana sebelum jatuh tempo. Jika \texttt{FixedDepositAccount} mewarisi \texttt{BankAccount} tetapi perilaku \texttt{withdraw} berbeda atau menimbulkan error, maka substitusi objek tidak dapat dilakukan tanpa efek samping.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran LSP}]
+	public class BankAccount {
+		protected double balance;
+		
+		public void deposit(double amount) {
+			balance += amount;
+		}
+		
+		public void withdraw(double amount) {
+			balance -= amount;
+		}
+		
+		public double getBalance() {
+			return balance;
+		}
+	}
+	
+	public class FixedDepositAccount extends BankAccount {
+		@Override
+		public void withdraw(double amount) {
+			throw new UnsupportedOperationException("Withdrawals not allowed before maturity");
+		}
+	}
+\end{lstlisting}
+
+Jika program menerima objek \texttt{BankAccount} dan mencoba melakukan penarikan, maka objek \texttt{FixedDepositAccount} tidak dapat disubstitusikan tanpa menyebabkan perilaku tak terduga (dalam hal ini, pengecualian).
+
+\begin{lstlisting}[style=JavaStyle, caption={Pemanggilan yang melanggar LSP}]
+	public void processWithdrawal(BankAccount account, double amount) {
+		account.withdraw(amount); // Dapat menyebabkan error jika objek adalah FixedDepositAccount
+	}
+\end{lstlisting}
+
+Untuk memperbaiki pelanggaran ini, kita dapat mendesain ulang hierarki dengan membuat antarmuka yang lebih spesifik, lalu hanya mengizinkan akun-akun yang mendukung penarikan untuk mengimplementasikannya.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor: gunakan abstraksi yang tepat}]
+	public interface WithdrawableAccount {
+		void withdraw(double amount);
+		double getBalance();
+	}
+	
+	public class SavingsAccount implements WithdrawableAccount {
+		private double balance;
+		
+		public void deposit(double amount) {
+			balance += amount;
+		}
+		
+		public void withdraw(double amount) {
+			balance -= amount;
+		}
+		
+		public double getBalance() {
+			return balance;
+		}
+	}
+	
+	public class FixedDepositAccount {
+		private double balance;
+		
+		public void deposit(double amount) {
+			balance += amount;
+		}
+		
+		public double getBalance() {
+			return balance;
+		}
+		
+		// Tidak memiliki metode withdraw
+	}
+\end{lstlisting}
+
+Dengan pendekatan ini, hanya akun yang benar-benar mendukung penarikan yang akan mengimplementasikan \texttt{WithdrawableAccount}, sehingga prinsip LSP tetap terjaga. Penggunaan antarmuka memisahkan perilaku dan memastikan substitusi yang aman sesuai kontrak perilaku.
+
+
+\section{Interface Segregation Principle (ISP)}
+
+\subsection{Pengertian dan Konsep Dasar}
+Interface Segregation Principle (ISP) adalah prinsip keempat dalam SOLID yang menyatakan bahwa sebuah antarmuka sebaiknya tidak memaksakan klien untuk bergantung pada metode-metode yang tidak mereka gunakan. Prinsip ini menekankan bahwa antarmuka yang besar dan serbaguna perlu dipecah menjadi antarmuka-antarmuka yang lebih kecil dan spesifik sesuai kebutuhan klien.
+
+ISP mendorong desain yang lebih modular dan fleksibel dengan meminimalkan ketergantungan yang tidak diperlukan. Ketika suatu antarmuka memiliki terlalu banyak metode, kelas yang mengimplementasikannya berisiko terpaksa menyediakan implementasi yang tidak relevan atau bahkan kosong, yang bertentangan dengan prinsip tanggung jawab tunggal dan prinsip substitusi.
+
+Prinsip ini biasanya diterapkan dengan cara memecah antarmuka besar menjadi beberapa antarmuka kecil yang masing-masing mendefinisikan perilaku spesifik. Klien hanya perlu mengetahui dan bergantung pada antarmuka yang benar-benar mereka butuhkan.
+
+\subsection{Manfaat dan Kekurangan}
+Penerapan Interface Segregation Principle membawa beberapa manfaat penting. Pertama, ia meningkatkan keterpisahan kekhawatiran (\textit{separation of concerns}) karena kelas hanya bergantung pada antarmuka yang relevan dengan perannya. Kedua, hal ini mengurangi dampak perubahan—modifikasi pada satu antarmuka kecil tidak akan memengaruhi kelas-kelas lain yang tidak menggunakannya. Selain itu, ISP mendukung desain yang lebih mudah diuji karena antarmuka menjadi lebih sederhana dan terfokus.
+
+Namun, kelemahan dari penerapan ISP dapat muncul jika pemecahan antarmuka dilakukan secara berlebihan. Hal ini dapat mengarah pada terlalu banyak antarmuka kecil yang tersebar, menyulitkan navigasi dan pemeliharaan kode. Selain itu, jika antarmuka terlalu sempit atau terlalu terfragmentasi, pengembang mungkin mengalami kesulitan dalam mengintegrasikan fungsionalitas yang seharusnya saling berkaitan.
+
+Oleh karena itu, penerapan ISP perlu dilakukan dengan pertimbangan terhadap keseimbangan antara keterpisahan dan keterpaduan antarmuka, serta konteks penggunaan dari setiap antarmuka tersebut.
+
+\subsection{Contoh Kasus 1}
+Salah satu contoh umum pelanggaran Interface Segregation Principle terjadi ketika antarmuka didefinisikan terlalu besar dan mencakup terlalu banyak tanggung jawab. Misalnya, dalam sistem manajemen perangkat multifungsi, dibuat sebuah antarmuka \texttt{Machine} yang mencakup metode untuk mencetak, memindai, dan mengirim faks. Masalah muncul ketika perangkat tertentu, seperti printer sederhana, hanya dapat mencetak dan tidak mendukung pemindaian atau faks.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran ISP}]
+	public interface Machine {
+		void print(Document d);
+		void scan(Document d);
+		void fax(Document d);
+	}
+	
+	public class OldPrinter implements Machine {
+		public void print(Document d) {
+			// Melakukan pencetakan
+		}
+		
+		public void scan(Document d) {
+			throw new UnsupportedOperationException("Scan not supported");
+		}
+		
+		public void fax(Document d) {
+			throw new UnsupportedOperationException("Fax not supported");
+		}
+	}
+\end{lstlisting}
+
+Kelas \texttt{OldPrinter} terpaksa mengimplementasikan metode \texttt{scan()} dan \texttt{fax()}, padahal tidak memiliki kemampuan tersebut. Ini merupakan pelanggaran terhadap ISP karena klien dipaksa bergantung pada metode yang tidak digunakan.
+
+Untuk memperbaikinya, antarmuka \texttt{Machine} dapat dipecah menjadi beberapa antarmuka kecil yang merepresentasikan kemampuan spesifik, seperti \texttt{Printable}, \texttt{Scannable}, dan \texttt{Faxable}.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan ISP}]
+	public interface Printable {
+		void print(Document d);
+	}
+	
+	public interface Scannable {
+		void scan(Document d);
+	}
+	
+	public interface Faxable {
+		void fax(Document d);
+	}
+	
+	public class OldPrinter implements Printable {
+		public void print(Document d) {
+			// Melakukan pencetakan
+		}
+	}
+\end{lstlisting}
+
+Dengan cara ini, kelas hanya bergantung pada antarmuka yang relevan. \texttt{OldPrinter} tidak lagi dipaksa untuk mengimplementasikan metode yang tidak didukung, sehingga prinsip ISP dipenuhi. Refaktorisasi ini juga membuat sistem lebih fleksibel jika di masa depan ingin menambahkan perangkat baru dengan kombinasi kapabilitas yang berbeda.
+
+\subsection{Contoh Kasus 2}
+Dalam sistem e-learning, kita bisa menemukan pelanggaran ISP ketika antarmuka \texttt{User} didefinisikan secara umum untuk mencakup semua jenis pengguna, seperti mahasiswa, dosen, dan administrator. Misalnya, antarmuka berikut memuat metode-metode untuk mengakses materi, mengajar kelas, dan mengelola sistem.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran ISP}]
+	public interface User {
+		void viewCourse();
+		void teachCourse();
+		void manageSystem();
+	}
+	
+	public class Student implements User {
+		public void viewCourse() {
+			// Mahasiswa melihat materi
+		}
+		
+		public void teachCourse() {
+			throw new UnsupportedOperationException("Mahasiswa tidak mengajar");
+		}
+		
+		public void manageSystem() {
+			throw new UnsupportedOperationException("Mahasiswa tidak mengelola sistem");
+		}
+	}
+\end{lstlisting}
+
+Kelas \texttt{Student} terpaksa mengimplementasikan metode \texttt{teachCourse()} dan \texttt{manageSystem()}, meskipun tidak relevan dengan perannya. Ini menyebabkan ketergantungan yang tidak perlu dan melanggar prinsip ISP.
+
+Solusi yang sesuai adalah dengan memecah antarmuka \texttt{User} menjadi beberapa antarmuka yang lebih spesifik, misalnya \texttt{CourseViewer}, \texttt{CourseInstructor}, dan \texttt{SystemManager}.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan ISP}]
+	public interface CourseViewer {
+		void viewCourse();
+	}
+	
+	public interface CourseInstructor {
+		void teachCourse();
+	}
+	
+	public interface SystemManager {
+		void manageSystem();
+	}
+	
+	public class Student implements CourseViewer {
+		public void viewCourse() {
+			// Mahasiswa melihat materi
+		}
+	}
+	
+	public class Lecturer implements CourseViewer, CourseInstructor {
+		public void viewCourse() {
+			// Dosen melihat materi
+		}
+		
+		public void teachCourse() {
+			// Dosen mengajar kelas
+		}
+	}
+	
+	public class Admin implements CourseViewer, SystemManager {
+		public void viewCourse() {
+			// Admin melihat materi
+		}
+		
+		public void manageSystem() {
+			// Admin mengelola sistem
+		}
+	}
+\end{lstlisting}
+
+Dengan desain ini, setiap kelas hanya bergantung pada antarmuka yang sesuai dengan tanggung jawabnya. Prinsip ISP dipenuhi, kode menjadi lebih modular, dan setiap jenis pengguna hanya mengetahui metode yang relevan untuknya.
+
+\section{Dependency Inversion Principle (DIP)}
+
+\subsection{Pengertian dan Konsep Dasar}
+Dependency Inversion Principle (DIP) adalah prinsip kelima dalam SOLID yang menekankan pentingnya membalik arah ketergantungan dalam desain perangkat lunak. Prinsip ini menyatakan dua hal utama:
+
+\begin{enumerate}
+	\item Modul tingkat tinggi tidak boleh bergantung pada modul tingkat rendah. Keduanya harus bergantung pada abstraksi.
+	\item Abstraksi tidak boleh bergantung pada detail. Detail harus bergantung pada abstraksi.
+\end{enumerate}
+
+Secara sederhana, prinsip ini mendorong agar kode tidak secara langsung bergantung pada implementasi konkret, tetapi pada antarmuka atau kelas abstrak. Modul tingkat tinggi (misalnya, logika bisnis) sebaiknya tidak langsung terikat pada modul tingkat rendah (misalnya, cara data disimpan atau dikirim). Sebaliknya, keduanya harus dikaitkan melalui kontrak (abstraksi) yang stabil dan fleksibel.
+
+DIP umumnya diwujudkan melalui penggunaan antarmuka atau kelas abstrak, serta mekanisme *dependency injection* untuk menyuntikkan dependensi saat runtime, bukan dengan membuat objek secara langsung di dalam kelas.
+
+\subsection{Manfaat dan Kekurangan}
+Penerapan Dependency Inversion Principle membawa banyak keuntungan dalam pengembangan perangkat lunak. Pertama, DIP meningkatkan fleksibilitas dan keterpisahan antar komponen karena modul tidak lagi saling bergantung secara langsung. Kedua, DIP mempermudah proses pengujian karena dependensi dapat digantikan dengan objek tiruan (mock) atau implementasi alternatif. Ketiga, kode menjadi lebih mudah dipelihara dan diperluas karena perubahan pada detail implementasi tidak akan memengaruhi modul tingkat tinggi.
+
+Namun, penerapan DIP juga memiliki tantangan. Salah satu kekurangannya adalah meningkatnya kompleksitas arsitektur akibat bertambahnya jumlah antarmuka atau abstraksi yang harus dikelola. Selain itu, dalam sistem kecil atau sederhana, penerapan DIP dapat dianggap berlebihan dan justru menyulitkan pengembangan karena menambah lapisan yang tidak dibutuhkan.
+
+Dengan demikian, prinsip ini sebaiknya diterapkan secara kontekstual sesuai dengan kebutuhan skala dan kompleksitas sistem, dan bukan semata-mata karena mengikuti pola desain.
+
+\subsection{Contoh Kasus 1}
+Pelanggaran prinsip Dependency Inversion terjadi ketika kelas tingkat tinggi bergantung langsung pada implementasi konkret kelas tingkat rendah. Sebagai contoh, dalam sistem pengiriman notifikasi, kelas \texttt{NotificationService} bertanggung jawab untuk mengirim pesan ke pengguna. Jika kelas ini secara langsung membuat instance dari \texttt{EmailSender}, maka ia bergantung pada detail implementasi, bukan pada abstraksi.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran DIP}]
+	public class EmailSender {
+		public void send(String message) {
+			// Kirim email
+		}
+	}
+	
+	public class NotificationService {
+		private EmailSender sender = new EmailSender();
+		
+		public void notifyUser(String message) {
+			sender.send(message);
+		}
+	}
+\end{lstlisting}
+
+Kelas \texttt{NotificationService} adalah modul tingkat tinggi, sedangkan \texttt{EmailSender} adalah modul tingkat rendah. Ketergantungan langsung ini menyebabkan sistem menjadi sulit diuji, sulit diperluas (misalnya jika ingin menambahkan \texttt{SMSNotification}), dan melanggar prinsip DIP.
+
+Solusi yang sesuai adalah dengan memperkenalkan abstraksi, misalnya antarmuka \texttt{MessageSender}, yang kemudian diimplementasikan oleh \texttt{EmailSender}. Dependensi disuntikkan dari luar (dependency injection), sehingga \texttt{NotificationService} hanya bergantung pada abstraksi, bukan implementasi.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan DIP}]
+	public interface MessageSender {
+		void send(String message);
+	}
+	
+	public class EmailSender implements MessageSender {
+		public void send(String message) {
+			// Kirim email
+		}
+	}
+	
+	public class NotificationService {
+		private MessageSender sender;
+		
+		public NotificationService(MessageSender sender) {
+			this.sender = sender;
+		}
+		
+		public void notifyUser(String message) {
+			sender.send(message);
+		}
+	}
+\end{lstlisting}
+
+Dengan desain ini, \texttt{NotificationService} dapat menggunakan implementasi lain dari \texttt{MessageSender}, seperti \texttt{SmsSender} atau \texttt{PushNotificationSender}, tanpa perlu mengubah kode di dalamnya. Ini membuat sistem lebih fleksibel, mudah diuji, dan sesuai dengan prinsip Dependency Inversion.
+
+\subsection{Contoh Kasus 2}
+Pelanggaran DIP juga umum terjadi dalam aplikasi yang mengakses database secara langsung dari kelas layanan (service). Misalnya, kelas \texttt{UserService} secara langsung membuat dan menggunakan instance \texttt{UserRepositoryImpl}, yang berisi logika akses data. Ketika \texttt{UserService} tergantung langsung pada implementasi ini, maka setiap perubahan dalam detail penyimpanan data akan memengaruhi logika bisnis.
+
+\begin{lstlisting}[style=JavaStyle, caption={Contoh pelanggaran DIP}]
+	public class UserRepositoryImpl {
+		public User findById(int id) {
+			// Ambil data dari database
+		}
+	}
+	
+	public class UserService {
+		private UserRepositoryImpl repository = new UserRepositoryImpl();
+		
+		public User getUser(int id) {
+			return repository.findById(id);
+		}
+	}
+\end{lstlisting}
+
+Dalam contoh ini, \texttt{UserService} adalah modul tingkat tinggi yang bergantung langsung pada modul tingkat rendah \texttt{UserRepositoryImpl}. Hal ini melanggar DIP dan menyulitkan pengujian atau penggantian implementasi (misalnya, mengganti dengan in-memory database untuk testing).
+
+Solusinya adalah dengan memperkenalkan antarmuka \texttt{UserRepository} dan menyuntikkan dependensi melalui konstruktor. Dengan begitu, \texttt{UserService} bergantung pada abstraksi, bukan pada implementasi konkret.
+
+\begin{lstlisting}[style=JavaStyle, caption={Refaktor menggunakan DIP}]
+	public interface UserRepository {
+		User findById(int id);
+	}
+	
+	public class UserRepositoryImpl implements UserRepository {
+		public User findById(int id) {
+			// Ambil data dari database
+		}
+	}
+	
+	public class UserService {
+		private UserRepository repository;
+		
+		public UserService(UserRepository repository) {
+			this.repository = repository;
+		}
+		
+		public User getUser(int id) {
+			return repository.findById(id);
+		}
+	}
+\end{lstlisting}
+
+Dengan pendekatan ini, \texttt{UserService} dapat bekerja dengan berbagai implementasi \texttt{UserRepository}, termasuk versi tiruan untuk pengujian unit. Hal ini mencerminkan penerapan Dependency Inversion Principle yang baik: ketergantungan dibalik dari implementasi ke abstraksi.
+
+
+
+\section{Kesimpulan}
+
+Penerapan prinsip SOLID dalam desain perangkat lunak berorientasi objek memberikan arah yang jelas dalam membangun sistem yang modular, fleksibel, dan mudah dikembangkan. Kelima prinsip—Single Responsibility, Open/Closed, Liskov Substitution, Interface Segregation, dan Dependency Inversion—mendorong pemisahan tanggung jawab, pemanfaatan abstraksi, serta pengurangan ketergantungan antar komponen.
+
+\textbf{Kekuatan utama} dari SOLID terletak pada kontribusinya terhadap berbagai aspek \textit{non-functional requirements} atau *.illities*, antara lain:
+\begin{itemize}
+	\item \textit{Maintainability}: Dengan kelas yang memiliki tanggung jawab tunggal (SRP) dan antarmuka yang terfokus (ISP), perubahan lokal tidak menyebabkan efek samping global.
+	\item \textit{Scalability}: Prinsip OCP memungkinkan pengembangan fungsionalitas baru tanpa mengubah kode yang sudah ada, sehingga sistem dapat tumbuh secara stabil.
+	\item \textit{Testability}: DIP dan LSP mendukung penyusunan kode yang mudah diuji melalui dependency injection dan kontrak perilaku yang konsisten.
+	\item \textit{Reusability dan Flexibility}: Dengan kode yang berbasis pada abstraksi, komponen lebih mudah digunakan kembali dalam konteks yang berbeda.
+\end{itemize}
+
+Namun, \textbf{kelemahan utama} dari SOLID adalah meningkatnya kompleksitas struktural, terutama ketika prinsip-prinsip ini diterapkan secara berlebihan dalam sistem yang masih sederhana. Abstraksi yang berlebihan dapat menghasilkan banyak kelas dan antarmuka tambahan, yang pada akhirnya mengganggu keterbacaan (\textit{readability}) dan kesederhanaan desain (\textit{simplicity}).
+
+\textbf{Dari sisi performa}, penerapan SOLID juga memiliki implikasi terhadap penggunaan sumber daya:
+\begin{itemize}
+	\item \textit{Memori}: Banyaknya kelas kecil dan abstraksi dapat meningkatkan jumlah objek di memori dan memperbesar \textit{memory footprint}, terutama pada sistem dengan alokasi dinamis yang intensif.
+	\item \textit{Kecepatan Proses}: Pemanggilan metode melalui antarmuka (interface dispatch) atau penggunaan dependency injection pada runtime dapat memperkenalkan latensi kecil dibandingkan pendekatan langsung. Ini dapat berdampak pada \textit{startup time} atau performa jalur kritis.
+	\item \textit{Overhead Arsitektural}: Framework atau kontainer injeksi yang kompleks (seperti Spring atau Dagger) dapat memperkenalkan overhead tambahan untuk pemetaan dan penyusunan dependensi saat runtime.
+\end{itemize}
+
+Meskipun demikian, dampak performa ini umumnya dapat ditoleransi dan bahkan tidak signifikan dalam konteks sistem bisnis skala menengah hingga besar. Dalam praktiknya, manfaat jangka panjang dari desain yang bersih dan mudah diuji sering kali lebih besar daripada biaya minor dalam hal performa.
+
+\textbf{Kesimpulannya}, prinsip SOLID adalah panduan yang sangat berguna dalam membangun sistem perangkat lunak yang siap untuk berubah. Namun, penerapannya harus dilakukan secara pragmatis, dengan mempertimbangkan kebutuhan fungsional, beban sistem, dan konteks penggunaan. SOLID bukan tujuan akhir, melainkan alat bantu untuk mencapai desain perangkat lunak yang seimbang antara fleksibilitas, keterkelolaan, dan efisiensi.
+
+
