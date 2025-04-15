@@ -1,0 +1,979 @@
+\documentclass[aspectratio=169, table]{beamer}
+
+%\usepackage[beamertheme=./praditatheme]{Pradita}
+\usepackage[utf8]{inputenc}
+\usepackage{xcolor} % for color
+\usepackage{colortbl} % for table color
+\usepackage{listings}
+
+% Define Java language style for listings
+\lstdefinestyle{JavaStyle}{
+language=Java,
+basicstyle=\ttfamily\scriptsize,
+keywordstyle=\color{blue},
+commentstyle=\color{gray},
+stringstyle=\color{red},
+breaklines=true,
+showstringspaces=false,
+tabsize=2,
+captionpos=b,
+numbers=left,
+numberstyle=\tiny\color{gray},
+frame=lines,
+backgroundcolor=\color{lightgray!10},
+comment=[l]{//},
+morecomment=[s]{/*}{*/},
+commentstyle=\color{gray}\ttfamily,
+string=[s]{'}{'},
+morestring=[s]{"}{"},
+%	stringstyle=\color{teal}\ttfamily,
+%	showstringspaces=false
+}
+
+%
+%\lstdefinestyle{sql}{
+%language=sql,
+%keywords={use, insert, into, values, select, from,
+%update, set, delete, create, where, join, left, right, inner, order, by, primary, key},
+%ndkeywords={max, min, varchar, int},
+%ndkeywordstyle=\color{purple}\bfseries,
+%basicstyle=\ttfamily\scriptsize,
+%keywordstyle=\color{blue},
+%commentstyle=\color{gray},
+%stringstyle=\color{red},
+%breaklines=true,
+%showstringspaces=false,
+%tabsize=2,
+%captionpos=b,
+%numbers=left,
+%numberstyle=\tiny\color{gray},
+%frame=lines,
+%backgroundcolor=\color{lightgray!10},
+%comment=[l]{\#},
+%morecomment=[s]{/*}{*/},
+%commentstyle=\color{gray}\ttfamily,
+%string=[s]{'}{'},
+%morestring=[s]{"}{"},
+%%	stringstyle=\color{teal}\ttfamily,
+%%	showstringspaces=false
+%}
+%
+%\lstdefinelanguage{bash} {
+%keywords={},
+%basicstyle=\ttfamily\scriptsize,
+%keywordstyle=\color{blue}\bfseries,
+%ndkeywords={iex},
+%ndkeywordstyle=\color{purple}\bfseries,
+%sensitive=true,
+%commentstyle=\color{gray},
+%stringstyle=\color{red},
+%numbers=left,
+%numberstyle=\tiny\color{gray},
+%breaklines=true,
+%frame=lines,
+%backgroundcolor=\color{lightgray!10},
+%tabsize=2,
+%comment=[l]{\#},
+%morecomment=[s]{/*}{*/},
+%commentstyle=\color{gray}\ttfamily,
+%stringstyle=\color{purple}\ttfamily,
+%showstringspaces=false
+%}
+%
+%\lstdefinestyle{XmlStyle} {
+%language=xml,
+%keywords={xmlns,version,type,import},
+%basicstyle=\ttfamily\scriptsize,
+%keywordstyle=\color{blue}\bfseries,
+%ndkeywords={import},
+%ndkeywordstyle=\color{purple}\bfseries,
+%sensitive=true,
+%commentstyle=\color{gray},
+%stringstyle=\color{red},
+%numbers=left,
+%numberstyle=\tiny\color{gray},
+%breaklines=true,
+%frame=lines,
+%backgroundcolor=\color{lightgray!10},
+%tabsize=2,
+%showstringspaces=false,
+%comment=[l]{\#},
+%commentstyle=\color{gray}\ttfamily,
+%stringstyle=\color{purple}\ttfamily,
+%morecomment=[s]{<!--}{-->}
+%}
+%
+%\lstdefinelanguage{css}{
+%basicstyle=\ttfamily\footnotesize,
+%keywordstyle=\color{blue},
+%commentstyle=\color{gray},
+%stringstyle=\color{red},
+%breaklines=true,
+%showstringspaces=false,
+%tabsize=2,
+%captionpos=b,
+%numbers=left,
+%numberstyle=\tiny\color{gray},
+%frame=lines,
+%backgroundcolor=\color{lightgray!10},
+%comment=[l]{//},
+%morecomment=[s]{/*}{*/},
+%commentstyle=\color{gray}\ttfamily,
+%string=[s]{'}{'},
+%morestring=[s]{"}{"},
+%%	stringstyle=\color{teal}\ttfamily,
+%%	showstringspaces=false
+%}
+%
+%\lstdefinelanguage{puml}{
+%	basicstyle=\ttfamily\footnotesize,
+%	keywords={@startuml, @enduml, class, String, abstract, interface, Person, note, of, end, enum},
+%	ndkeywords={right, left},
+%	morekeywords={\{,\}, <!-- },
+%	emph={=,!,?}, emphstyle=\color{red}\bfseries,
+%	keywordstyle=\color{blue},
+%	commentstyle=\color{gray},
+%	stringstyle=\color{teal},
+%	ndkeywordstyle=\color{purple}\bfseries,
+%	breaklines=true,
+%	showstringspaces=false,
+%	tabsize=2,
+%	captionpos=b,
+%	numbers=left,
+%	numberstyle=\tiny\color{gray},
+%	frame=lines,
+%	backgroundcolor=\color{lightgray!10},
+%	comment=[l]{\'},
+%	morecomment=[s]{/*}{*/},
+%	commentstyle=\color{gray}\ttfamily,
+%	%	string=[s]{'}{'},
+%	morestring=[s]{"}{"},
+%	%	stringstyle=\color{teal}\ttfamily,
+%	%	showstringspaces=false
+%	literate=
+%	{\{}{{\textcolor{red}{\{}}}1
+%	{\}}{{\textcolor{red}{\}}}}1
+%	{:}{{\textcolor{red}{:}}}1
+%	{=}{{\textcolor{red}{=}}}1
+%}
+
+\usetheme{Pradita}
+%
+\subtitle{IF220303 - Object-oriented Programming}
+
+\title{\Huge{Object-Oriented Design\\\vspace{5pt}Priciples (SOLID)}}
+\date[Serial]{\scriptsize {PRU/SPMI/FR-BM-18/0222}}
+\author[Pradita]{\small {\textbf{Alfa Yohannis}}}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}[fragile]
+\frametitle{Contents}
+\vspace{20pt}
+\begin{columns}[t]
+	\column{0.5\textwidth}
+	\tableofcontents[sections={1-5}]
+	
+	\column{0.5\textwidth}
+	\tableofcontents[sections={6-10}]
+\end{columns}
+\end{frame}
+
+\section{Introduction}
+
+\begin{frame}[fragile]{Introduction}
+	\vspace{20pt}
+	\begin{columns}[t]
+		\column{0.4\textwidth}
+		\textbf{Good OOP design} is not just about solving problems,
+		but also about:
+		\begin{itemize}
+			\item Adapting to change easily
+			\item Maintaining code quality
+			\item Supporting team collaboration
+		\end{itemize}
+		
+		\textbf{Problems with poor design:}
+		\begin{itemize}
+			\item Hard-to-maintain code
+			\item Bugs when changes are made
+			\item Difficult to test in isolation
+		\end{itemize}
+		
+		\column{0.6\textwidth}
+		\textbf{Solution: SOLID Principles (Robert C. Martin)}
+		\begin{itemize}
+			\item Single Responsibility Principle (SRP)
+			\item Open/Closed Principle (OCP)
+			\item Liskov Substitution Principle (LSP)
+			\item Interface Segregation Principle (ISP)
+			\item Dependency Inversion Principle (DIP)
+		\end{itemize}
+		
+		\textbf{Goals:}
+		\begin{itemize}
+			\item Modularity
+			\item Flexibility to changes
+			\item Minimal dependency between components
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Focus and Benefits of SOLID Principles}
+	\vspace{20pt}
+	\begin{columns}[t]
+		\column{0.5\textwidth}
+		\textbf{Focus of each principle:}
+		\begin{itemize}
+			\item \textbf{SRP}: Separate responsibilities in a class
+			\item \textbf{OCP}: Open for extension, closed for modification
+			\item \textbf{LSP}: Subclasses must not violate superclass contracts
+			\item \textbf{ISP}: Avoid fat or bloated interfaces
+			\item \textbf{DIP}: Depend on abstractions, not implementations
+		\end{itemize}
+		
+		\column{0.5\textwidth}
+		\textbf{Benefits of applying SOLID:}
+		\begin{itemize}
+			\item Clean and manageable design
+			\item Improved scalability
+			\item Easier to test
+			\item Resource-efficient
+			\item Supports long-term development
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+
+
+\section{Single Responsibility Principle (SRP)}
+
+\begin{frame}[fragile]{SRP: Definition and Concept}
+	\vspace{20pt}
+	\textbf{Single Responsibility Principle (SRP)} states that:
+	\begin{itemize}
+		\item A class should have only one reason to change.
+		\item Each class should focus on a single responsibility.
+	\end{itemize}
+	
+	\textbf{Benefits:}
+	\begin{itemize}
+		\item Better modularity and separation of concerns
+		\item Easier to test and maintain
+	\end{itemize}
+	
+	By applying SRP, code becomes more organised, readable, and maintainable in the long run.
+\end{frame}
+
+\begin{frame}[fragile]{SRP: Benefits and Drawbacks}
+	\vspace{20pt}
+	\textbf{Main benefits of SRP:}
+	\begin{itemize}
+		\item Easier code maintenance
+		\item Clear unit testing boundaries
+		\item Isolated changes to specific concerns
+	\end{itemize}
+	
+	\textbf{Potential drawback:}
+	\begin{itemize}
+		\item Increased number of small classes
+		\item Slightly more complex project structure
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{SRP Violation Example: Invoice Class}
+	\vspace{20pt}
+	\textbf{Problem:} A single class manages data, business logic, printing, and storage.
+	\begin{lstlisting}[style=JavaStyle]
+		public class Invoice {
+			private List<Item> items;
+			
+			public double calculateTotal() {
+				// calculate total
+			}
+			
+			public void printInvoice() {
+				// print to printer
+			}
+			
+			public void saveToFile() {
+				// save to file
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{SRP Refactored: Invoice Class}
+	\vspace{20pt}
+	\textbf{Solution:} Split responsibilities into separate classes.
+	\begin{lstlisting}[style=JavaStyle]
+		public class Invoice {
+			private List<Item> items;
+			public double calculateTotal() { ... }
+		}
+		
+		public class InvoicePrinter {
+			public void print(Invoice invoice) { ... }
+		}
+		
+		public class InvoiceSaver {
+			public void saveToFile(Invoice invoice) { ... }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{SRP Violation Example: User Class}
+	\vspace{20pt}
+	\textbf{Problem:} User class mixes data, validation, and email logic.
+	\begin{lstlisting}[style=JavaStyle]
+		public class User {
+			private String name;
+			private String email;
+			
+			public boolean isValidEmail() {
+				// validate format
+			}
+			
+			public void sendWelcomeEmail() {
+				// send email
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{SRP Refactored: User Class}
+	\vspace{20pt}
+	\textbf{Solution:} Each class has a single clear responsibility.
+	\begin{lstlisting}[style=JavaStyle]
+		public class User {
+			private String name;
+			private String email;
+			public String getEmail() { return email; }
+		}
+		
+		public class EmailValidator {
+			public boolean isValid(String email) { ... }
+		}
+		
+		public class EmailSender {
+			public void sendWelcomeEmail(String email) { ... }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\section{Open/Closed Principle (OCP)}
+
+\begin{frame}[fragile]{OCP: Definition and Concept}
+	\vspace{20pt}
+	\textbf{Open/Closed Principle (OCP)} states that:
+	\begin{itemize}
+		\item Software entities (classes, modules, functions) should be \textbf{open for extension} but \textbf{closed for modification}.
+		\item You should be able to add new functionality without changing existing code.
+	\end{itemize}
+	
+	\textbf{Introduced by:} Bertrand Meyer
+	
+	\textbf{Common techniques:}
+	\begin{itemize}
+		\item Abstractions (interfaces, abstract classes)
+		\item Design patterns: \textit{Strategy}, \textit{Decorator}, \textit{Factory Method}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]{OCP: Benefits and Drawbacks}
+	\vspace{20pt}
+	\textbf{Benefits of OCP:}
+	\begin{itemize}
+		\item Improves system stability
+		\item Makes the system easier to extend
+		\item Encourages reuse and modularity
+	\end{itemize}
+	
+	\textbf{Drawbacks:}
+	\begin{itemize}
+		\item May increase class/interface count
+		\item Adds abstraction overhead if used prematurely
+	\end{itemize}
+	
+	\textit{Use OCP progressively as the system evolves.}
+\end{frame}
+
+\begin{frame}[fragile]{OCP Violation: PaymentProcessor}
+	\vspace{20pt}
+	\textbf{Problem:} Every new payment type requires modifying the class.
+	\begin{lstlisting}[style=JavaStyle]
+		public class PaymentProcessor {
+			public void process(String paymentType) {
+				if (paymentType.equals("CreditCard")) {
+					// Process credit card
+				} else if (paymentType.equals("BankTransfer")) {
+					// Process bank transfer
+				}
+			}
+		}
+	\end{lstlisting}
+	\textit{Adding a new payment method (e.g., EWallet) means editing this class.}
+\end{frame}
+
+\begin{frame}[fragile]{OCP Refactored: PaymentProcessor}
+	\vspace{20pt}
+	\textbf{Solution:} Use interface to allow extension without modification.
+	\begin{lstlisting}[style=JavaStyle]
+		public interface PaymentMethod {
+			void process();
+		}
+
+		public class CreditCardPayment implements PaymentMethod {
+			public void process() { ... }
+		}
+		public class BankTransferPayment implements PaymentMethod {
+			public void process() { ... }
+		}
+		public class PaymentProcessor {
+			public void process(PaymentMethod method) {
+				method.process();
+			}
+		}
+	\end{lstlisting}
+	\textit{Now you can add EWalletPayment without changing existing code.}
+\end{frame}
+
+\begin{frame}[fragile]{OCP Violation: NotificationService}
+	\vspace{20pt}
+	\textbf{Problem:} New notification channels require editing the class.
+	\begin{lstlisting}[style=JavaStyle]
+		public class NotificationService {
+			public void send(String channel, String message) {
+				if (channel.equals("email")) {
+					// Send email
+				} else if (channel.equals("sms")) {
+					// Send SMS
+				}
+			}
+		}
+	\end{lstlisting}
+	\textit{Adding push notifications requires modifying this method.}
+\end{frame}
+
+\begin{frame}[fragile]{OCP Refactored: NotificationService}
+	\vspace{20pt}
+	\textbf{Solution:} Extract notifier behavior using an interface.
+	\begin{lstlisting}[style=JavaStyle]
+		public interface Notifier {
+			void send(String message);
+		}
+		
+		public class EmailNotifier implements Notifier {
+			public void send(String message) { ... }
+		}
+		public class SMSNotifier implements Notifier {
+			public void send(String message) { ... }
+		}
+		public class NotificationService {
+			public void sendNotification(Notifier notifier, String message) {
+				notifier.send(message);
+			}
+		}
+	\end{lstlisting}
+	\textit{Supports adding PushNotifier or others without modifying NotificationService.}
+\end{frame}
+
+\section{Liskov Substitution Principle (LSP)}
+
+\begin{frame}[fragile]{LSP Definition and Concept}
+	\vspace{20pt}
+	\textbf{Liskov Substitution Principle (LSP)} was introduced by Barbara Liskov (1987).
+	
+	\textbf{Definition:}
+	\begin{itemize}
+		\item Subclasses must be substitutable for their base classes without altering expected program behaviour.
+		\item Inheritance must respect the behavioural contract of the superclass.
+	\end{itemize}
+	
+	\textbf{Focus:} Behavioural correctness, not just structural compatibility.
+\end{frame}
+
+\begin{frame}[fragile]{LSP Benefits and Challenges}
+	\vspace{20pt}
+	\textbf{Benefits of LSP:}
+	\begin{itemize}
+		\item Safer inheritance and effective polymorphism
+		\item More predictable testing and documentation
+		\item Increased system reliability
+	\end{itemize}
+	
+	\textbf{Challenges:}
+	\begin{itemize}
+		\item Behavioural alignment between super- and subclass
+		\item Risk of forced generalisation or misleading abstraction
+	\end{itemize}
+	
+	\textit{Design contracts carefully to avoid silent violations.}
+\end{frame}
+
+\begin{frame}[fragile]{LSP Violation: Rectangle vs Square}
+	\vspace{20pt}
+	\textbf{Problem:} Square changes the behaviour of inherited setters.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class Rectangle {
+			protected int width, height;
+			public void setWidth(int width) { this.width = width; }
+			public void setHeight(int height) { this.height = height; }
+			public int getArea() { return width * height; }
+		}
+		
+		public class Square extends Rectangle {
+			public void setWidth(int width) {
+				this.width = width;
+				this.height = width;
+			}
+			public void setHeight(int height) {
+				this.width = height;
+				this.height = height;
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{LSP Violation in Practice}
+	\vspace{20pt}
+	\textbf{Test scenario: expects normal rectangle behaviour}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public void resizeRectangle(Rectangle r) {
+			r.setWidth(5);
+			r.setHeight(10);
+			System.out.println("Expected area: 50, Actual area: " + r.getArea());
+		}
+	\end{lstlisting}
+	
+	\textit{If Square is passed, area will be 100 – violates expectations.}
+\end{frame}
+
+\begin{frame}[fragile]{LSP Refactor: Use Interface Instead}
+	\vspace{20pt}
+	\textbf{Solution:} Avoid inheritance; use a shared interface.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public interface Shape {
+			int getArea();
+		}
+		
+		public class Rectangle implements Shape {
+			private int width, height;
+			public Rectangle(int w, int h) {
+				this.width = w;
+				this.height = h;
+			}
+			public int getArea() { return width * height; }
+		}
+		
+		public class Square implements Shape {
+			private int side;
+			public Square(int side) { this.side = side; }
+			public int getArea() { return side * side; }
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{LSP Violation: BankAccount Example}
+	\vspace{20pt}
+	\textbf{Problem:} Subclass overrides method with broken contract.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public class BankAccount {
+			protected double balance;
+			public void deposit(double amount) { balance += amount; }
+			public void withdraw(double amount) { balance -= amount; }
+			public double getBalance() { return balance; }
+		}
+		
+		public class FixedDepositAccount extends BankAccount {
+			@Override
+			public void withdraw(double amount) {
+				throw new UnsupportedOperationException("Not allowed");
+			}
+		}
+	\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{Code That Violates Substitution}
+	\vspace{20pt}
+	\textbf{Code that expects withdraw to always work}
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public void processWithdrawal(BankAccount account, double amount) {
+			account.withdraw(amount); // Will throw exception if FixedDepositAccount
+		}
+	\end{lstlisting}
+	
+	\textit{This breaks LSP because not all subclasses can honour the method.}
+\end{frame}
+
+\begin{frame}[fragile]{LSP Refactor: Use Specific Interface}
+	\vspace{20pt}
+	\textbf{Solution:} Only withdrawal-capable accounts implement the interface.
+	
+	\begin{lstlisting}[style=JavaStyle]
+		public interface WithdrawableAccount {
+			void withdraw(double amount);
+			double getBalance();
+		}
+		
+		public class SavingsAccount implements WithdrawableAccount {
+			private double balance;
+			public void deposit(double amount) { balance += amount; }
+			public void withdraw(double amount) { balance -= amount; }
+			public double getBalance() { return balance; }
+		}
+		
+		public class FixedDepositAccount {
+			private double balance;
+			public void deposit(double amount) { balance += amount; }
+			public double getBalance() { return balance; }
+			// No withdraw method here
+		}
+	\end{lstlisting}
+\end{frame}
+
+\section{Interface Segregation Principle (ISP)}
+
+\begin{frame}[fragile]{ISP Definition and Concept}
+	\vspace{20pt}
+	\textbf{Interface Segregation Principle (ISP)} states that:
+	\begin{itemize}
+		\item Clients should not be forced to depend on methods they do not use.
+		\item Large interfaces should be split into smaller, role-specific interfaces.
+	\end{itemize}
+	
+	\textbf{Goal:} Encourage modular and focused design by avoiding unnecessary dependencies.
+	
+	\textit{Applies to:} Interface design, responsibility separation, and role-specific abstractions.
+\end{frame}
+
+\begin{frame}[fragile]{ISP Benefits and Drawbacks}
+	\vspace{20pt}
+	\textbf{Benefits of ISP:}
+	\begin{itemize}
+		\item Clear separation of concerns
+		\item Reduces ripple effects of interface changes
+		\item Easier unit testing and maintenance
+	\end{itemize}
+	
+	\textbf{Drawbacks:}
+	\begin{itemize}
+		\item Too many fragmented interfaces may reduce cohesion
+		\item Excessive splitting can increase complexity
+	\end{itemize}
+	
+	\textit{Balance segregation with meaningful grouping.}
+\end{frame}
+
+\begin{frame}[fragile]{ISP Violation: Multifunction Device}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public interface Machine {
+			void print(Document d);
+			void scan(Document d);
+			void fax(Document d);
+		}
+		
+		public class OldPrinter implements Machine {
+			public void print(Document d) { ... }
+			
+			public void scan(Document d) {
+				throw new UnsupportedOperationException();
+			}
+			
+			public void fax(Document d) {
+				throw new UnsupportedOperationException();
+			}
+		}
+	\end{lstlisting}
+	\textit{OldPrinter is forced to implement methods it doesn’t support.}
+\end{frame}
+
+\begin{frame}[fragile]{ISP Refactored: Split Interfaces}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public interface Printable {
+			void print(Document d);
+		}
+		
+		public interface Scannable {
+			void scan(Document d);
+		}
+		
+		public interface Faxable {
+			void fax(Document d);
+		}
+		
+		public class OldPrinter implements Printable {
+			public void print(Document d) { ... }
+		}
+	\end{lstlisting}
+	\textit{Classes now implement only what they actually support.}
+\end{frame}
+
+\begin{frame}[fragile]{ISP Violation: Generic User Role}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public interface User {
+			void viewCourse();
+			void teachCourse();
+			void manageSystem();
+		}
+		
+		public class Student implements User {
+			public void viewCourse() { ... }
+			
+			public void teachCourse() {
+				throw new UnsupportedOperationException();
+			}
+			
+			public void manageSystem() {
+				throw new UnsupportedOperationException();
+			}
+		}
+	\end{lstlisting}
+	\textit{Student is forced to depend on irrelevant operations.}
+\end{frame}
+
+\begin{frame}[fragile]{ISP Refactored: Role-Specific Interfaces}
+	\vspace{20pt}
+\begin{columns}[t]
+	\column{0.5\textwidth}
+	\begin{lstlisting}[style=JavaStyle]
+		public interface CourseViewer {
+			void viewCourse();
+		}
+		
+		public interface CourseInstructor {
+			void teachCourse();
+		}
+		
+		public interface SystemManager {
+			void manageSystem();
+		}
+		
+		public class Student implements CourseViewer {
+			public void viewCourse() { ... }
+		}
+	\end{lstlisting}
+	
+	\column{0.5\textwidth}
+	\begin{lstlisting}[style=JavaStyle,  firstnumber=16]
+		public class Lecturer 
+		implements CourseViewer, CourseInstructor {
+			public void viewCourse() { ... }
+			public void teachCourse() { ... }
+		}
+		
+		public class Admin 
+		implements CourseViewer, SystemManager {
+			public void viewCourse() { ... }
+			public void manageSystem() { ... }
+		}
+	\end{lstlisting}
+	\textit{Each class depends only on relevant behaviour. ISP is respected.}
+\end{columns}
+
+\end{frame}
+
+\section{Dependency Inversion Principle (DIP)}
+
+\begin{frame}[fragile]{DIP Definition and Concept}
+	\vspace{20pt}
+	\textbf{Dependency Inversion Principle (DIP)} states:
+	\begin{enumerate}
+		\item High-level modules should not depend on low-level modules. Both should depend on abstractions.
+		\item Abstractions should not depend on details. Details should depend on abstractions.
+	\end{enumerate}
+	
+	\textbf{Goal:} Depend on interfaces or abstract classes, not concrete implementations.
+	
+	\textit{Common tools:} Interfaces, abstract classes, and dependency injection mechanisms.
+\end{frame}
+
+\begin{frame}[fragile]{DIP Benefits and Drawbacks}
+	\vspace{20pt}
+	\textbf{Benefits of DIP:}
+	\begin{itemize}
+		\item Better separation between business logic and implementation details
+		\item Easier testing using mocks or stubs
+		\item More flexible and maintainable code
+	\end{itemize}
+	
+	\textbf{Drawbacks:}
+	\begin{itemize}
+		\item Increases architectural complexity
+		\item Can be overkill for small-scale systems
+	\end{itemize}
+	
+	\textit{Apply contextually based on system size and needs.}
+\end{frame}
+
+\begin{frame}[fragile]{DIP Violation: Hard Dependency}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public class EmailSender {
+			public void send(String message) { ... }
+		}
+		
+		public class NotificationService {
+			private EmailSender sender = new EmailSender();
+			
+			public void notifyUser(String message) {
+				sender.send(message);
+			}
+		}
+	\end{lstlisting}
+	
+	\textit{High-level class depends directly on low-level detail.}
+\end{frame}
+
+\begin{frame}[fragile]{DIP Refactored: Use Interface and Injection}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public interface MessageSender {
+			void send(String message);
+		}
+		public class EmailSender implements MessageSender {
+			public void send(String message) { ... }
+		}
+		public class NotificationService {
+			private MessageSender sender;
+			
+			public NotificationService(MessageSender sender) {
+				this.sender = sender;
+			}
+			public void notifyUser(String message) {
+				sender.send(message);
+			}
+		}
+	\end{lstlisting}
+	
+	\textit{NotificationService depends on abstraction, not implementation.}
+\end{frame}
+
+\begin{frame}[fragile]{Violation: Service Uses Concrete Repository}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public class UserRepositoryImpl {
+			public User findById(int id) { ... }
+		}
+		
+		public class UserService {
+			private UserRepositoryImpl repository = new UserRepositoryImpl();
+			
+			public User getUser(int id) {
+				return repository.findById(id);
+			}
+		}
+	\end{lstlisting}
+	
+	\textit{UserService is tightly coupled to UserRepositoryImpl.}
+\end{frame}
+
+\begin{frame}[fragile]{DIP Refactored: Inject via Abstraction}
+	\vspace{20pt}
+	\begin{lstlisting}[style=JavaStyle]
+		public interface UserRepository {
+			User findById(int id);
+		}
+		public class UserRepositoryImpl implements UserRepository {
+			public User findById(int id) { ... }
+		}
+		public class UserService {
+			private UserRepository repository;
+			
+			public UserService(UserRepository repository) {
+				this.repository = repository;
+			}
+			public User getUser(int id) {
+				return repository.findById(id);
+			}
+		}
+	\end{lstlisting}
+	
+	\textit{Now UserService works with any UserRepository implementation, including mocks.}
+\end{frame}
+
+\section{Conclusions}
+
+\begin{frame}[fragile]{Conclusion: Strengths and Impact of SOLID}
+	\vspace{20pt}
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\textbf{SOLID helps build:}
+		\begin{itemize}
+			\item Modular systems
+			\item Low coupling between components
+			\item Scalable and flexible designs
+		\end{itemize}
+		
+		\textbf{Core Principles:}
+		\begin{itemize}
+			\item Single Responsibility Principle
+			\item Open/Closed Principle
+			\item Liskov Substitution Principle
+			\item Interface Segregation Principle
+			\item Dependency Inversion Principle
+		\end{itemize}
+		
+		\column{0.5\textwidth}
+		\textbf{Non-functional qualities improved:}
+		\begin{itemize}
+			\item Maintainability, Testability, Scalability, Reusability, Flexibility
+		\end{itemize}
+		
+		\textbf{Examples:}
+		\begin{itemize}
+			\item Interface Segregation reduces side effects
+			\item Open/Closed allows safe extension
+			\item Dependency Inversion enables mock injection
+		\end{itemize}
+		\textbf{Key Benefits: Stable architecture with consistent behaviour}
+	\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Conclusion: Trade-offs and Practical Advice}
+	\vspace{20pt}
+	\begin{columns}[T]
+		\column{0.5\textwidth}
+		\textbf{Main drawbacks:}
+		\begin{itemize}
+			\item More abstraction layers
+			\item Increased number of classes
+			\item Reduced readability if overused
+		\end{itemize}
+		
+		\textbf{Performance impact:}
+		\begin{itemize}
+			\item More memory usage
+			\item Slight runtime dispatch cost
+			\item Dependency Injection frameworks may introduce latency
+		\end{itemize}
+		
+		\column{0.5\textwidth}
+		\textbf{When to apply:}
+		\begin{itemize}
+			\item Medium to large systems
+			\item When flexibility and testing matter
+			\item When maintenance is a long-term goal
+		\end{itemize}
+		
+		\textbf{Final remark:}
+		\begin{itemize}
+			\item SOLID is a guideline, not a rule
+			\item Apply pragmatically based on context
+			\item Balance clarity, performance, and design purity
+		\end{itemize}
+	\end{columns}
+\end{frame}
+
+\end{document}
