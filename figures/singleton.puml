@@ -1,0 +1,23 @@
+@startuml
+skinparam dpi 300
+
+class Singleton {
+  - Singleton()
+  - static Singleton instance
+  + static Singleton getInstance()
+  + doSomething()
+}
+
+Singleton : <<singleton>>
+
+note right of Singleton::Singleton
+  Constructor is private
+  to prevent external instantiation
+end note
+
+note right of Singleton::getInstance
+  Returns the single instance,
+  creates it if it doesn't exist yet
+end note
+
+@enduml

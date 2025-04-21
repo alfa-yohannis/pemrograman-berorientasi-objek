@@ -1,0 +1,70 @@
+@startuml
+' Interfaces
+interface Button {
+    + render()
+}
+
+interface Checkbox {
+    + check()
+}
+
+interface GUIFactory {
+    + createButton() : Button
+    + createCheckbox() : Checkbox
+}
+
+' Concrete Products - Windows
+class WinButton implements Button {
+    + render()
+}
+
+class WinCheckbox implements Checkbox {
+    + check()
+}
+
+' Concrete Products - macOS
+class MacButton implements Button {
+    + render()
+}
+
+class MacCheckbox implements Checkbox {
+    + check()
+}
+
+' Concrete Factories
+class WinFactory implements GUIFactory {
+    + createButton() : Button
+    + createCheckbox() : Checkbox
+}
+
+class MacFactory implements GUIFactory {
+    + createButton() : Button
+    + createCheckbox() : Checkbox
+}
+
+' Client
+class Application {
+    - Button button
+    - Checkbox checkbox
+    + renderUI()
+}
+
+' Relationships
+GUIFactory <|.. WinFactory
+GUIFactory <|.. MacFactory
+
+Button <|.. WinButton
+Button <|.. MacButton
+
+Checkbox <|.. WinCheckbox
+Checkbox <|.. MacCheckbox
+
+Application --> GUIFactory : uses
+Application --> Button
+Application --> Checkbox
+WinFactory ..> WinButton : creates
+WinFactory ..> WinCheckbox : creates
+MacFactory ..> MacButton : creates
+MacFactory ..> MacCheckbox : creates
+
+@enduml

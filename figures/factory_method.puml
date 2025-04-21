@@ -1,0 +1,38 @@
+@startuml
+interface Transport {
+    + deliver()
+}
+
+class Car implements Transport {
+    + deliver()
+}
+
+class Bike implements Transport {
+    + deliver()
+}
+
+abstract class TransportFactory {
+    + createTransport() : Transport
+    + planDelivery()
+}
+
+class CarFactory extends TransportFactory {
+    + createTransport() : Transport
+}
+
+class BikeFactory extends TransportFactory {
+    + createTransport() : Transport
+}
+
+Main --> TransportFactory : uses
+TransportFactory <|-- CarFactory
+TransportFactory <|-- BikeFactory
+Transport <|.. Car
+Transport <|.. Bike
+TransportFactory ..> Transport : creates
+
+note right of TransportFactory::createTransport
+Factory Method defined here,
+subclasses override this
+end note
+@enduml
