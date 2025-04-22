@@ -161,7 +161,7 @@ morestring=[s]{"}{"},
 %
 \subtitle{IF220303 - Object-oriented Programming}
 
-\title{\Huge{Object-Oriented Design\\\vspace{5pt}Priciples (SOLID)}}
+\title{\Huge{Design Patterns \&\\\vspace{5pt}Creational Patterns}}
 \date[Serial]{\scriptsize {PRU/SPMI/FR-BM-18/0222}}
 \author[Pradita]{\small {\textbf{Alfa Yohannis}}}
 
@@ -173,807 +173,1056 @@ morestring=[s]{"}{"},
 \frametitle{Contents}
 \vspace{20pt}
 \begin{columns}[t]
-	\column{0.5\textwidth}
-	\tableofcontents[sections={1-5}]
-	
-	\column{0.5\textwidth}
-	\tableofcontents[sections={6-10}]
+\column{0.5\textwidth}
+\tableofcontents[sections={1-5}]
+
+\column{0.5\textwidth}
+\tableofcontents[sections={6-10}]
 \end{columns}
 \end{frame}
 
 \section{Introduction}
 
-\begin{frame}[fragile]{Introduction}
-	\vspace{20pt}
-	\begin{columns}[t]
-		\column{0.4\textwidth}
-		\textbf{Good OOP design} is not just about solving problems,
-		but also about:
-		\begin{itemize}
-			\item Adapting to change easily
-			\item Maintaining code quality
-			\item Supporting team collaboration
-		\end{itemize}
-		
-		\textbf{Problems with poor design:}
-		\begin{itemize}
-			\item Hard-to-maintain code
-			\item Bugs when changes are made
-			\item Difficult to test in isolation
-		\end{itemize}
-		
-		\column{0.6\textwidth}
-		\textbf{Solution: SOLID Principles (Robert C. Martin)}
-		\begin{itemize}
-			\item Single Responsibility Principle (SRP)
-			\item Open/Closed Principle (OCP)
-			\item Liskov Substitution Principle (LSP)
-			\item Interface Segregation Principle (ISP)
-			\item Dependency Inversion Principle (DIP)
-		\end{itemize}
-		
-		\textbf{Goals:}
-		\begin{itemize}
-			\item Modularity
-			\item Flexibility to changes
-			\item Minimal dependency between components
-		\end{itemize}
-	\end{columns}
-\end{frame}
+\begin{frame}[fragile]{What Are Design Patterns?}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Definition:}
 
-\begin{frame}[fragile]{Focus and Benefits of SOLID Principles}
-	\vspace{20pt}
-	\begin{columns}[t]
-		\column{0.5\textwidth}
-		\textbf{Focus of each principle:}
-		\begin{itemize}
-			\item \textbf{SRP}: Separate responsibilities in a class
-			\item \textbf{OCP}: Open for extension, closed for modification
-			\item \textbf{LSP}: Subclasses must not violate superclass contracts
-			\item \textbf{ISP}: Avoid fat or bloated interfaces
-			\item \textbf{DIP}: Depend on abstractions, not implementations
-		\end{itemize}
-		
-		\column{0.5\textwidth}
-		\textbf{Benefits of applying SOLID:}
-		\begin{itemize}
-			\item Clean and manageable design
-			\item Improved scalability
-			\item Easier to test
-			\item Resource-efficient
-			\item Supports long-term development
-		\end{itemize}
-	\end{columns}
-\end{frame}
+Design patterns are proven and reusable solutions to common software design problems, especially in object-oriented development.
 
+\vspace{8pt}
+They are not final code but rather templates or blueprints that can be adapted to specific contexts.
 
+\column{0.5\textwidth}
+\textbf{Origins and Purpose:}
 
-\section{Single Responsibility Principle (SRP)}
+Patterns emerged from best practices and experiences shared by developers to build flexible, maintainable, and structured systems.
 
-\begin{frame}[fragile]{SRP: Definition and Concept}
-	\vspace{20pt}
-	\textbf{Single Responsibility Principle (SRP)} states that:
-	\begin{itemize}
-		\item A class should have only one reason to change.
-		\item Each class should focus on a single responsibility.
-	\end{itemize}
-	
-	\textbf{Benefits:}
-	\begin{itemize}
-		\item Better modularity and separation of concerns
-		\item Easier to test and maintain
-	\end{itemize}
-	
-	By applying SRP, code becomes more organised, readable, and maintainable in the long run.
-\end{frame}
-
-\begin{frame}[fragile]{SRP: Benefits and Drawbacks}
-	\vspace{20pt}
-	\textbf{Main benefits of SRP:}
-	\begin{itemize}
-		\item Easier code maintenance
-		\item Clear unit testing boundaries
-		\item Isolated changes to specific concerns
-	\end{itemize}
-	
-	\textbf{Potential drawback:}
-	\begin{itemize}
-		\item Increased number of small classes
-		\item Slightly more complex project structure
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{SRP Violation Example: Invoice Class}
-	\vspace{20pt}
-	\textbf{Problem:} A single class manages data, business logic, printing, and storage.
-	\begin{lstlisting}[style=JavaStyle]
-		public class Invoice {
-			private List<Item> items;
-			
-			public double calculateTotal() {
-				// calculate total
-			}
-			
-			public void printInvoice() {
-				// print to printer
-			}
-			
-			public void saveToFile() {
-				// save to file
-			}
-		}
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{SRP Refactored: Invoice Class}
-	\vspace{20pt}
-	\textbf{Solution:} Split responsibilities into separate classes.
-	\begin{lstlisting}[style=JavaStyle]
-		public class Invoice {
-			private List<Item> items;
-			public double calculateTotal() { ... }
-		}
-		
-		public class InvoicePrinter {
-			public void print(Invoice invoice) { ... }
-		}
-		
-		public class InvoiceSaver {
-			public void saveToFile(Invoice invoice) { ... }
-		}
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{SRP Violation Example: User Class}
-	\vspace{20pt}
-	\textbf{Problem:} User class mixes data, validation, and email logic.
-	\begin{lstlisting}[style=JavaStyle]
-		public class User {
-			private String name;
-			private String email;
-			
-			public boolean isValidEmail() {
-				// validate format
-			}
-			
-			public void sendWelcomeEmail() {
-				// send email
-			}
-		}
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{SRP Refactored: User Class}
-	\vspace{20pt}
-	\textbf{Solution:} Each class has a single clear responsibility.
-	\begin{lstlisting}[style=JavaStyle]
-		public class User {
-			private String name;
-			private String email;
-			public String getEmail() { return email; }
-		}
-		
-		public class EmailValidator {
-			public boolean isValid(String email) { ... }
-		}
-		
-		public class EmailSender {
-			public void sendWelcomeEmail(String email) { ... }
-		}
-	\end{lstlisting}
-\end{frame}
-
-\section{Open/Closed Principle (OCP)}
-
-\begin{frame}[fragile]{OCP: Definition and Concept}
-	\vspace{20pt}
-	\textbf{Open/Closed Principle (OCP)} states that:
-	\begin{itemize}
-		\item Software entities (classes, modules, functions) should be \textbf{open for extension} but \textbf{closed for modification}.
-		\item You should be able to add new functionality without changing existing code.
-	\end{itemize}
-	
-	\textbf{Introduced by:} Bertrand Meyer
-	
-	\textbf{Common techniques:}
-	\begin{itemize}
-		\item Abstractions (interfaces, abstract classes)
-		\item Design patterns: \textit{Strategy}, \textit{Decorator}, \textit{Factory Method}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}[fragile]{OCP: Benefits and Drawbacks}
-	\vspace{20pt}
-	\textbf{Benefits of OCP:}
-	\begin{itemize}
-		\item Improves system stability
-		\item Makes the system easier to extend
-		\item Encourages reuse and modularity
-	\end{itemize}
-	
-	\textbf{Drawbacks:}
-	\begin{itemize}
-		\item May increase class/interface count
-		\item Adds abstraction overhead if used prematurely
-	\end{itemize}
-	
-	\textit{Use OCP progressively as the system evolves.}
-\end{frame}
-
-\begin{frame}[fragile]{OCP Violation: PaymentProcessor}
-	\vspace{20pt}
-	\textbf{Problem:} Every new payment type requires modifying the class.
-	\begin{lstlisting}[style=JavaStyle]
-		public class PaymentProcessor {
-			public void process(String paymentType) {
-				if (paymentType.equals("CreditCard")) {
-					// Process credit card
-				} else if (paymentType.equals("BankTransfer")) {
-					// Process bank transfer
-				}
-			}
-		}
-	\end{lstlisting}
-	\textit{Adding a new payment method (e.g., EWallet) means editing this class.}
-\end{frame}
-
-\begin{frame}[fragile]{OCP Refactored: PaymentProcessor}
-	\vspace{20pt}
-	\textbf{Solution:} Use interface to allow extension without modification.
-	\begin{lstlisting}[style=JavaStyle]
-		public interface PaymentMethod {
-			void process();
-		}
-
-		public class CreditCardPayment implements PaymentMethod {
-			public void process() { ... }
-		}
-		public class BankTransferPayment implements PaymentMethod {
-			public void process() { ... }
-		}
-		public class PaymentProcessor {
-			public void process(PaymentMethod method) {
-				method.process();
-			}
-		}
-	\end{lstlisting}
-	\textit{Now you can add EWalletPayment without changing existing code.}
-\end{frame}
-
-\begin{frame}[fragile]{OCP Violation: NotificationService}
-	\vspace{20pt}
-	\textbf{Problem:} New notification channels require editing the class.
-	\begin{lstlisting}[style=JavaStyle]
-		public class NotificationService {
-			public void send(String channel, String message) {
-				if (channel.equals("email")) {
-					// Send email
-				} else if (channel.equals("sms")) {
-					// Send SMS
-				}
-			}
-		}
-	\end{lstlisting}
-	\textit{Adding push notifications requires modifying this method.}
-\end{frame}
-
-\begin{frame}[fragile]{OCP Refactored: NotificationService}
-	\vspace{20pt}
-	\textbf{Solution:} Extract notifier behavior using an interface.
-	\begin{lstlisting}[style=JavaStyle]
-		public interface Notifier {
-			void send(String message);
-		}
-		
-		public class EmailNotifier implements Notifier {
-			public void send(String message) { ... }
-		}
-		public class SMSNotifier implements Notifier {
-			public void send(String message) { ... }
-		}
-		public class NotificationService {
-			public void sendNotification(Notifier notifier, String message) {
-				notifier.send(message);
-			}
-		}
-	\end{lstlisting}
-	\textit{Supports adding PushNotifier or others without modifying NotificationService.}
-\end{frame}
-
-\section{Liskov Substitution Principle (LSP)}
-
-\begin{frame}[fragile]{LSP Definition and Concept}
-	\vspace{20pt}
-	\textbf{Liskov Substitution Principle (LSP)} was introduced by Barbara Liskov (1987).
-	
-	\textbf{Definition:}
-	\begin{itemize}
-		\item Subclasses must be substitutable for their base classes without altering expected program behaviour.
-		\item Inheritance must respect the behavioural contract of the superclass.
-	\end{itemize}
-	
-	\textbf{Focus:} Behavioural correctness, not just structural compatibility.
-\end{frame}
-
-\begin{frame}[fragile]{LSP Benefits and Challenges}
-	\vspace{20pt}
-	\textbf{Benefits of LSP:}
-	\begin{itemize}
-		\item Safer inheritance and effective polymorphism
-		\item More predictable testing and documentation
-		\item Increased system reliability
-	\end{itemize}
-	
-	\textbf{Challenges:}
-	\begin{itemize}
-		\item Behavioural alignment between super- and subclass
-		\item Risk of forced generalisation or misleading abstraction
-	\end{itemize}
-	
-	\textit{Design contracts carefully to avoid silent violations.}
-\end{frame}
-
-\begin{frame}[fragile]{LSP Violation: Rectangle vs Square}
-	\vspace{20pt}
-	\textbf{Problem:} Square changes the behaviour of inherited setters.
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public class Rectangle {
-			protected int width, height;
-			public void setWidth(int width) { this.width = width; }
-			public void setHeight(int height) { this.height = height; }
-			public int getArea() { return width * height; }
-		}
-		
-		public class Square extends Rectangle {
-			public void setWidth(int width) {
-				this.width = width;
-				this.height = width;
-			}
-			public void setHeight(int height) {
-				this.width = height;
-				this.height = height;
-			}
-		}
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{LSP Violation in Practice}
-	\vspace{20pt}
-	\textbf{Test scenario: expects normal rectangle behaviour}
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public void resizeRectangle(Rectangle r) {
-			r.setWidth(5);
-			r.setHeight(10);
-			System.out.println("Expected area: 50, Actual area: " + r.getArea());
-		}
-	\end{lstlisting}
-	
-	\textit{If Square is passed, area will be 100 – violates expectations.}
-\end{frame}
-
-\begin{frame}[fragile]{LSP Refactor: Use Interface Instead}
-	\vspace{20pt}
-	\textbf{Solution:} Avoid inheritance; use a shared interface.
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public interface Shape {
-			int getArea();
-		}
-		
-		public class Rectangle implements Shape {
-			private int width, height;
-			public Rectangle(int w, int h) {
-				this.width = w;
-				this.height = h;
-			}
-			public int getArea() { return width * height; }
-		}
-		
-		public class Square implements Shape {
-			private int side;
-			public Square(int side) { this.side = side; }
-			public int getArea() { return side * side; }
-		}
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{LSP Violation: BankAccount Example}
-	\vspace{20pt}
-	\textbf{Problem:} Subclass overrides method with broken contract.
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public class BankAccount {
-			protected double balance;
-			public void deposit(double amount) { balance += amount; }
-			public void withdraw(double amount) { balance -= amount; }
-			public double getBalance() { return balance; }
-		}
-		
-		public class FixedDepositAccount extends BankAccount {
-			@Override
-			public void withdraw(double amount) {
-				throw new UnsupportedOperationException("Not allowed");
-			}
-		}
-	\end{lstlisting}
-\end{frame}
-
-\begin{frame}[fragile]{Code That Violates Substitution}
-	\vspace{20pt}
-	\textbf{Code that expects withdraw to always work}
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public void processWithdrawal(BankAccount account, double amount) {
-			account.withdraw(amount); // Will throw exception if FixedDepositAccount
-		}
-	\end{lstlisting}
-	
-	\textit{This breaks LSP because not all subclasses can honour the method.}
-\end{frame}
-
-\begin{frame}[fragile]{LSP Refactor: Use Specific Interface}
-	\vspace{20pt}
-	\textbf{Solution:} Only withdrawal-capable accounts implement the interface.
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public interface WithdrawableAccount {
-			void withdraw(double amount);
-			double getBalance();
-		}
-		
-		public class SavingsAccount implements WithdrawableAccount {
-			private double balance;
-			public void deposit(double amount) { balance += amount; }
-			public void withdraw(double amount) { balance -= amount; }
-			public double getBalance() { return balance; }
-		}
-		
-		public class FixedDepositAccount {
-			private double balance;
-			public void deposit(double amount) { balance += amount; }
-			public double getBalance() { return balance; }
-			// No withdraw method here
-		}
-	\end{lstlisting}
-\end{frame}
-
-\section{Interface Segregation Principle (ISP)}
-
-\begin{frame}[fragile]{ISP Definition and Concept}
-	\vspace{20pt}
-	\textbf{Interface Segregation Principle (ISP)} states that:
-	\begin{itemize}
-		\item Clients should not be forced to depend on methods they do not use.
-		\item Large interfaces should be split into smaller, role-specific interfaces.
-	\end{itemize}
-	
-	\textbf{Goal:} Encourage modular and focused design by avoiding unnecessary dependencies.
-	
-	\textit{Applies to:} Interface design, responsibility separation, and role-specific abstractions.
-\end{frame}
-
-\begin{frame}[fragile]{ISP Benefits and Drawbacks}
-	\vspace{20pt}
-	\textbf{Benefits of ISP:}
-	\begin{itemize}
-		\item Clear separation of concerns
-		\item Reduces ripple effects of interface changes
-		\item Easier unit testing and maintenance
-	\end{itemize}
-	
-	\textbf{Drawbacks:}
-	\begin{itemize}
-		\item Too many fragmented interfaces may reduce cohesion
-		\item Excessive splitting can increase complexity
-	\end{itemize}
-	
-	\textit{Balance segregation with meaningful grouping.}
-\end{frame}
-
-\begin{frame}[fragile]{ISP Violation: Multifunction Device}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public interface Machine {
-			void print(Document d);
-			void scan(Document d);
-			void fax(Document d);
-		}
-		
-		public class OldPrinter implements Machine {
-			public void print(Document d) { ... }
-			
-			public void scan(Document d) {
-				throw new UnsupportedOperationException();
-			}
-			
-			public void fax(Document d) {
-				throw new UnsupportedOperationException();
-			}
-		}
-	\end{lstlisting}
-	\textit{OldPrinter is forced to implement methods it doesn’t support.}
-\end{frame}
-
-\begin{frame}[fragile]{ISP Refactored: Split Interfaces}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public interface Printable {
-			void print(Document d);
-		}
-		
-		public interface Scannable {
-			void scan(Document d);
-		}
-		
-		public interface Faxable {
-			void fax(Document d);
-		}
-		
-		public class OldPrinter implements Printable {
-			public void print(Document d) { ... }
-		}
-	\end{lstlisting}
-	\textit{Classes now implement only what they actually support.}
-\end{frame}
-
-\begin{frame}[fragile]{ISP Violation: Generic User Role}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public interface User {
-			void viewCourse();
-			void teachCourse();
-			void manageSystem();
-		}
-		
-		public class Student implements User {
-			public void viewCourse() { ... }
-			
-			public void teachCourse() {
-				throw new UnsupportedOperationException();
-			}
-			
-			public void manageSystem() {
-				throw new UnsupportedOperationException();
-			}
-		}
-	\end{lstlisting}
-	\textit{Student is forced to depend on irrelevant operations.}
-\end{frame}
-
-\begin{frame}[fragile]{ISP Refactored: Role-Specific Interfaces}
-	\vspace{20pt}
-\begin{columns}[t]
-	\column{0.5\textwidth}
-	\begin{lstlisting}[style=JavaStyle]
-		public interface CourseViewer {
-			void viewCourse();
-		}
-		
-		public interface CourseInstructor {
-			void teachCourse();
-		}
-		
-		public interface SystemManager {
-			void manageSystem();
-		}
-		
-		public class Student implements CourseViewer {
-			public void viewCourse() { ... }
-		}
-	\end{lstlisting}
-	
-	\column{0.5\textwidth}
-	\begin{lstlisting}[style=JavaStyle,  firstnumber=16]
-		public class Lecturer 
-		implements CourseViewer, CourseInstructor {
-			public void viewCourse() { ... }
-			public void teachCourse() { ... }
-		}
-		
-		public class Admin 
-		implements CourseViewer, SystemManager {
-			public void viewCourse() { ... }
-			public void manageSystem() { ... }
-		}
-	\end{lstlisting}
-	\textit{Each class depends only on relevant behaviour. ISP is respected.}
+\vspace{8pt}
+They help teams adopt a shared vocabulary for common challenges in software design.
 \end{columns}
-
 \end{frame}
 
-\section{Dependency Inversion Principle (DIP)}
+\begin{frame}[fragile]{Design Pattern Categories}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Creational Patterns}
+\begin{itemize}
+\item Focus on object creation
+\item Improve flexibility and control
+\item Examples:
+\textit{Singleton, Factory Method, Abstract Factory}
+\end{itemize}
 
-\begin{frame}[fragile]{DIP Definition and Concept}
-	\vspace{20pt}
-	\textbf{Dependency Inversion Principle (DIP)} states:
-	\begin{enumerate}
-		\item High-level modules should not depend on low-level modules. Both should depend on abstractions.
-		\item Abstractions should not depend on details. Details should depend on abstractions.
-	\end{enumerate}
-	
-	\textbf{Goal:} Depend on interfaces or abstract classes, not concrete implementations.
-	
-	\textit{Common tools:} Interfaces, abstract classes, and dependency injection mechanisms.
+\textbf{Structural Patterns}
+\begin{itemize}
+\item Organise class \& object structures
+\item Enable scalable architecture
+\item Examples:
+\textit{Adapter, Composite, Decorator}
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Behavioral Patterns}
+\begin{itemize}
+\item Manage object interactions
+\item Simplify communication logic
+\item Examples:
+\textit{Strategy, Observer, Command}
+\end{itemize}
+
+\textbf{Key Point:}
+\begin{itemize}
+\item Categories reflect intent:
+creation, structure, and behaviour
+\end{itemize}
+\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{DIP Benefits and Drawbacks}
-	\vspace{20pt}
-	\textbf{Benefits of DIP:}
-	\begin{itemize}
-		\item Better separation between business logic and implementation details
-		\item Easier testing using mocks or stubs
-		\item More flexible and maintainable code
-	\end{itemize}
-	
-	\textbf{Drawbacks:}
-	\begin{itemize}
-		\item Increases architectural complexity
-		\item Can be overkill for small-scale systems
-	\end{itemize}
-	
-	\textit{Apply contextually based on system size and needs.}
+\begin{frame}[fragile]{Why Use Design Patterns?}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Strategic Benefits}
+\begin{itemize}
+\item \textbf{Reusability}:
+Same solution, multiple contexts
+\item \textbf{Readability \& Communication}:
+Named patterns improve team collaboration
+\item \textbf{Architectural Consistency}:
+Promotes predictable, unified design
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Engineering Impact}
+\begin{itemize}
+\item \textbf{Maintainability}: Easier updates with lower risk
+\item \textbf{Extensibility}: Supports Open/Closed Principle
+\item \textbf{Quality \& Longevity}: Reduces code duplication and complexity
+\end{itemize}
+
+\vspace{5pt}
+Design patterns enable clean, elegant, and sustainable software design.
+\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{DIP Violation: Hard Dependency}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public class EmailSender {
-			public void send(String message) { ... }
+\section{Creational Pattern: Singleton}
+
+\begin{frame}[fragile]{Singleton: Goal and Use Cases}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Goal:}
+\begin{itemize}
+\item Ensure a class has only one instance
+\item Provide global access point to that instance
+\end{itemize}
+
+\textbf{Typical Uses:}
+\begin{itemize}
+\item Global configuration manager
+\item System logger
+\item Database connection manager
+\item Cache controller
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Implementation Approach:}
+\begin{itemize}
+\item Hide constructor using \texttt{private}
+\item Provide static method to access the instance
+\end{itemize}
+
+\vspace{5pt}
+Useful when multiple instances may lead to inconsistency or conflicts.
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Singleton: Practical Examples}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Logger:}
+\begin{itemize}
+\item One central logger for all activities
+\item Prevents unnecessary duplication
+\end{itemize}
+
+\vspace{10pt}
+\textbf{Configuration Manager:}
+\begin{itemize}
+\item Stores paths, server addresses, network settings
+\item Loaded once and shared across system
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Pattern Characteristics:}
+\begin{itemize}
+\item Centralised instance management
+\item Controlled lifecycle
+\item Common in frameworks and platforms
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Singleton: Pros and Cons}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Advantages:}
+\begin{itemize}
+\item \textbf{Controlled instance:} Only one object exists
+\item \textbf{Global access:} Easy to reach from anywhere
+\item \textbf{Efficient:} Saves memory and resource reuse
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Disadvantages:}
+\begin{itemize}
+\item \textbf{Hard to test:} Global state hinders unit isolation
+\item \textbf{Violates SRP \& DIP:} Becomes overly responsible and tightly coupled
+\item \textbf{Thread safety issues:} May cause race conditions if not handled properly
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Singleton: Thread-Safety Pitfall}
+\vspace{10pt}
+\textbf{Problem:} Basic implementation fails in multithreaded environments
+
+\begin{lstlisting}[style=JavaStyle]
+public class Config {
+private static Config instance;
+
+private Config() {}
+
+public static Config getInstance() {
+	if (instance == null) {
+		instance = new Config();
+	}
+	return instance;
+}
+}
+\end{lstlisting}
+
+\vspace{5pt}
+Two threads may simultaneously enter \texttt{getInstance()} while \texttt{instance} is still \texttt{null}, creating two separate objects—breaking the singleton guarantee.
+\end{frame}
+
+
+\begin{frame}[fragile]{Java Implementation Overview}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Class Diagram Summary:}
+\begin{itemize}
+\item Constructor \texttt{Singleton()} is \texttt{private} to prevent direct instantiation.
+\item Static field \texttt{instance} holds the sole object.
+\item Static method \texttt{getInstance()} gives global access.
+\item Method \texttt{doSomething()} represents general operations.
+\end{itemize}
+
+\vspace{10pt}
+\textbf{Purpose:} Ensure only one object is created and accessed globally across the system.
+
+\column{0.5\textwidth}
+\begin{figure}[h]
+\centering
+\includegraphics[width=\linewidth]{../../figures/out/singleton.png}
+\end{figure}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{1. Simple Singleton (Not Thread-Safe)}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.4\textwidth}
+\textbf{Key Points:}
+\begin{itemize}
+\item Uses private constructor
+\item Provides static \texttt{getInstance()} method
+\item Easy to implement
+\item Not safe in multithreaded environments
+\end{itemize}
+
+\textbf{Drawback:}
+Two threads could both create an instance at the same time if accessed simultaneously.
+
+\column{0.6\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class SimpleSingleton {
+	private static SimpleSingleton instance;
+	
+	private SimpleSingleton() {}
+	
+	public static SimpleSingleton getInstance() {
+		if (instance == null) {
+			instance = new SimpleSingleton();
 		}
+		return instance;
+	}
+}
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{2. Thread-Safe Singleton (\texttt{synchronized})}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.4\textwidth}
+\textbf{Key Points:}
+\begin{itemize}
+\item Uses \texttt{synchronized} keyword
+\item Prevents race conditions during first instantiation
+\item Safer for concurrent use
+\end{itemize}
+
+\textbf{Trade-off:}
+Synchronisation adds overhead—affects performance if called frequently.
+
+\column{0.6\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class ThreadSafeSingleton {
+	private static ThreadSafeSingleton instance;
+	
+	private ThreadSafeSingleton() {}
+	
+	public static synchronized 
+	ThreadSafeSingleton getInstance() {
+		if (instance == null) {
+			instance = new ThreadSafeSingleton();
+		}
+		return instance;
+	}
+}
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{3. Double-Checked Locking}
+\vspace{20pt}
+\begin{columns}[T]
+\column{0.35\textwidth}
+\textbf{Purpose:}
+\begin{itemize}
+\item Combine performance and thread-safety
+\item Locking only occurs on first access
+\end{itemize}
+
+\textbf{Key Technique:}
+\begin{itemize}
+\item Uses \texttt{volatile} for visibility across threads
+\item Prevents multiple instance creation
+\end{itemize}
+
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class DoubleCheckedSingleton {
+	private static volatile 
+	DoubleCheckedSingleton instance;
+	
+	private DoubleCheckedSingleton() {}
+	
+	public static DoubleCheckedSingleton 
+	getInstance() {
+		if (instance == null) {
+			synchronized (DoubleCheckedSingleton.class) {
+				if (instance == null) {
+					instance = new DoubleCheckedSingleton();
+				}
+			}
+		}
+		return instance;
+	}
+}
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{4. Holder Idiom (Recommended)}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.4\textwidth}
+\textbf{Advantages:}
+\begin{itemize}
+\item Thread-safe by JVM class loading
+\item Lazy-loaded only on first use
+\item No need for \texttt{synchronized}
+\end{itemize}
+
+\textbf{JVM Guarantee:}
+Inner class is not loaded until referenced.
+
+\column{0.6\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class HolderSingleton {
+	private HolderSingleton() {}
+	
+	private static class SingletonHolder {
+		private static final HolderSingleton 
+		INSTANCE = new HolderSingleton();
+	}
+	
+	public static HolderSingleton getInstance() {
+		return SingletonHolder.INSTANCE;
+	}
+}
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{5. Enum-Based Singleton (Safest)}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.45\textwidth}
+\textbf{Why Use Enum:}
+\begin{itemize}
+\item Thread-safe by default
+\item Serialization-safe
+\item Easy to implement
+\end{itemize}
+
+\textbf{Limitation:}
+Cannot extend other classes.
+
+\textbf{Usage:}
+\begin{lstlisting}[style=JavaStyle]
+EnumSingleton.INSTANCE.doSomething();
+\end{lstlisting}
+
+\column{0.55\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public enum EnumSingleton {
+	INSTANCE;
+	
+	public void doSomething() {
+		System.out.println("Doing something...");
+	}
+}
+\end{lstlisting}
+\end{columns}
+\end{frame}
+
+\section{Creational Pattern: Factory Method}
+
+\begin{frame}[fragile]{Factory Method: Purpose and Context}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Goal:}
+\begin{itemize}
+\item Avoid direct dependency on concrete classes
+\item Define a method for creating objects, but let subclasses decide which class to instantiate
+\end{itemize}
+
+\textbf{Key Use Cases:}
+\begin{itemize}
+\item When object type is unknown at compile time
+\item When object creation requires complex logic
+\item To support the Open/Closed Principle
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Common Usage:}
+\begin{itemize}
+\item Frameworks define structure
+\item Developers provide specific implementations via subclassing
+\end{itemize}
+
+\vspace{5pt}
+Useful for building extensible and decoupled systems.
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Factory Method: Real-World Examples}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Example: GUI Framework}
+\begin{itemize}
+\item Abstract \texttt{Dialog} class defines \texttt{createButton()}
+\item \texttt{WindowsDialog} returns \texttt{WindowsButton}
+\item \texttt{LinuxDialog} returns \texttt{LinuxButton}
+\end{itemize}
+
+\textbf{Benefit:}
+Each platform defines its own button creation without altering the client code
+
+\column{0.5\textwidth}
+\textbf{Example: Transport Ordering System}
+\begin{itemize}
+\item Abstract \texttt{TransportFactory} defines \texttt{createTransport()}
+\item \texttt{CarFactory} creates \texttt{Car}
+\item \texttt{BikeFactory} creates \texttt{Bike}
+\end{itemize}
+
+\textbf{Benefit:}
+Client remains unaware of specific product classes
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Factory Method: Pros and Cons}
+\vspace{10pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Advantages:}
+\begin{itemize}
+\item \textbf{Flexible \& Extensible:} Add new products via subclassing
+\item \textbf{Supports SOLID:} Aligns with Open/Closed and Dependency Inversion
+\item \textbf{Cleaner client code:} No need to know concrete classes
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Disadvantages:}
+\begin{itemize}
+\item \textbf{Increased complexity:} Requires many subclasses
+\item \textbf{Harder to read:} Interface and hierarchy separation may confuse beginners
+\item \textbf{Overkill for simple cases:} Unnecessary when only a few object types are needed
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Java Code: Factory Method Overview}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Concept:}
+\begin{itemize}
+\item Abstract class defines factory method
+\item Subclasses decide which concrete object to create
+\item Client works with interface, not implementation
+\end{itemize}
+
+\textbf{Goal:} Decouple object creation from usage
+
+\vspace{5pt}
+\textbf{Use Case:} Transport system supporting car and bike
+
+\column{0.5\textwidth}
+\includegraphics[width=\linewidth]{../../figures/out/factory_method.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 1: Product Interface \& Implementations}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+// Product interface
+public interface Transport {
+	void deliver();
+}
+
+// Concrete products
+public class Car implements Transport {
+	public void deliver() {
+		System.out.println("Delivery by car.");
+	}
+}
+
+public class Bike implements Transport {
+	public void deliver() {
+		System.out.println("Delivery by bike.");
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item \texttt{Transport} defines a unified delivery behaviour.
+\item \texttt{Car} and \texttt{Bike} implement this interface.
+\item Promotes consistency and abstraction across transport types.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 2: Abstract Factory}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+// Abstract creator with factory method
+public abstract class TransportFactory {
+	public abstract Transport createTransport();
+	
+	public void planDelivery() {
+		Transport transport = createTransport();
+		transport.deliver();
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item \texttt{createTransport()} is the factory method.
+\item \texttt{planDelivery()} defines a fixed algorithm.
+\item The concrete object is determined by subclasses.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 3: Concrete Factories}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class CarFactory extends TransportFactory {
+	public Transport createTransport() {
+		return new Car();
+	}
+}
+
+public class BikeFactory extends TransportFactory {
+	public Transport createTransport() {
+		return new Bike();
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Each subclass defines the transport it creates.
+\item Enables switching types without touching core logic.
+\item Encourages extension with minimal modification.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 4: Client Code}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class Main {
+	public static void main(String[] args) {
+		TransportFactory factory;
 		
-		public class NotificationService {
-			private EmailSender sender = new EmailSender();
-			
-			public void notifyUser(String message) {
-				sender.send(message);
-			}
-		}
-	\end{lstlisting}
-	
-	\textit{High-level class depends directly on low-level detail.}
-\end{frame}
-
-\begin{frame}[fragile]{DIP Refactored: Use Interface and Injection}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public interface MessageSender {
-			void send(String message);
-		}
-		public class EmailSender implements MessageSender {
-			public void send(String message) { ... }
-		}
-		public class NotificationService {
-			private MessageSender sender;
-			
-			public NotificationService(MessageSender sender) {
-				this.sender = sender;
-			}
-			public void notifyUser(String message) {
-				sender.send(message);
-			}
-		}
-	\end{lstlisting}
-	
-	\textit{NotificationService depends on abstraction, not implementation.}
-\end{frame}
-
-\begin{frame}[fragile]{Violation: Service Uses Concrete Repository}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public class UserRepositoryImpl {
-			public User findById(int id) { ... }
-		}
+		factory = new CarFactory();
+		factory.planDelivery(); // Delivery by car.
 		
-		public class UserService {
-			private UserRepositoryImpl repository = new UserRepositoryImpl();
-			
-			public User getUser(int id) {
-				return repository.findById(id);
-			}
-		}
-	\end{lstlisting}
-	
-	\textit{UserService is tightly coupled to UserRepositoryImpl.}
+		factory = new BikeFactory();
+		factory.planDelivery(); // Delivery by bike.
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Client only depends on the abstract factory.
+\item No need to modify client logic to support new types.
+\item Supports Open/Closed Principle effectively.
+\end{itemize}
+\end{columns}
 \end{frame}
 
-\begin{frame}[fragile]{DIP Refactored: Inject via Abstraction}
-	\vspace{20pt}
-	\begin{lstlisting}[style=JavaStyle]
-		public interface UserRepository {
-			User findById(int id);
-		}
-		public class UserRepositoryImpl implements UserRepository {
-			public User findById(int id) { ... }
-		}
-		public class UserService {
-			private UserRepository repository;
-			
-			public UserService(UserRepository repository) {
-				this.repository = repository;
-			}
-			public User getUser(int id) {
-				return repository.findById(id);
-			}
-		}
-	\end{lstlisting}
-	
-	\textit{Now UserService works with any UserRepository implementation, including mocks.}
+
+\begin{frame}[fragile]{Discussion and Design Impact}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{SOLID Support:}
+\begin{itemize}
+\item \textbf{Open/Closed}: Extendable via new factories
+\item \textbf{DIP}: Depends on \texttt{Transport} interface
+\end{itemize}
+
+\textbf{Framework Friendly:}
+\begin{itemize}
+\item Framework defines the structure
+\item Developers inject specific behaviour via subclassing
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Benefits:}
+\begin{itemize}
+\item Clear separation between creator and product
+\item Improved modularity and testability
+\end{itemize}
+
+\textbf{Trade-offs:}
+\begin{itemize}
+\item Adds class hierarchy complexity
+\item May feel over-engineered for simple needs
+\end{itemize}
+\end{columns}
 \end{frame}
 
-\section{Conclusions}
 
-\begin{frame}[fragile]{Conclusion: Strengths and Impact of SOLID}
+\section{Creational Pattern: Abstract Factory}
+
+\begin{frame}[fragile]{Abstract Factory: Purpose and Context}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Purpose:}
+\begin{itemize}
+\item Provide an interface for creating families of related objects.
+\item Clients do not depend on specific concrete classes.
+\item Ensure compatibility between objects created by the same factory.
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Common Use Cases:}
+\begin{itemize}
+\item Systems that support multiple configurations or themes.
+\item Object creation involves complex interdependencies.
+\item Easily switch object families without modifying main code.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Use Case 1: Cross-Platform GUI Toolkit}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Example: GUI Abstraction}
+\begin{itemize}
+\item Products: \texttt{Button}, \texttt{Checkbox}
+\item Windows: \texttt{WinButton}, \texttt{WinCheckbox}
+\item macOS: \texttt{MacButton}, \texttt{MacCheckbox}
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Benefits:}
+\begin{itemize}
+\item Change theme by switching factory
+\item No changes required in application logic
+\item Supports consistent user interface design
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Use Case 2: Multi-Database Support}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Example: Database Toolkit}
+\begin{itemize}
+\item Products: \texttt{Connection}, \texttt{QueryBuilder}
+\item Factories: \texttt{MySQLFactory}, \texttt{PostgresFactory}, \texttt{OracleFactory}
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Advantages:}
+\begin{itemize}
+\item Vendor-specific implementations are encapsulated
+\item Switching backend only requires changing the factory
+\item Promotes code reuse and isolation
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Benefits of Abstract Factory}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{1. Product Consistency}
+\begin{itemize}
+\item Ensures all UI components belong to the same design system
+\item \textit{e.g.} \texttt{WinFactory} ensures all widgets match Windows style
+\end{itemize}
+
+\textbf{2. SOLID Principles}
+\begin{itemize}
+\item Supports \textbf{DIP}: Client depends on abstraction
+\item Supports \textbf{OCP}: Add new families via new factories
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{3. No Concrete Class Coupling}
+\begin{itemize}
+\item Clients don’t need to know specific implementations
+\item \texttt{factory.createButton()} hides whether it’s Mac or Win
+\end{itemize}
+
+\textbf{4. Easy Reconfiguration}
+\begin{itemize}
+\item Switch entire look-and-feel with one factory instance
+\item \textit{e.g.} switch to \texttt{DarkThemeFactory} to enable dark mode
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Drawbacks of Abstract Factory}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{1. Class Explosion}
+\begin{itemize}
+\item Requires many interfaces and classes
+\item \textit{e.g.} 3 variants × 2 products = 9+ classes/interfaces
+\end{itemize}
+
+\textbf{2. Overhead for Simple Cases}
+\begin{itemize}
+\item Not ideal if only one component type varies
+\item \textit{e.g.} replacing just \texttt{Button} doesn’t need a full factory
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{3. High Abstraction Barrier}
+\begin{itemize}
+\item Involves composition of multiple design patterns
+\item Difficult for beginners to understand the structure
+\item Requires knowledge of interfaces, inheritance, and delegation
+\end{itemize}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}[fragile]{Abstract Factory: Implementation Overview}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{Overview:}
+\begin{itemize}
+\item Interface-based product family: \texttt{Button}, \texttt{Checkbox}
+\item \texttt{GUIFactory} defines creation of both
+\item Concrete factories: \texttt{WinFactory}, \texttt{MacFactory}
+\end{itemize}
+
+\column{0.5\textwidth}
+\includegraphics[width=\linewidth]{../../figures/out/factory_abstract.png}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 1: Interfaces \& Implementations}
+\vspace{20pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+// Product 1: Button
+public interface Button {
+	void render();
+}
+
+public class WinButton implements Button {
+	public void render() {
+		System.out.println("Render Windows-style button.");
+	}
+}
+
+public class MacButton implements Button {
+	public void render() {
+		System.out.println("Render macOS-style button.");
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item \texttt{Button} defines the abstraction.
+\item Concrete implementations render platform-specific styles.
+\item Allows interchangeable use in UI code.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 2: Second Product Family: Checkbox}
+\vspace{20pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+// Product 2: Checkbox
+public interface Checkbox {
+	void check();
+}
+
+public class WinCheckbox implements Checkbox {
+	public void check() {
+		System.out.println("Check Windows-style checkbox.");
+	}
+}
+
+public class MacCheckbox implements Checkbox {
+	public void check() {
+		System.out.println("Check macOS-style checkbox.");
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Abstracts checkbox logic for different platforms.
+\item Follows the same structure as the button product.
+\item Consistent usage across the client.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 3: Abstract Factory Interface}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+// Abstract Factory
+public interface GUIFactory {
+	Button createButton();
+	Checkbox createCheckbox();
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Common interface to produce product families.
+\item Client interacts only with this factory.
+\item Promotes consistency and abstraction.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 4: Concrete Factories}
+\vspace{20pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+// Windows variant
+public class WinFactory implements GUIFactory {
+	public Button createButton() {
+		return new WinButton();
+	}
+	public Checkbox createCheckbox() {
+		return new WinCheckbox();
+	}
+}
+
+// macOS variant
+public class MacFactory implements GUIFactory {
+	public Button createButton() {
+		return new MacButton();
+	}
+	public Checkbox createCheckbox() {
+		return new MacCheckbox();
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Each factory produces compatible product sets.
+\item Switching factories changes the full UI theme.
+\item Supports platform scalability.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Step 5: Client Code with Abstract Factory}
+\vspace{30pt}
+\begin{columns}[T]
+\column{0.65\textwidth}
+\begin{lstlisting}[style=JavaStyle]
+public class Application {
+	private Button button;
+	private Checkbox checkbox;
+	public Application(GUIFactory factory) {
+		button = factory.createButton();
+		checkbox = factory.createCheckbox();
+	}
+	public void renderUI() {
+		button.render();
+		checkbox.check();
+	}
+	public static void main(String[] args) {
+		GUIFactory factory;
+		factory = new WinFactory();
+		Application app1 = new Application(factory);
+		app1.renderUI();
+		factory = new MacFactory();
+		Application app2 = new Application(factory);
+		app2.renderUI();
+	}
+}
+\end{lstlisting}
+
+\column{0.35\textwidth}
+\begin{itemize}
+\item Client depends only on \texttt{GUIFactory}.
+\item Easily change style without altering core logic.
+\item Greatly simplifies code maintenance and testing.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Discussion: Design Structure and Benefits}
+\vspace{5pt}
+\begin{columns}[T]
+\column{0.5\textwidth}
+\textbf{What This Structure Provides:}
+\begin{itemize}
+\item Full abstraction from platform-specific UI code.
+\item Reusable logic for rendering and interaction.
+\item Easy testing and swapping of factories.
+\end{itemize}
+
+\column{0.5\textwidth}
+\textbf{Resulting Benefits:}
+\begin{itemize}
+\item Highly modular and scalable architecture.
+\item Supports Open/Closed and Dependency Inversion.
+\item Facilitates theme-switching and platform adaptation.
+\end{itemize}
+\end{columns}
+\end{frame}
+
+\begin{frame}[fragile]{Conceptual Explanation}
 	\vspace{20pt}
 	\begin{columns}[T]
 		\column{0.5\textwidth}
-		\textbf{SOLID helps build:}
+		\textbf{Factory Method}
 		\begin{itemize}
-			\item Modular systems
-			\item Low coupling between components
-			\item Scalable and flexible designs
+			\item Provides a single method like \texttt{createProduct()}.
+			\item Subclasses decide which concrete object is created.
+			\item Focus: Flexibility and delegation to subclasses.
+			\item Suitable for when you need to instantiate one type of object.
 		\end{itemize}
-		
-		\textbf{Core Principles:}
-		\begin{itemize}
-			\item Single Responsibility Principle
-			\item Open/Closed Principle
-			\item Liskov Substitution Principle
-			\item Interface Segregation Principle
-			\item Dependency Inversion Principle
-		\end{itemize}
+		\textit{Example:} \texttt{CarFactory} and \texttt{BikeFactory} implement \texttt{createTransport()}.
 		
 		\column{0.5\textwidth}
-		\textbf{Non-functional qualities improved:}
+		\textbf{Abstract Factory}
 		\begin{itemize}
-			\item Maintainability, Testability, Scalability, Reusability, Flexibility
+			\item Groups related factory methods together.
+			\item Each concrete factory creates a full family of compatible objects.
+			\item Focus: Consistency and product compatibility.
 		\end{itemize}
-		
-		\textbf{Examples:}
-		\begin{itemize}
-			\item Interface Segregation reduces side effects
-			\item Open/Closed allows safe extension
-			\item Dependency Inversion enables mock injection
-		\end{itemize}
-		\textbf{Key Benefits: Stable architecture with consistent behaviour}
+		\textit{Example:} \texttt{GUIFactory} defines \texttt{createButton()}, \texttt{createCheckbox()};  
+		\texttt{WinFactory} and \texttt{MacFactory} implement them consistently.
 	\end{columns}
 \end{frame}
 
+\begin{frame}[fragile]{Factory Method vs Abstract Factory}
+	\vspace{20pt}
+	\centering
+	\scriptsize
+	
+	\arrayrulecolor{black} % border color
+	\setlength{\arrayrulewidth}{0.5pt} % thin border lines
+	\rowcolors{2}{gray!10}{white}
+	\begin{tabular}{|p{0.16\textwidth}|p{0.28\textwidth}|p{0.45\textwidth}|}
+		\hline
+		\rowcolor{gray!20} 
+		\textbf{Aspect} & \textbf{Factory Method} & \textbf{Abstract Factory} \\
+		\hline
+		Purpose & Define concrete object in subclass & Create a family of related, compatible products \\
+		\hline
+		Product Type & Single product & Multiple related products \\
+		\hline
+		Structure & One factory method & Multiple factory methods in one interface \\
+		\hline
+		Number of Products & Usually one & Multiple (higher complexity) \\
+		\hline
+		Product Polymorphism & One hierarchy & Multiple hierarchies \\
+		\hline
+		Client Dependency & On one abstract product & On multiple abstract products \\
+		\hline
+		Common Example & \texttt{createTransport()} & \texttt{createButton()}, \texttt{createCheckbox()} \\
+		\hline
+		Complexity & Simpler & More complex \\
+		\hline
+	\end{tabular}
+\end{frame}
 
-\begin{frame}[fragile]{Conclusion: Trade-offs and Practical Advice}
+
+\begin{frame}[fragile]{When to Use Each Pattern}
 	\vspace{20pt}
 	\begin{columns}[T]
 		\column{0.5\textwidth}
-		\textbf{Main drawbacks:}
+		\textbf{Use Factory Method when:}
 		\begin{itemize}
-			\item More abstraction layers
-			\item Increased number of classes
-			\item Reduced readability if overused
+			\item You need to create only one type of object.
+			\item You want to defer or vary object instantiation in subclasses.
+			\item You prefer minimal structure and lower complexity.
 		\end{itemize}
-		
-		\textbf{Performance impact:}
-		\begin{itemize}
-			\item More memory usage
-			\item Slight runtime dispatch cost
-			\item Dependency Injection frameworks may introduce latency
-		\end{itemize}
+		\textit{Example:} Choosing \texttt{Car} or \texttt{Bike} at runtime via \texttt{createTransport()}.
 		
 		\column{0.5\textwidth}
-		\textbf{When to apply:}
+		\textbf{Use Abstract Factory when:}
 		\begin{itemize}
-			\item Medium to large systems
-			\item When flexibility and testing matter
-			\item When maintenance is a long-term goal
+			\item The system requires several related objects.
+			\item You want to enforce consistency across product families.
+			\item You need to switch entire configurations (e.g., light/dark theme).
 		\end{itemize}
-		
-		\textbf{Final remark:}
-		\begin{itemize}
-			\item SOLID is a guideline, not a rule
-			\item Apply pragmatically based on context
-			\item Balance clarity, performance, and design purity
-		\end{itemize}
+		\textit{Example:} Replacing all UI components by changing from \texttt{WinFactory} to \texttt{MacFactory}.
 	\end{columns}
 \end{frame}
+
+\section{Conclusion}
+
+\begin{frame}[fragile]{Conclusion}
+	\vspace{20pt}
+	This chapter introduced three essential creational patterns:
+	
+	\vspace{10pt}
+	\begin{itemize}
+		\item \textbf{Singleton}: Guarantees a single global instance.
+		\item \textbf{Factory Method}: Defers object creation to subclasses.
+		\item \textbf{Abstract Factory}: Creates families of related objects consistently.
+	\end{itemize}
+	
+	\vspace{10pt}
+	These patterns support modularity, consistency, and key design principles like dependency inversion and scalability. Choosing the right pattern depends on the system’s context and architectural goals.
+\end{frame}
+
 
 \end{document}

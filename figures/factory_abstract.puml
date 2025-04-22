@@ -50,14 +50,14 @@ class Application {
 }
 
 ' Relationships
-GUIFactory <|.. WinFactory
-GUIFactory <|.. MacFactory
+' GUIFactory <|.. WinFactory
+' GUIFactory <|.. MacFactory
 
-Button <|.. WinButton
-Button <|.. MacButton
+' Button <|.. WinButton
+' Button <|.. MacButton
 
-Checkbox <|.. WinCheckbox
-Checkbox <|.. MacCheckbox
+' Checkbox <|.. WinCheckbox
+' Checkbox <|.. MacCheckbox
 
 Application --> GUIFactory : uses
 Application --> Button

@@ -25,10 +25,10 @@ class BikeFactory extends TransportFactory {
 }
 
 Main --> TransportFactory : uses
-TransportFactory <|-- CarFactory
-TransportFactory <|-- BikeFactory
-Transport <|.. Car
-Transport <|.. Bike
+' TransportFactory <|-- CarFactory
+' TransportFactory <|-- BikeFactory
+' Transport <|.. Car
+' Transport <|.. Bike
 TransportFactory ..> Transport : creates
 
 note right of TransportFactory::createTransport
