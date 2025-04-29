@@ -1,0 +1,22 @@
+@startuml
+interface Cloneable
+
+abstract class Shape {
+  - color : String
+  + setColor(color : String) : void
+  + getColor() : String
+  + draw() : void
+  + clone() : Shape
+}
+
+class Circle {
+  + draw() : void
+}
+
+class Main {
+  + main(args : String[]) : void
+}
+
+Cloneable <|.left. Shape
+Shape <|-left- Circle
+@enduml

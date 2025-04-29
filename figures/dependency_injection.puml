@@ -1,0 +1,21 @@
+@startuml
+interface MessageService {
+  + sendMessage(message : String, recipient : String) : void
+}
+
+class EmailService implements MessageService {
+  + sendMessage(message : String, recipient : String) : void
+}
+
+class NotificationService {
+  - messageService : MessageService
+  + NotificationService(messageService : MessageService)
+  + send(message : String, recipient : String) : void
+}
+
+class Main {
+  + main(args : String[]) : void
+}
+
+MessageService <-- NotificationService : uses
+@enduml

@@ -1,0 +1,22 @@
+@startuml
+
+class Computer {
+  - CPU : String
+  - RAM : String
+  - wifiEnabled : boolean
+  --
+  + printSpecs() : void
+}
+
+class Builder {
+  - CPU : String
+  - RAM : String
+  - wifiEnabled : boolean
+  --
+  + Builder(CPU : String, RAM : String)
+  + setWiFiEnabled(wifiEnabled : boolean) : Builder
+  + build() : Computer
+}
+
+Computer <-left- Builder : builds
+@enduml
