@@ -1,0 +1,36 @@
+@startuml 
+' left to right direction
+skinparam dpi 300 
+
+class Client {
+    +main(String[] args)
+}
+
+class HomeTheaterFacade {
+    -audio: AudioSystem
+    -video: VideoSystem
+    -lights: LightingSystem
+    +HomeTheaterFacade(a: AudioSystem, v: VideoSystem, l: LightingSystem)
+    +watchMovie(): void
+}
+
+class AudioSystem {
+    +on(): void
+    +setVolume(level: int): void
+}
+
+class VideoSystem { 
+    +on(): void
+    +setInput(source: String): void
+}
+
+class LightingSystem {
+    +dim(level: int): void
+}
+
+Client -right-> HomeTheaterFacade : uses
+HomeTheaterFacade -up-> AudioSystem
+HomeTheaterFacade -up-> VideoSystem
+HomeTheaterFacade -down-> LightingSystem
+
+@enduml

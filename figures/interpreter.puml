@@ -1,0 +1,36 @@
+@startuml
+'left to right direction
+skinparam dpi 300
+
+interface Expression {
+  +interpret(): int
+}
+
+class NumberExpression {
+  -number: int
+  +interpret(): int
+}
+
+class AddExpression {
+  -left: Expression
+  -right: Expression
+  +interpret(): int
+}
+
+class SubtractExpression {
+  -left: Expression
+  -right: Expression
+  +interpret(): int
+}
+
+class Main {
+  +main(args: String[]): void
+}
+
+Expression <|.. NumberExpression
+Expression <|.. AddExpression
+Expression <|.. SubtractExpression
+
+Main -right-> Expression : builds & evaluates
+
+@enduml

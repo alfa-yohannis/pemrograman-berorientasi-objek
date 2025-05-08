@@ -1,0 +1,29 @@
+@startuml
+left to right direction
+skinparam dpi 300
+
+interface Shape {
+    +draw(color: String): void
+}
+
+class Circle {
+    -radius: int = 5
+    -type: String = "Circle"
+    +draw(color: String): void
+}
+
+class ShapeFactory {
+    -circleMap: Map<String, Shape>
+    +getCircle(): Shape
+}
+
+class Main {
+    +main(args: String[]): void
+}
+
+Shape <|.. Circle
+Main --> ShapeFactory : calls getCircle()
+ShapeFactory --> Circle : creates (if null)
+Main --> Shape : draw(color)
+
+@enduml

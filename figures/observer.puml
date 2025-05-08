@@ -1,0 +1,37 @@
+@startuml
+
+interface Subject {
+  +registerObserver(o: Observer)
+  +removeObserver(o: Observer)
+  +notifyObservers()
+}
+
+interface Observer {
+  +update(temperature: float, humidity: float, pressure: float)
+}
+
+class WeatherStation {
+  -observers: List<Observer>
+  -temperature: float
+  -humidity: float
+  -pressure: float
+  +registerObserver(o: Observer)
+  +removeObserver(o: Observer)
+  +notifyObservers()
+  +setMeasurements(temp: float, hum: float, pres: float)
+}
+
+class CurrentConditionsDisplay {
+  +update(temperature: float, humidity: float, pressure: float)
+}
+
+class Main {
+  +main(args: String[]): void
+}
+
+Subject <|.. WeatherStation
+Observer <|.. CurrentConditionsDisplay
+Main --> WeatherStation
+Main --> CurrentConditionsDisplay
+
+@enduml
