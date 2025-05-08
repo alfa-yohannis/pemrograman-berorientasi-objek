@@ -1,0 +1,32 @@
+@startuml 
+left to right direction
+skinparam dpi 300
+
+interface FileSystemNode {
+    +print(indent: String)
+    +getSize(): int
+}
+
+class File implements FileSystemNode {
+    -name: String
+    -size: int
+    +print(indent: String)
+    +getSize(): int
+}
+
+class Directory implements FileSystemNode {
+    -name: String
+    -children: List<FileSystemNode>
+    +add(node: FileSystemNode)
+    +print(indent: String)
+    +getSize(): int
+}
+
+class Main {
+    +main(args: String[]): void
+}
+
+Directory *-- "0..*" FileSystemNode : contains
+Main --> FileSystemNode : uses
+
+@enduml

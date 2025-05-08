@@ -1,0 +1,42 @@
+@startuml
+' left to right direction
+' skinparam dpi 300 
+
+' --- Implementor ---
+interface DrawingAPI {
+    + drawCircle(x: double, y: double, radius: double)
+}
+
+class ConsoleDrawingAPI implements DrawingAPI {
+    + drawCircle(x: double, y: double, radius: double)
+}
+
+class FileDrawingAPI implements DrawingAPI {
+    + drawCircle(x: double, y: double, radius: double)
+}
+
+' --- Abstraction ---
+abstract class Shape {
+    # drawingAPI: DrawingAPI
+    + draw(): void
+    + resizeByPercentage(pct: double): void
+}
+
+class Circle extends Shape {
+    - x: double
+    - y: double
+    - radius: double
+    + draw(): void
+    + resizeByPercentage(pct: double): void
+}
+
+class Main {
+    + main(args: String[]): void
+}
+
+' --- Relationships ---
+
+Shape *-up- DrawingAPI : uses
+
+Main --> Shape : uses
+@enduml

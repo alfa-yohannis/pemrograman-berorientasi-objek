@@ -1,0 +1,37 @@
+@startuml DecoratorPattern
+left to right direction
+skinparam dpi 300
+ 
+interface TextComponent {
+    + render(): String
+}
+
+class PlainText implements TextComponent {
+    - text: String
+    + render(): String
+}
+
+abstract class TextDecorator implements TextComponent {
+    - inner: TextComponent
+    + render(): String
+}
+
+class UnderlineDecorator extends TextDecorator {
+    + render(): String
+}
+
+class ColorDecorator extends TextDecorator {
+    - color: String
+    + render(): String
+}
+
+class Main {
+    + main(args: String[]): void
+}
+
+
+UnderlineDecorator --> TextComponent : wraps
+ColorDecorator --> TextComponent : wraps
+Main --> TextComponent : uses
+
+@enduml
