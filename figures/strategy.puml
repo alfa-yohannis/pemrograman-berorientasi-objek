@@ -1,0 +1,36 @@
+@startuml
+left to right direction
+skinparam dpi 300
+
+interface DiscountStrategy {
+    +calculate(totalAmount: double): double
+}
+
+class PercentageDiscount implements DiscountStrategy {
+    -percentage: double
+    +PercentageDiscount(percentage: double)
+    +calculate(totalAmount: double): double
+}
+
+class FixedDiscount implements DiscountStrategy {
+    -amount: double
+    +FixedDiscount(amount: double)
+    +calculate(totalAmount: double): double
+}
+
+class Checkout {
+    -discountStrategy: DiscountStrategy
+    +Checkout(discountStrategy: DiscountStrategy)
+    +getFinalAmount(total: double): double
+}
+
+class Main {
+    +main(args: String[]): void
+}
+
+' DiscountStrategy <|.. PercentageDiscount
+' DiscountStrategy <|.. FixedDiscount
+Checkout --> DiscountStrategy
+Main --> Checkout
+
+@enduml

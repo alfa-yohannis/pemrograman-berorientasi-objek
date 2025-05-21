@@ -1,6 +1,11 @@
 \chapter{Pola Desain Perilaku 1}
 
 
+
+\section{Pendahuluan}
+Pola desain perilaku (\textit{behavioral design patterns}) merupakan pendekatan pemrograman berorientasi objek yang fokus pada bagaimana objek saling berinteraksi dan bertukar tanggung jawab secara dinamis. Bab ini membahas empat pola penting—\textit{Interpreter}, \textit{Observer}, \textit{Strategy}, dan \textit{Command}—yang masing-masing dirancang untuk menangani kebutuhan yang berbeda, mulai dari interpretasi ekspresi, penyebaran notifikasi antar objek, pemilihan algoritma yang dapat diganti saat runtime, hingga pembungkusan aksi sebagai objek. Pemahaman pola-pola ini akan membantu pengembang membangun sistem yang modular, fleksibel, dan mudah dipelihara.
+
+
 \section{Interpreter}
 
 \subsection{Tujuan dan Konteks Penggunaan}
@@ -279,7 +284,7 @@ Pola \textit{Observer} menawarkan mekanisme yang efektif untuk mengatur komunika
 	\item \textbf{Urutan notifikasi tidak terjamin:} Observer biasanya diberi tahu tanpa urutan yang pasti, yang bisa menjadi masalah jika ada ketergantungan antar observer dalam pengolahan data.
 \end{itemize}
 
-Secara keseluruhan, pola \textit{Observer} sangat berguna untuk membangun sistem yang reaktif, modular, dan mudah diperluas. Namun, harus digunakan dengan kehati-hatian dalam sistem besar dan kompleks untuk menghindari masalah skalabilitas dan pemelihar
+Secara keseluruhan, pola \textit{Observer} sangat berguna untuk membangun sistem yang reaktif, modular, dan mudah diperluas. Namun, harus digunakan dengan kehati-hatian dalam sistem besar dan kompleks untuk menghindari masalah skalabilitas dan pemeliharaan.
 
 
 \subsection{Implementasi dalam Java}
@@ -372,5 +377,397 @@ Pada contoh di atas:
 
 Pendekatan ini menunjukkan kekuatan pola \textit{Observer} dalam menciptakan sistem yang reaktif dan loosely-coupled, memungkinkan klien menambahkan atau menghapus observer tanpa mengubah kode subjek.
 
+
+\section{Strategy}
+
+\subsection{Tujuan dan Konteks Penggunaan}
+
+Pola \textit{Strategy} adalah pola desain perilaku yang bertujuan untuk memisahkan algoritma dari objek yang menggunakannya, dengan mendefinisikan satu keluarga algoritma, membungkus masing-masing algoritma dalam kelas terpisah, dan membuatnya dapat dipertukarkan secara dinamis. Dengan pendekatan ini, pola \textit{Strategy} memungkinkan objek untuk mengubah perilakunya tanpa harus mengubah kode internalnya.
+
+Tujuan utama dari pola ini adalah untuk:
+\begin{itemize}
+	\item Menghindari pengulangan kode dan struktur kondisional yang kompleks seperti \texttt{if-else} atau \texttt{switch-case}.
+	\item Meningkatkan fleksibilitas dengan memungkinkan pemilihan algoritma yang tepat pada waktu eksekusi.
+	\item Memisahkan tanggung jawab antara objek utama dan logika algoritma yang dapat berubah-ubah.
+\end{itemize}
+
+Struktur utama dari pola \textit{Strategy} terdiri dari:
+\begin{itemize}
+	\item \textbf{Strategy (Interface):} Mendefinisikan antarmuka umum untuk semua algoritma atau perilaku.
+	\item \textbf{ConcreteStrategy:} Implementasi spesifik dari strategi atau algoritma.
+	\item \textbf{Context:} Objek yang menggunakan strategi tertentu dan menyediakan antarmuka kepada klien. Objek ini dapat mengatur strategi secara dinamis.
+\end{itemize}
+
+Pola \textit{Strategy} sangat cocok digunakan dalam situasi berikut:
+\begin{itemize}
+	\item Terdapat banyak algoritma atau variasi logika yang serupa, dan ingin dikelola secara bersih dan modular.
+	\item Ingin mengikuti prinsip \textit{Open/Closed} — terbuka untuk ekstensi tetapi tertutup untuk modifikasi.
+	\item Perubahan atau penambahan perilaku algoritmik perlu dilakukan tanpa mengubah kelas utama atau klien.
+\end{itemize}
+
+Pola ini banyak digunakan dalam sistem yang membutuhkan fleksibilitas perilaku, seperti sistem pembayaran (berbagai metode pembayaran), kompresi file (berbagai algoritma kompresi), atau perhitungan biaya pengiriman (berbagai strategi penghitungan tarif). Dengan memisahkan setiap perilaku ke dalam strategi tersendiri, sistem menjadi lebih mudah dikembangkan, diuji, dan dipelihara.
+
+\subsection{Contoh Kasus Penggunaan}
+
+Pola \textit{Strategy} digunakan dalam berbagai konteks di mana terdapat beberapa cara untuk melakukan suatu tugas atau algoritma, dan pemilihan strategi dilakukan secara dinamis berdasarkan kondisi atau kebutuhan klien. Dengan memisahkan algoritma ke dalam kelas-kelas terpisah, pola ini membuat kode lebih modular, mudah diperluas, dan mudah diuji. Berikut beberapa contoh konkret penggunaannya:
+
+\textbf{1. Sistem Pembayaran Online} \\
+Dalam aplikasi e-commerce, pengguna bisa memilih berbagai metode pembayaran seperti kartu kredit, e-wallet, atau transfer bank. Setiap metode memiliki logika pemrosesan yang berbeda. Dengan pola \textit{Strategy}, sistem dapat mengenkapsulasi setiap metode pembayaran dalam kelas strategi yang berbeda, sehingga pemilihan metode pembayaran bisa dilakukan tanpa mengubah logika utama transaksi.
+
+\textbf{2. Algoritma Kompresi File} \\
+Aplikasi yang mendukung berbagai algoritma kompresi seperti ZIP, RAR, atau 7z dapat menggunakan pola \textit{Strategy} untuk mengabstraksi proses kompresi. Kelas utama tinggal memilih strategi kompresi yang sesuai berdasarkan preferensi pengguna atau jenis file.
+
+\textbf{3. Perhitungan Tarif Pengiriman} \\
+Layanan logistik atau e-commerce sering kali memiliki berbagai cara menghitung tarif pengiriman, seperti tarif berdasarkan berat, volume, atau jarak. Dengan pola \textit{Strategy}, setiap metode perhitungan tarif dapat diimplementasikan sebagai strategi yang dapat dipilih dan digunakan sesuai dengan jenis layanan pengiriman.
+
+\textbf{4. Sorting atau Pencarian dengan Kriteria Berbeda} \\
+Dalam sistem manajemen data, pengguna bisa memilih untuk mengurutkan data berdasarkan nama, tanggal, atau prioritas. Masing-masing strategi pengurutan dapat diimplementasikan dalam kelas berbeda, dan digunakan secara dinamis oleh komponen yang membutuhkan.
+
+\textbf{5. Game AI dengan Strategi Berbeda} \\
+Dalam permainan seperti catur atau strategi waktu nyata (RTS), pola \textit{Strategy} digunakan untuk mengatur perilaku AI seperti menyerang, bertahan, atau mencari sumber daya. Masing-masing strategi dapat diterapkan sesuai dengan kondisi permainan yang sedang berlangsung.
+
+\textbf{6. Sistem Promosi atau Diskon} \\
+Sistem penjualan atau kasir dapat menawarkan diskon dengan berbagai strategi seperti diskon persentase, diskon tetap, atau beli satu gratis satu. Dengan pola \textit{Strategy}, setiap jenis diskon dapat dikemas sebagai strategi yang dapat dipilih dan diterapkan terhadap total belanja.
+
+Dengan contoh-contoh di atas, pola \textit{Strategy} menunjukkan fleksibilitas dan kekuatannya dalam mengorganisir berbagai pilihan perilaku atau algoritma tanpa mencemari logika utama aplikasi. Pendekatan ini mendukung sistem yang mudah dikembangkan dan disesuaikan untuk kebutuhan masa depan.
+
+\subsection{Kelebihan dan Kekurangan}
+
+Pola \textit{Strategy} memberikan solusi elegan terhadap permasalahan variasi perilaku atau algoritma dalam aplikasi dengan cara mendekompisisikannya ke dalam kelas-kelas terpisah yang dapat dipertukarkan. Meski fleksibel, pola ini juga memiliki beberapa keterbatasan yang perlu diperhatikan.
+
+\textbf{Kelebihan:}
+\begin{itemize}
+	\item \textbf{Memisahkan perilaku dari konteks:} Strategi mengisolasi algoritma atau logika tertentu dari kelas utama, sehingga kelas utama menjadi lebih bersih dan fokus pada tanggung jawab utamanya.
+	
+	\item \textbf{Mendukung prinsip Open/Closed:} Kode terbuka untuk ekstensi tetapi tertutup untuk modifikasi. Artinya, strategi baru dapat ditambahkan tanpa harus mengubah kode yang sudah ada.
+	
+	\item \textbf{Mengurangi duplikasi kode:} Dengan mengenkapsulasi algoritma dalam kelas terpisah, pola ini mencegah duplikasi logika yang sama di banyak tempat.
+	
+	\item \textbf{Meningkatkan fleksibilitas:} Perilaku dapat diganti selama runtime, misalnya dalam program interaktif atau sistem konfigurasi dinamis.
+	
+	\item \textbf{Mendukung unit testing:} Setiap strategi dapat diuji secara terpisah, karena strategi merupakan entitas independen dengan antarmuka eksplisit.
+\end{itemize}
+
+\textbf{Kekurangan:}
+\begin{itemize}
+	\item \textbf{Peningkatan jumlah kelas:} Setiap strategi perlu diimplementasikan dalam kelas terpisah, sehingga dalam kasus dengan banyak algoritma, jumlah kelas bisa bertambah secara signifikan.
+	
+	\item \textbf{Kompleksitas konfigurasi:} Pengelolaan dan pemilihan strategi yang tepat pada runtime bisa menjadi kompleks, terutama bila strategi melibatkan dependensi tambahan.
+	
+	\item \textbf{Tidak menjamin pertukaran penuh:} Meskipun strategi memiliki antarmuka yang sama, tidak semua strategi selalu cocok untuk semua konteks. Kesalahan pemilihan strategi dapat menyebabkan perilaku tak diinginkan.
+	
+	\item \textbf{Overhead tambahan:} Karena strategi dipanggil melalui komposisi objek (delegasi), akan ada overhead tambahan dalam hal pemanggilan fungsi dibandingkan logika langsung.
+	
+	\item \textbf{Tidak ideal untuk algoritma sederhana:} Untuk algoritma yang sangat kecil atau hanya satu baris, penggunaan pola ini bisa terasa terlalu rumit dan tidak efisien.
+\end{itemize}
+
+Secara keseluruhan, pola \textit{Strategy} sangat tepat digunakan ketika sistem perlu mendukung berbagai variasi algoritma atau perilaku yang dapat diganti tanpa menyentuh kode utama. Namun, penggunaannya harus disesuaikan dengan kompleksitas dan kebutuhan sistem untuk menghindari desain yang terlalu abstrak.
+
+\subsection{Implementasi dalam Java}
+
+Implementasi pola \textit{Strategy} dalam Java melibatkan pembuatan antarmuka untuk mendefinisikan perilaku atau algoritma yang dapat diganti-ganti, serta kelas-kelas konkret yang mengimplementasikan strategi tersebut. Objek \texttt{Context} kemudian menggunakan strategi tertentu yang dipilih saat runtime.
+
+Pola ini memungkinkan klien untuk dengan mudah mengganti strategi tanpa mengubah logika utama dalam kelas \texttt{Context}. Pemilihan strategi dapat dilakukan melalui konfigurasi, input pengguna, atau logika internal sistem.
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=\textwidth]{../figures/out/strategy.png}
+	\caption{Struktur Pola Strategy}
+	\label{fig:strategy}
+\end{figure}
+
+Contoh berikut menunjukkan bagaimana pola \textit{Strategy} diterapkan dalam konteks sistem perhitungan diskon, di mana strategi diskon dapat diganti-ganti (Gambar~\ref{fig:strategy}).
+
+\begin{lstlisting}[style=JavaStyle, caption={Antarmuka Strategy}, label={lst:strategy-interface}]
+	public interface DiscountStrategy {
+		double calculate(double totalAmount);
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Strategi Diskon Persentase}, label={lst:strategy-percentage}]
+	public class PercentageDiscount implements DiscountStrategy {
+		private double percentage;
+		
+		public PercentageDiscount(double percentage) {
+			this.percentage = percentage;
+		}
+		
+		@Override
+		public double calculate(double totalAmount) {
+			return totalAmount * (1 - percentage);
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Strategi Diskon Tetap}, label={lst:strategy-fixed}]
+	public class FixedDiscount implements DiscountStrategy {
+		private double amount;
+		
+		public FixedDiscount(double amount) {
+			this.amount = amount;
+		}
+		
+		@Override
+		public double calculate(double totalAmount) {
+			return totalAmount - amount;
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Context: Kasir atau Checkout}, label={lst:strategy-context}]
+	public class Checkout {
+		private DiscountStrategy discountStrategy;
+		
+		public Checkout(DiscountStrategy discountStrategy) {
+			this.discountStrategy = discountStrategy;
+		}
+		
+		public double getFinalAmount(double total) {
+			return discountStrategy.calculate(total);
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Client: Menggunakan Strategi Diskon}, label={lst:strategy-client}]
+	public class Main {
+		public static void main(String[] args) {
+			double total = 100.0;
+			
+			// Menggunakan strategi diskon 20%
+			DiscountStrategy percentage = new PercentageDiscount(0.2);
+			Checkout checkout1 = new Checkout(percentage);
+			System.out.println("Total setelah diskon persentase: " + checkout1.getFinalAmount(total));
+			
+			// Menggunakan strategi diskon tetap Rp 15
+			DiscountStrategy fixed = new FixedDiscount(15.0);
+			Checkout checkout2 = new Checkout(fixed);
+			System.out.println("Total setelah diskon tetap: " + checkout2.getFinalAmount(total));
+		}
+	}
+\end{lstlisting}
+
+Penjelasan dari implementasi di atas:
+\begin{itemize}
+	\item \texttt{DiscountStrategy} adalah antarmuka yang mendefinisikan kontrak perhitungan diskon.
+	\item \texttt{PercentageDiscount} dan \texttt{FixedDiscount} adalah implementasi dari strategi diskon yang berbeda.
+	\item \texttt{Checkout} adalah \texttt{Context} yang menggunakan strategi yang diberikan untuk menghitung harga akhir.
+	\item Strategi dapat diganti secara dinamis tergantung kondisi, tanpa harus mengubah kode dalam kelas \texttt{Checkout}.
+\end{itemize}
+
+Pendekatan ini sangat cocok untuk sistem yang membutuhkan variasi perilaku seperti sistem promosi, algoritma kompresi, perhitungan ongkir, strategi pergerakan karakter dalam game, dan lain sebagainya.
+
+
+\section{Command}
+
+\subsection{Tujuan dan Konteks Penggunaan}
+
+Pola \textit{Command} adalah pola desain perilaku yang bertujuan untuk mengenkapsulasi sebuah permintaan (request) sebagai objek, sehingga memungkinkan parameterisasi terhadap klien dengan berbagai permintaan, antrean permintaan, serta kemampuan untuk membatalkan atau mencatat permintaan tersebut. Pola ini memisahkan objek yang mengeluarkan perintah dari objek yang mengeksekusi perintah, dengan cara membungkus perintah tersebut dalam bentuk objek.
+
+Tujuan utama dari pola ini adalah untuk:
+\begin{itemize}
+	\item Memisahkan pengirim perintah (\texttt{Invoker}) dari penerima perintah (\texttt{Receiver}).
+	\item Memungkinkan penyimpanan, log, atau pembatalan perintah (undo/redo).
+	\item Mendukung antrean tugas atau makro (sekumpulan perintah).
+\end{itemize}
+
+Struktur utama dari pola \textit{Command} melibatkan:
+\begin{itemize}
+	\item \textbf{Command (Interface):} Mendefinisikan antarmuka umum untuk semua perintah, biasanya dengan metode \texttt{execute()}.
+	\item \textbf{ConcreteCommand:} Implementasi spesifik dari perintah, yang menyimpan referensi ke objek \texttt{Receiver} dan memanggil metode yang sesuai.
+	\item \textbf{Receiver:} Objek aktual yang berisi logika bisnis untuk mengeksekusi perintah.
+	\item \textbf{Invoker:} Objek yang meminta perintah untuk dieksekusi, tanpa mengetahui detail implementasi atau penerima.
+	\item \textbf{Client:} Objek yang mengatur hubungan antara perintah, penerima, dan pengirim.
+\end{itemize}
+
+Pola ini sangat bermanfaat dalam situasi berikut:
+\begin{itemize}
+	\item Ketika sistem memerlukan antrean atau penjadwalan tugas.
+	\item Untuk mendukung operasi undo/redo atau logging histori aksi.
+	\item Ketika banyak jenis permintaan berbeda perlu dipicu secara dinamis.
+	\item Untuk membuat sistem makro, di mana beberapa perintah dieksekusi dalam satu langkah.
+\end{itemize}
+
+Contoh aplikasi umum dari pola \textit{Command} meliputi:
+\begin{itemize}
+	\item Sistem GUI: setiap aksi tombol atau menu direpresentasikan sebagai objek \texttt{Command} yang dapat dijalankan, dibatalkan, atau direkam.
+	\item Sistem remote control: tombol remote dikaitkan dengan berbagai perintah terhadap perangkat (TV, AC, dll).
+	\item Sistem perintah dalam game atau editor teks: mendukung undo, redo, atau makro pengguna.
+	\item Arsitektur task queue atau job scheduler.
+\end{itemize}
+
+Dengan menerapkan pola ini, sistem memperoleh fleksibilitas tinggi untuk menambahkan, mengelola, dan melacak berbagai jenis perintah tanpa mengubah logika utama pemrosesan.
+
+\subsection{Contoh Kasus Penggunaan}
+
+Pola \textit{Command} digunakan secara luas dalam berbagai sistem perangkat lunak yang memerlukan pemisahan antara pemicu perintah dan eksekutor perintah, serta ketika perintah perlu dicatat, dibatalkan, atau dijalankan ulang. Dengan membungkus aksi sebagai objek, pola ini memberikan fleksibilitas dalam pengelolaan dan orkestrasi perintah. Berikut adalah beberapa contoh nyata penerapannya:
+
+\textbf{1. Aksi Tombol dalam GUI (Graphical User Interface)} \\
+Dalam aplikasi desktop seperti editor teks atau pengolah gambar, setiap klik pada tombol seperti \texttt{Save}, \texttt{Copy}, atau \texttt{Undo} dipetakan ke objek \texttt{Command}. Hal ini memungkinkan sistem mencatat urutan perintah pengguna dan mendukung fitur undo/redo.
+
+\textbf{2. Sistem Remote Control} \\
+Dalam sistem pengendali jarak jauh (misalnya pengontrol rumah pintar), setiap tombol pada remote dapat dikaitkan dengan objek \texttt{Command} yang mewakili tindakan seperti menyalakan lampu, menutup tirai, atau mengaktifkan AC. Perintah-perintah ini bisa disimpan, dijadwalkan, atau dijalankan secara berurutan (makro).
+
+\textbf{3. Manajemen Perintah dalam Game} \\
+Dalam game strategi atau simulasi, setiap aksi pemain (misalnya, \texttt{Move}, \texttt{Attack}, \texttt{Build}) direpresentasikan sebagai objek \texttt{Command}. Ini memungkinkan penyimpanan aksi pemain untuk replay, undo, atau skrip otomatis.
+
+\textbf{4. Fitur Undo/Redo dalam Editor} \\
+Pola \textit{Command} sangat cocok untuk mendukung operasi \texttt{Undo} dan \texttt{Redo}. Setiap perubahan terhadap dokumen dibungkus sebagai objek \texttt{Command}, dan sistem menyimpan stack perintah yang telah dijalankan. Ketika pengguna menekan \texttt{Undo}, perintah terakhir dibatalkan dengan memanggil metode \texttt{undo()} yang sesuai.
+
+\textbf{5. Eksekusi Perintah dalam Antrian Tugas (Job Queue)} \\
+Dalam sistem batch processing atau job scheduler, setiap tugas dikemas sebagai objek \texttt{Command} dan dimasukkan ke dalam antrean. Scheduler hanya perlu mengeksekusi perintah satu per satu tanpa mengetahui isi atau penerima dari perintah tersebut.
+
+\textbf{6. Orkestrasi Layanan dalam Sistem Terdistribusi} \\
+Dalam sistem mikrolayanan, pola ini dapat digunakan untuk mengatur rangkaian tindakan lintas layanan, seperti dalam implementasi \textit{Saga Pattern}, di mana setiap langkah transaksi dikemas sebagai perintah dan bisa dijalankan atau dikompensasi.
+
+\textbf{7. Logging dan Audit Trail} \\
+Karena setiap perintah dikemas sebagai objek dengan informasi lengkap, sistem dapat dengan mudah mencatat (log) setiap perintah yang dijalankan beserta parameter-parameternya, sehingga mendukung audit dan pelacakan sistem.
+
+Pola \textit{Command} memberikan pendekatan yang bersih dan fleksibel dalam menangani aksi terprogram, memungkinkan pengendalian penuh atas pelaksanaan perintah, pengurutan, pembatalan, hingga pencatatan histori aktivitas pengguna atau sistem.
+
+
+\subsection{Kelebihan dan Kekurangan}
+
+Pola \textit{Command} menyediakan cara yang terstruktur untuk mengenkapsulasi permintaan sebagai objek, sehingga memungkinkan fleksibilitas tinggi dalam pengelolaan perintah. Namun, seperti semua pola desain, penerapannya memiliki kelebihan dan kekurangan yang perlu dipertimbangkan berdasarkan konteks sistem yang dikembangkan.
+
+\textbf{Kelebihan:}
+\begin{itemize}
+	\item \textbf{Pemisahan tanggung jawab (separation of concerns):} Pola ini memisahkan objek pengirim perintah (\texttt{Invoker}) dari objek penerima perintah (\texttt{Receiver}). Hal ini mendukung prinsip \textit{loose coupling} dan meningkatkan modularitas.
+	
+	\item \textbf{Mendukung undo/redo:} Karena perintah dikemas dalam objek mandiri, sistem dapat menyimpan riwayat perintah yang telah dieksekusi, dan melakukan \texttt{undo()} atau \texttt{redo()} dengan mudah.
+	
+	\item \textbf{Mudah dikembangkan dan diperluas:} Penambahan jenis perintah baru cukup dengan membuat kelas \texttt{ConcreteCommand} baru tanpa mengubah kode pengirim atau penerima.
+	
+	\item \textbf{Mendukung makro dan scripting:} Beberapa objek \texttt{Command} dapat digabungkan dalam satu objek makro untuk mengeksekusi rangkaian tindakan secara berurutan.
+	
+	\item \textbf{Dapat diantrikan atau dijadwalkan:} Karena perintah dikemas sebagai objek, ia dapat dimasukkan ke antrean, diproses secara paralel, atau dijadwalkan untuk eksekusi di masa mendatang (seperti dalam sistem batch atau worker thread).
+\end{itemize}
+
+\textbf{Kekurangan:}
+\begin{itemize}
+	\item \textbf{Proliferasi kelas:} Setiap perintah biasanya memerlukan satu kelas konkret, yang dapat meningkatkan jumlah kelas secara signifikan jika jumlah perintah banyak.
+	
+	\item \textbf{Overhead implementasi:} Untuk tugas-tugas yang sederhana, menggunakan pola ini dapat terasa berlebihan dan memperumit desain dibandingkan sekadar memanggil metode secara langsung.
+	
+	\item \textbf{Kebutuhan penyimpanan status tambahan:} Untuk mendukung \texttt{undo()}, kelas \texttt{Command} harus menyimpan status sebelumnya, yang dapat menambah kompleksitas dan konsumsi memori.
+	
+	\item \textbf{Membutuhkan pemetaan tambahan di klien:} Klien bertanggung jawab untuk mengatur hubungan antara tombol (atau pemicu) dan perintah, sehingga menambah langkah konfigurasi.
+	
+	\item \textbf{Kesulitan dalam debugging dan tracing:} Karena aksi tersebar dalam objek-objek \texttt{Command} yang terpisah, melacak eksekusi sistem bisa lebih kompleks dibandingkan pendekatan prosedural langsung.
+\end{itemize}
+
+Secara keseluruhan, pola \textit{Command} sangat ideal untuk aplikasi yang membutuhkan eksekusi terstruktur atas perintah, terutama jika sistem membutuhkan fitur undo/redo, logging, atau orkestrasi tugas kompleks. Namun, dalam sistem kecil dengan logika perintah yang sederhana, pola ini bisa memperkenalkan kompleksitas yang tidak perlu.
+
+
+\subsection{Implementasi dalam Java}
+
+Implementasi pola \textit{Command} dalam Java dilakukan dengan cara mendefinisikan antarmuka \texttt{Command} yang merepresentasikan perintah, serta membuat kelas-kelas konkret yang mengimplementasikan aksi spesifik. Setiap perintah menyimpan referensi ke objek \texttt{Receiver}, yaitu objek yang memiliki logika aktual untuk melakukan aksi. Objek \texttt{Invoker} akan menyimpan dan menjalankan perintah tanpa mengetahui detail implementasinya.
+
+\begin{figure}[h]
+	\centering
+		\includegraphics[width=\textwidth]{../figures/out/command.png}
+	\caption{Struktur Pola Command}
+	\label{fig:command}
+\end{figure}
+
+Contoh berikut menunjukkan implementasi pola \textit{Command} dalam sistem kendali perangkat rumah pintar, di mana pengguna dapat menyalakan dan mematikan perangkat seperti lampu.
+
+\begin{lstlisting}[style=JavaStyle, caption={Antarmuka Command}, label={lst:command-interface}]
+	public interface Command {
+		void execute();
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Receiver: Lampu}, label={lst:command-receiver}]
+	public class Light {
+		public void turnOn() {
+			System.out.println("Lampu dinyalakan.");
+		}
+		
+		public void turnOff() {
+			System.out.println("Lampu dimatikan.");
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={ConcreteCommand: Perintah Menyalakan Lampu}, label={lst:command-on}]
+	public class TurnOnCommand implements Command {
+		private Light light;
+		
+		public TurnOnCommand(Light light) {
+			this.light = light;
+		}
+		
+		@Override
+		public void execute() {
+			light.turnOn();
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={ConcreteCommand: Perintah Mematikan Lampu}, label={lst:command-off}]
+	public class TurnOffCommand implements Command {
+		private Light light;
+		
+		public TurnOffCommand(Light light) {
+			this.light = light;
+		}
+		
+		@Override
+		public void execute() {
+			light.turnOff();
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Invoker: Remote Control}, label={lst:command-invoker}]
+	public class RemoteControl {
+		private Command command;
+		
+		public void setCommand(Command command) {
+			this.command = command;
+		}
+		
+		public void pressButton() {
+			command.execute();
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Client: Penggunaan Command}, label={lst:command-client}]
+	public class Main {
+		public static void main(String[] args) {
+			Light livingRoomLight = new Light();
+			
+			Command lightOn = new TurnOnCommand(livingRoomLight);
+			Command lightOff = new TurnOffCommand(livingRoomLight);
+			
+			RemoteControl remote = new RemoteControl();
+			
+			remote.setCommand(lightOn);
+			remote.pressButton(); // Output: Lampu dinyalakan.
+			
+			remote.setCommand(lightOff);
+			remote.pressButton(); // Output: Lampu dimatikan.
+		}
+	}
+\end{lstlisting}
+
+Penjelasan dari struktur implementasi di atas:
+\begin{itemize}
+	\item \texttt{Command} adalah antarmuka generik yang mendefinisikan metode \texttt{execute()}.
+	\item \texttt{Light} bertindak sebagai \texttt{Receiver} yang melakukan logika aktual (menyalakan/mematikan lampu).
+	\item \texttt{TurnOnCommand} dan \texttt{TurnOffCommand} adalah implementasi konkret dari perintah yang memanggil aksi pada \texttt{Receiver}.
+	\item \texttt{RemoteControl} adalah \texttt{Invoker} yang mengeksekusi perintah yang telah disetel tanpa mengetahui detail implementasinya.
+	\item \texttt{Main} sebagai klien, bertanggung jawab untuk mengatur hubungan antara perintah dan penerima, serta menginisialisasi proses.
+\end{itemize}
+
+Dengan pola ini, perintah dapat dengan mudah diperluas (misalnya untuk menambah \texttt{DimLightCommand}, \texttt{SetTimerCommand}), disusun dalam antrian, atau ditambahkan ke dalam sistem undo/redo untuk mengelola perilaku interaktif yang kompleks secara fleksibel.
+
+
+
+
 \section{Kesimpulan}
-Pola \textit{Interpreter} menyediakan kerangka kerja untuk memproses ekspresi atau bahasa domain secara sistematis. Terakhir, \textit{Observer} mendukung arsitektur reaktif dan event-driven dengan menyebarkan notifikasi perubahan status secara otomatis ke banyak objek terkait.
+
+Keempat pola desain perilaku yang dibahas dalam bab ini — \textit{Interpreter}, \textit{Observer}, \textit{Strategy}, dan \textit{Command} — masing-masing menawarkan solusi terhadap jenis masalah perilaku yang berbeda dalam pengembangan perangkat lunak. Pola \textit{Interpreter} digunakan untuk mengevaluasi ekspresi atau bahasa domain dengan struktur gramatika yang stabil. Pola \textit{Observer} memungkinkan penyebaran notifikasi otomatis ke banyak objek saat terjadi perubahan status, mendukung sistem reaktif dan event-driven.
+
+Sementara itu, pola \textit{Strategy} memisahkan algoritma dari konteks penggunaannya agar dapat diganti secara dinamis tanpa mengubah logika inti, sangat berguna dalam sistem dengan banyak variasi perilaku. Pola \textit{Command} membungkus aksi sebagai objek sehingga mendukung fitur undo/redo, penjadwalan, dan pemrosesan terpisah. Pemilihan pola yang tepat akan membantu menciptakan sistem yang modular, fleksibel, dan mudah dipelihara sesuai kebutuhan arsitektural dan fungsional aplikasi.

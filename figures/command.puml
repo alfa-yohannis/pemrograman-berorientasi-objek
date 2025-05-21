@@ -1,0 +1,50 @@
+@startuml
+left to right direction
+skinparam dpi 300
+
+' Interface Command
+interface Command {
+    +execute(): void
+}
+
+' Receiver
+class Light {
+    +turnOn(): void
+    +turnOff(): void
+}
+
+' Concrete Commands
+class TurnOnCommand implements Command {
+    -light: Light
+    +TurnOnCommand(light: Light)
+    +execute(): void
+}
+
+class TurnOffCommand implements Command {
+    -light: Light
+    +TurnOffCommand(light: Light)
+    +execute(): void
+}
+
+' Invoker
+class RemoteControl {
+    -command: Command
+    +setCommand(command: Command): void
+    +pressButton(): void
+}
+
+' Client
+class Main {
+    +main(args: String[]): void
+}
+
+' Relationships
+TurnOnCommand --> Light
+TurnOffCommand --> Light
+RemoteControl --> Command
+Main --> RemoteControl
+Main --> TurnOnCommand
+Main --> TurnOffCommand
+Main --> Light
+
+@enduml
