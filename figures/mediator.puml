@@ -1,0 +1,43 @@
+@startuml
+skinparam dpi 300
+left to right direction
+
+interface DialogMediator {
+    +notify(sender: Component, event: String)
+}
+
+abstract class Component {
+    -mediator: DialogMediator
+    +Component(mediator: DialogMediator)
+}
+
+class TextBox {
+    -text: String
+    +setText(value: String)
+    +getText(): String
+}
+
+class Button {
+    +click()
+}
+
+class FormMediator {
+    -submitButton: Button
+    -inputField: TextBox
+    +setComponents(button: Button, input: TextBox)
+    +notify(sender: Component, event: String)
+}
+
+class Main
+
+DialogMediator <|-- FormMediator
+Component <|-- TextBox
+Component <|-- Button
+FormMediator --> Button : manages
+FormMediator --> TextBox : manages
+TextBox --> DialogMediator : uses
+Button --> DialogMediator : uses
+Main --> FormMediator
+Main --> Button
+Main --> TextBox
+@enduml

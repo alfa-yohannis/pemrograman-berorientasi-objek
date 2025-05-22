@@ -1,0 +1,33 @@
+@startuml
+skinparam dpi 300
+left to right direction
+
+abstract class SupportHandler {
+  -next: SupportHandler
+  +setNext(next: SupportHandler)
+  +handleRequest(requestType: String)
+}
+
+class TechnicalSupportHandler {
+  +handleRequest(requestType: String)
+}
+
+class BillingSupportHandler {
+  +handleRequest(requestType: String)
+}
+
+class GeneralSupportHandler {
+  +handleRequest(requestType: String)
+}
+
+class Main
+
+SupportHandler <|-- TechnicalSupportHandler
+SupportHandler <|-- BillingSupportHandler
+SupportHandler <|-- GeneralSupportHandler
+
+Main --> SupportHandler : uses
+TechnicalSupportHandler --> SupportHandler : next
+BillingSupportHandler --> SupportHandler : next
+
+@enduml

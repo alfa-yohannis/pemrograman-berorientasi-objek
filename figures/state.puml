@@ -1,0 +1,58 @@
+@startuml
+skinparam dpi 300
+left to right direction
+
+interface State {
+  +insertMoney()
+  +selectDestination()
+  +printTicket()
+}
+
+class IdleState {
+  -machine: TicketMachine
+  +insertMoney()
+  +selectDestination()
+  +printTicket()
+}
+
+class SelectingState {
+  -machine: TicketMachine
+  +insertMoney()
+  +selectDestination()
+  +printTicket()
+}
+
+class PaidState {
+  -machine: TicketMachine
+  +insertMoney()
+  +selectDestination()
+  +printTicket()
+}
+
+class TicketMachine {
+  -idleState: State
+  -selectingState: State
+  -paidState: State
+  -currentState: State
+  +setState(state: State)
+  +insertMoney()
+  +selectDestination()
+  +printTicket()
+  +getIdleState(): State
+  +getSelectingState(): State
+  +getPaidState(): State
+}
+
+State <|.. IdleState
+State <|.. SelectingState
+State <|.. PaidState
+
+TicketMachine --> State : currentState
+TicketMachine --> IdleState
+TicketMachine --> SelectingState
+TicketMachine --> PaidState
+
+IdleState --> TicketMachine
+SelectingState --> TicketMachine
+PaidState --> TicketMachine
+@enduml

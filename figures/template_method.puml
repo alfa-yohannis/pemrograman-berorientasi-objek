@@ -1,0 +1,32 @@
+@startuml
+skinparam dpi 300
+left to right direction
+
+abstract class Beverage {
+    +prepareRecipe()
+    +boilWater()
+    +pourInCup()
+    #brew()
+    #addCondiments()
+    #customerWantsCondiments()
+}
+
+class Tea {
+    +brew()
+    +addCondiments()
+}
+
+class Coffee {
+    +brew()
+    +addCondiments()
+    +customerWantsCondiments()
+}
+
+class Main
+
+Beverage <|-- Tea
+Beverage <|-- Coffee
+
+Main --> Beverage : uses
+
+@enduml
