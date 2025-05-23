@@ -392,6 +392,56 @@ public class IdleState implements State {
 \small \texttt{IdleState} hanya menerima uang dan berpindah ke \texttt{SelectingState}.
 \end{frame}
 
+\begin{frame}[fragile]{State: ConcreteState SelectingState}
+\vspace{20pt}
+\begin{lstlisting}[style=JavaStyle]
+public class SelectingState implements State {
+	private TicketMachine machine;
+	public SelectingState(TicketMachine machine) {
+		this.machine = machine;
+	}
+	@Override
+	public void insertMoney() {
+		System.out.println("Uang sudah dimasukkan.");
+	}
+	@Override
+	public void selectDestination() {
+		System.out.println("Tujuan dipilih.");
+		machine.setState(machine.getPaidState());
+	}
+	@Override
+	public void printTicket() {
+		System.out.println("Pilih tujuan terlebih dahulu.");
+	}
+}
+\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]{State: ConcreteState PaidState}
+\vspace{20pt}
+\begin{lstlisting}[style=JavaStyle]
+public class PaidState implements State {
+	private TicketMachine machine;
+	public PaidState(TicketMachine machine) {
+		this.machine = machine;
+	}
+	@Override
+	public void insertMoney() {
+		System.out.println("Pembayaran sudah dilakukan.");
+	}
+	@Override
+	public void selectDestination() {
+		System.out.println("Tujuan sudah dipilih.");
+	}
+	@Override
+	public void printTicket() {
+		System.out.println("Mencetak tiket...");
+		machine.setState(machine.getIdleState());
+	}
+}
+\end{lstlisting}
+\end{frame}
+
 \begin{frame}[fragile]{State: Context TicketMachine}
 	\vspace{10pt}
 \begin{columns}[T]
@@ -439,6 +489,24 @@ public class TicketMachine {
 \small \texttt{TicketMachine} menyimpan dan mendelegasikan aksi ke status aktif.
 \end{frame}
 
+\begin{frame}[fragile]{State: Client Demonstrasi}
+\begin{lstlisting}[style=JavaStyle]
+public class Main {
+	public static void main(String[] args) {
+		TicketMachine machine = new TicketMachine();
+		
+		// Mulai dari IdleState
+		machine.insertMoney(); // pindah ke SelectingState
+		machine.selectDestination(); // pindah ke PaidState
+		machine.printTicket(); // kembali ke IdleState
+		
+		// Jalur tidak valid
+		machine.printTicket(); // tidak bisa tanpa insertMoney
+		machine.selectDestination(); // tidak bisa tanpa insertMoney
+	}
+}
+\end{lstlisting}
+\end{frame}
 
 
 \section{Pola Chain of Responsibility}

@@ -351,6 +351,58 @@ Bayangkan sebuah mesin tiket dengan tiga status: \texttt{Idle}, \texttt{Selectin
 	}
 \end{lstlisting}
 
+\begin{lstlisting}[style=JavaStyle, caption={ConcreteState: SelectingState}]
+	public class SelectingState implements State {
+		private TicketMachine machine;
+		
+		public SelectingState(TicketMachine machine) {
+			this.machine = machine;
+		}
+		
+		@Override
+		public void insertMoney() {
+			System.out.println("Uang sudah dimasukkan.");
+		}
+		
+		@Override
+		public void selectDestination() {
+			System.out.println("Tujuan dipilih.");
+			machine.setState(machine.getPaidState());
+		}
+		
+		@Override
+		public void printTicket() {
+			System.out.println("Pilih tujuan terlebih dahulu.");
+		}
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={ConcreteState: PaidState}]
+	public class PaidState implements State {
+		private TicketMachine machine;
+		
+		public PaidState(TicketMachine machine) {
+			this.machine = machine;
+		}
+		
+		@Override
+		public void insertMoney() {
+			System.out.println("Pembayaran sudah dilakukan.");
+		}
+		
+		@Override
+		public void selectDestination() {
+			System.out.println("Tujuan sudah dipilih.");
+		}
+		
+		@Override
+		public void printTicket() {
+			System.out.println("Mencetak tiket...");
+			machine.setState(machine.getIdleState());
+		}
+	}
+\end{lstlisting}
+
 \begin{lstlisting}[style=JavaStyle, caption={Context: TicketMachine}]
 	public class TicketMachine {
 		private State idleState;
@@ -386,6 +438,23 @@ Bayangkan sebuah mesin tiket dengan tiga status: \texttt{Idle}, \texttt{Selectin
 		public State getIdleState() { return idleState; }
 		public State getSelectingState() { return selectingState; }
 		public State getPaidState() { return paidState; }
+	}
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle, caption={Client: Demonstrasi Perpindahan State}]
+	public class Main {
+		public static void main(String[] args) {
+			TicketMachine machine = new TicketMachine();
+			
+			// Mulai dari IdleState
+			machine.insertMoney(); // pindah ke SelectingState
+			machine.selectDestination(); // pindah ke PaidState
+			machine.printTicket(); // kembali ke IdleState
+			
+			// Jalur tidak valid
+			machine.printTicket(); // tidak bisa tanpa insertMoney
+			machine.selectDestination(); // tidak bisa tanpa insertMoney
+		}
 	}
 \end{lstlisting}
 
