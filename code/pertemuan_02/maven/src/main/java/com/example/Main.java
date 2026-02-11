@@ -12,6 +12,6 @@ public class Main {
         String result = Joiner.on(", ").join("Apple", "Banana", "Cherry");
         System.out.println("Joined String: " + result);
 
-        Util.sayHello("Ant User");
+        Util.sayHello("Maven User");
     }
 }

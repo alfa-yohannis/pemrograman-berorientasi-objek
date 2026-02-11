@@ -319,3 +319,6 @@ TSWLatexianTemp*
 /slides/pertemuan*/pertemuan*.pdf
 /code/pertemuan_05/javafx/app/document.pdf
 /code/pertemuan_05/javafx/document.pdf
+*.lst
+code/pertemuan_01/hello-maven/target/surefire-reports/
+*/.vscode/settings.json

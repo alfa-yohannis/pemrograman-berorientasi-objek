@@ -17,6 +17,9 @@ public class Triangle extends Shape implements Drawable {
 		
 		@Override
 		public void draw() {
-			System.out.println("Drawing a triangle with base " + base + " and height " + height);
+			// System.out.println("Drawing a triangle with base " + base + " and height " + height);
+			System.out.println("  /\\  ");
+			System.out.println(" /  \\ ");
+			System.out.println("/----\\");
 		}
 	}

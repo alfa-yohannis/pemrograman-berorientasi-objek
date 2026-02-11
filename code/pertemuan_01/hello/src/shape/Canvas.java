@@ -1,6 +1,6 @@
 package shape;
 
-public class ShapeDemo {
+public class Canvas {
 		public static void main(String[] args) {
 			Shape[] shapes = {
 				new Rectangle("blue", 4, 5),
