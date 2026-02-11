@@ -110,8 +110,7 @@
       <artifactId>app</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>system</scope>
-      <!--<systemPath>${project.basedir}/lib/app.jar</systemPath>-->
-      <systemPath>${basedir}/lib/app.jar</systemPath>
+      <systemPath>${project.basedir}/lib/app.jar</systemPath>
     </dependency>
   </dependencies>
 </project>
