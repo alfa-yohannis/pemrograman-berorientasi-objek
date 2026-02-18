@@ -112,5 +112,14 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/lib/app.jar</systemPath>
     </dependency>
+
+    <!-- Source: https://mvnrepository.com/artifact/org.bitcoin-s/bitcoin-s-core -->
+    <dependency>
+      <groupId>org.bitcoin-s</groupId>
+      <artifactId>bitcoin-s-core_2.13</artifactId>
+      <version>1.9.11</version>
+      <scope>compile</scope>
+    </dependency>
+
   </dependencies>
 </project>
