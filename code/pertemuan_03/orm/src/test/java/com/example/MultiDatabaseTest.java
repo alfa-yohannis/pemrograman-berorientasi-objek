@@ -18,7 +18,7 @@ public class MultiDatabaseTest {
         Session session = MultiDatabaseFactory.getSqliteSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
 
-        User user = new User("SQLite Test User");
+        User user = new User("Alice");
         Long generatedId = (Long) session.save(user);
 
         transaction.commit();
@@ -38,7 +38,7 @@ public class MultiDatabaseTest {
         Session session = MultiDatabaseFactory.getPostgresSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
 
-        User user = new User("PostgreSQL Test User");
+        User user = new User("Bob");
         Long generatedId = (Long) session.save(user);
 
         transaction.commit();
@@ -57,7 +57,7 @@ public class MultiDatabaseTest {
         Session session = MultiDatabaseFactory.getMysqlSessionFactory().openSession();
         Transaction transaction = session.beginTransaction();
 
-        User user = new User("MySQL Test User");
+        User user = new User("Charlie");
         Long generatedId = (Long) session.save(user);
 
         transaction.commit();
