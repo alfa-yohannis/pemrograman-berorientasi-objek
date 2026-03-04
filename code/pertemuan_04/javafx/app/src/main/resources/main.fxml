@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml" hgap="8.0" vgap="8.0" fx:controller="org.mvc.controller.MahasiswaController">
+    <Label text="Nama:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <TextField fx:id="txtNama" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+
+    <Label text="Umur:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <TextField fx:id="txtUmur" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+
+    <Button text="Tambah" onAction="#tambahMahasiswa" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+
+    <TableView fx:id="tableMahasiswa" prefHeight="240.0" prefWidth="360.0" GridPane.columnIndex="0" GridPane.rowIndex="3" GridPane.columnSpan="2">
+        <columns>
+            <TableColumn fx:id="colNama" prefWidth="220.0" text="Nama" />
+            <TableColumn fx:id="colUmur" prefWidth="120.0" text="Umur" />
+        </columns>
+    </TableView>
+</GridPane>

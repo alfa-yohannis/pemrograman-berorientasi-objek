@@ -748,231 +748,339 @@
 \subsection{Model-View-Controller (MVC) in JavaFX}
 
 \begin{frame}[fragile]{Model-View-Controller (MVC) in JavaFX}
-	\vspace{20pt}
-	The Model-View-Controller (MVC) design pattern is widely used in software development  
-	to separate business logic, presentation, and data flow control within an application.  
-	JavaFX supports MVC implementation effectively, enabling more modular and maintainable UI development.
-	
-	\bigskip
-	\textbf{Main Components of MVC in JavaFX:}
-	\begin{itemize}
-		\item \textbf{Model} – Represents the application’s data and business logic.
-		\item \textbf{View} – Responsible for displaying data to users.
-		\item \textbf{Controller} – Manages interactions between the View and Model.
-	\end{itemize}
-	
-	\bigskip
-	This separation allows for: easier testing and debugging, more scalable and maintainable applications, better separation of concerns in UI development.
+\vspace{20pt}
+
+The Model-View-Controller (MVC) design pattern separates application logic into three main components.
+
+\begin{itemize}
+\item \textbf{Model} – Represents application data and business logic.
+\item \textbf{View} – Displays the user interface, typically defined using FXML.
+\item \textbf{Controller} – Handles user interactions and connects the View with the Model.
+\end{itemize}
+
+\bigskip
+
+JavaFX supports MVC naturally through:
+
+\begin{itemize}
+\item FXML files for UI layout
+\item Controller classes for event handling
+\item Model classes representing application data
+\end{itemize}
+
+\bigskip
+
+This separation improves maintainability, readability, and scalability of applications.
+
 \end{frame}
+
+
+\begin{frame}[fragile]{Application Bootstrap in JavaFX}
+\vspace{20pt}
+\begin{columns}[T]
+
+\column{0.55\textwidth}
+
+A JavaFX application begins with a class that extends
+\texttt{Application}.  
+This class is responsible for loading the initial user interface.
+
+
+\textbf{Main Steps}
+
+\begin{itemize}
+\item Load the UI from an \textbf{FXML} file
+\item Create a \textbf{Scene} containing the UI
+\item Display the scene inside a \textbf{Stage}
+\end{itemize}
+
+
+\textbf{Key Components}
+
+\begin{itemize}
+\item \texttt{FXMLLoader} loads the UI defined in FXML
+\item \texttt{Stage} represents the application window
+\item \texttt{Scene} contains the UI components
+\end{itemize}
+
+\column{0.45\textwidth}
+
+\begin{lstlisting}[style=JavaStyle]
+public class MvcMain extends Application {
+
+  @Override
+  public void start(Stage stage)
+      throws Exception {
+
+    Parent root =
+      FXMLLoader.load(
+        getClass().getResource(
+          "/main.fxml"));
+
+    Scene scene = new Scene(root);
+
+    stage.setTitle("MVC Application");
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  public static void main(String[] args) {
+    launch(args);
+  }
+}
+\end{lstlisting}
+
+\end{columns}
+
+\end{frame}
+
 
 
 \begin{frame}[fragile]{Implementing the Model in JavaFX}
-	\vspace{20pt}
-	In JavaFX, the Model represents the application's data and business logic.  
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public class Student {
-			private StringProperty name = new SimpleStringProperty();
-			private IntegerProperty age = new SimpleIntegerProperty();
-			
-			public Student(String name, int age) {
-				this.name.set(name);
-				this.age.set(age);
-			}
-			
-			public StringProperty nameProperty() { return name; }
-			public IntegerProperty ageProperty() { return age; }
-		}
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item The class \texttt{Student} represents the Model with \texttt{name} and \texttt{age} properties.
-		\item These properties use \textit{Property Binding}, allowing them to be directly linked to the UI.
-		\item This enables dynamic updates between the UI and data without manual event handling.
-	\end{itemize}
+\vspace{20pt}
+\begin{columns}[T]
+
+\column{0.55\textwidth}
+
+The \textbf{Model} represents the application's data and domain objects.
+
+In JavaFX, models often use \textbf{Property classes} so UI components can observe data changes.
+
+\textbf{Key Concepts}
+
+\begin{itemize}
+\item The class represents the application data structure.
+\item JavaFX \textbf{Property Binding} enables automatic UI updates.
+\item Changes in the model can be observed by UI controls such as \texttt{TableView}.
+\end{itemize}
+
+\column{0.45\textwidth}
+
+\begin{lstlisting}[style=JavaStyle]
+public class Student {
+
+  private StringProperty name =
+      new SimpleStringProperty();
+
+  private IntegerProperty age =
+      new SimpleIntegerProperty();
+
+  public Student(String name, int age) {
+    this.name.set(name);
+    this.age.set(age);
+  }
+
+  public StringProperty nameProperty() {
+    return name;
+  }
+
+  public IntegerProperty ageProperty() {
+    return age;
+  }
+}
+\end{lstlisting}
+
+\end{columns}
+
+Common JavaFX property types include: \texttt{StringProperty}, \texttt{IntegerProperty}, \texttt{BooleanProperty}
+
 \end{frame}
 
-\begin{frame}[fragile]{Implementing the View in JavaFX}
-	\vspace{20pt}
-	In JavaFX, the View is responsible for presenting data to the user.  
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public class StudentView {
-			private TableView<Student> table = new TableView<>();
-			
-			public Parent getView() {
-				TableColumn<Student, String> nameColumn = new TableColumn<>("Name");
-				nameColumn.setCellValueFactory(data -> data.getValue().nameProperty());
-				
-				TableColumn<Student, Integer> ageColumn = new TableColumn<>("Age");
-				ageColumn.setCellValueFactory(data -> data.getValue().ageProperty().asObject());
-				
-				table.getColumns().addAll(nameColumn, ageColumn);
-				return new VBox(table);
-			}
-		}
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item The View defines a table layout using \texttt{TableView} to display a list of students.
-		\item It binds each column to the corresponding properties in the \texttt{Student} model.
-		\item This setup ensures that the UI updates automatically when data changes.
-	\end{itemize}
+
+
+\begin{frame}[fragile]{Implementing the View using FXML}
+
+\begin{columns}[T]
+
+\column{0.45\textwidth}
+
+In JavaFX, the \textbf{View} is typically defined using \textbf{FXML},  
+an XML-based language used to describe the UI layout.
+
+\textbf{Key Elements}
+
+\begin{itemize}
+\item \texttt{fx:controller} links the UI with its controller class.
+\item \texttt{fx:id} identifies UI components so they can be injected into the controller.
+\item \texttt{onAction} connects UI events to controller methods.
+\end{itemize}
+
+
+\column{0.55\textwidth}
+
+\begin{lstlisting}[style=XmlStyle]
+<GridPane xmlns:fx="http://javafx.com/fxml"
+          fx:controller="controller.StudentController">
+  <Label text="Name:"/>
+  <TextField fx:id="txtName"/>
+  <Button text="Add"
+          onAction="#addStudent"/>
+</GridPane>
+\end{lstlisting}
+
+Using FXML allows developers to separate the  
+\textbf{UI structure} from the \textbf{application logic}.
+
+\end{columns}
+
 \end{frame}
+
+
 
 \begin{frame}[fragile]{Implementing the Controller in JavaFX}
-	\vspace{20pt}
-	In JavaFX, the Controller manages the interaction between the Model and View.  
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public class StudentController {
-			private StudentView view;
-			private ObservableList<Student> data = FXCollections.observableArrayList();
-			
-			public StudentController(StudentView view) {
-				this.view = view;
-				data.add(new Student("John", 20));
-				data.add(new Student("Emma", 21));
-				view.getTable().setItems(data);
-			}
-		}
-	\end{lstlisting}
-	
-	\begin{itemize}
-		\item The Controller connects the View with the Model.
-		\item It initializes the data list with sample students.
-		\item The data is then set into the \texttt{TableView} in the View.
-		\item This allows the UI to reflect changes dynamically.
-	\end{itemize}
+\vspace{10pt}
+\begin{columns}[T]
+
+\column{0.6\textwidth}
+
+The \textbf{Controller} manages interactions between the View and the Model.
+
+\medskip
+
+\textbf{Responsibilities}
+
+\begin{itemize}
+\item Receive user input from UI components
+\item Create or update objects in the Model
+\item Update observable data used by the View
+\end{itemize}
+
+\medskip
+
+\textbf{Important Concepts}
+
+\begin{itemize}
+\item \texttt{@FXML} injects UI elements defined in the FXML file.
+\item Controller methods handle UI events.
+\item The \texttt{ObservableList} automatically updates the UI when data changes.
+\end{itemize}
+
+\column{0.4\textwidth}
+
+\begin{lstlisting}[style=JavaStyle]
+public class StudentController {
+
+  @FXML
+  private TextField txtName;
+
+  private ObservableList<Student> data =
+      FXCollections.observableArrayList();
+
+  @FXML
+  private void addStudent() {
+
+    String name = txtName.getText();
+
+    data.add(new Student(name, 18));
+
+    txtName.clear();
+  }
+}
+\end{lstlisting}
+
+\end{columns}
+
 \end{frame}
+
+
 
 \subsection{Separation of Business Logic and UI}
 
 \begin{frame}[fragile]{Separation of Business Logic and UI}
-	\vspace{20pt}
-	In JavaFX application development, separating business logic from the UI  
-	is essential for ensuring code flexibility and readability.  
-	This approach prevents mixing UI code with data management and business operations.
-	
-	\bigskip
-	\textbf{Approaches for Achieving Separation:}
-	\begin{itemize}
-		\item Using separate classes to handle business logic.
-		\item Defining the UI structure with FXML.
-		\item Utilizing \textit{Binding} and \textit{Listeners} to connect the UI with data.
-	\end{itemize}
-	
-	\bigskip
-	By following these principles, applications become more modular,  
-	maintainable, and scalable.
+\vspace{20pt}
+
+Separating UI code from business logic is important for building maintainable JavaFX applications.
+
+\bigskip
+
+Recommended practices include:
+
+\begin{itemize}
+\item Defining UI layouts using \textbf{FXML}.
+\item Handling user interactions in \textbf{Controller classes}.
+\item Storing application data in \textbf{Model classes}.
+\item Using \textbf{Binding} and \textbf{ObservableList} to synchronize UI and data.
+\end{itemize}
+
+\bigskip
+
+This design improves modularity, readability, and scalability.
+
 \end{frame}
 
-
-\begin{frame}[fragile]{Using FXML for UI Definition}
-	\vspace{20pt}
-	JavaFX supports FXML, an XML-based format that allows for UI definition  
-	without embedding business logic. This approach enhances flexibility  
-	and separation of concerns.
-	
-	\begin{lstlisting}[style=XmlStyle]
-		<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.StudentController">
-		<Label text="Name:"/>
-		<TextField fx:id="txtName"/>
-		<Button text="Add" onAction="#addStudent"/>
-		</GridPane>
-	\end{lstlisting}
-	
-	This FXML file defines the UI structure independently, allowing modifications  
-	without altering the underlying logic. The UI is controlled by \texttt{StudentController},  
-	ensuring a clear separation between presentation and business logic.
-\end{frame}
-
-
-\begin{frame}[fragile]{Controller Handling UI Events and Benefits of Separation}
-	\vspace{20pt}
-	JavaFX follows the MVC pattern, ensuring a clear separation between UI and business logic.  
-	The Controller manages UI interactions, while the View remains independent.
-
-	\begin{lstlisting}[style=JavaStyle]
-		public class StudentController {
-			@FXML private TextField txtName;
-			private ObservableList<Student> data = FXCollections.observableArrayList();
-			
-			@FXML
-			private void addStudent() {
-				String name = txtName.getText();
-				data.add(new Student(name, 18));
-				txtName.clear();
-			}
-		}
-	\end{lstlisting}
-
-	\begin{itemize}
-		\item The View (FXML) can be updated without modifying business logic.
-		\item Enhances maintainability, modularity, and testability.
-		\item UI logic remains separate from data processing, improving scalability.
-	\end{itemize}
-\end{frame}
 
 
 \subsection{Dependency Injection in JavaFX}
 
-\begin{frame}[fragile]{Dependency Injection in JavaFX}
-	\vspace{20pt}
-	Dependency Injection (DI) is a technique used to manage dependencies between components  
-	in an application, improving flexibility and easing testing.
-	
-	\bigskip
-	\textbf{Popular Dependency Injection Frameworks for JavaFX:}
-	\begin{itemize}
-		\item \textbf{Guice} – A lightweight DI framework developed by Google.
-		\item \textbf{Spring} – A widely used framework for dependency management in Java applications.
-		\item \textbf{CDI (Contexts and Dependency Injection)} – A Java EE standard for DI.
-	\end{itemize}
-	
-	\bigskip
-	By leveraging DI, JavaFX applications can achieve better modularity,  
-	improving code maintainability and testability.
+\begin{frame}[fragile]{Dependency Injection using FXML}
+
+\begin{columns}[T]
+
+\column{0.6\textwidth}
+
+JavaFX provides a simple form of \textbf{Dependency Injection} through the
+\texttt{@FXML} mechanism.
+
+\medskip
+
+When an FXML file is loaded:
+
+\begin{itemize}
+\item UI components declared with \texttt{fx:id} are injected into the Controller.
+\item Methods referenced by \texttt{onAction} are connected to UI events.
+\end{itemize}
+
+\medskip
+
+This mechanism automatically connects the
+\textbf{View (FXML)} and the \textbf{Controller}
+without manually creating UI objects.
+
+\column{0.4\textwidth}
+
+\begin{lstlisting}[style=XmlStyle]
+<TextField fx:id="txtName"/>
+
+<Button text="Add"
+        onAction="#addStudent"/>
+\end{lstlisting}
+
+\begin{lstlisting}[style=JavaStyle]
+public class StudentController {
+
+  @FXML
+  private TextField txtName;
+
+  @FXML
+  private void addStudent() {
+    System.out.println(
+        txtName.getText());
+  }
+}
+\end{lstlisting}
+
+\end{columns}
+
 \end{frame}
 
 
-
-\begin{frame}[fragile]{Dependency Injection with Guice}
-	\vspace{20pt}
-	Guice simplifies dependency management in JavaFX, making code more modular and testable.
-	
-	\begin{lstlisting}[style=JavaStyle]
-		public class StudentService {
-			public List<Student> getStudents() {
-				return List.of(new Student("Andi", 22), new Student("Lina", 23));
-			}
-		}
-		
-		public class StudentController {
-			@Inject
-			private StudentService studentService;
-			
-			public void displayStudents() {
-				studentService.getStudents().forEach(s -> System.out.println(s.getName()));
-			}
-		}
-	\end{lstlisting}
-	
-	Guice automatically injects \texttt{StudentService} into \texttt{StudentController},  
-	enhancing separation of concerns and easing testing.
-\end{frame}
 
 \begin{frame}[fragile]{Benefits of Dependency Injection in JavaFX}
-	\vspace{20pt}
-	Dependency Injection enhances JavaFX application architecture by:
-	\begin{itemize}
-		\item Reducing direct dependencies between components.
-		\item Facilitating unit testing by enabling isolated object testing.
-		\item Increasing flexibility, allowing implementation changes  
-		without modifying core logic.
-	\end{itemize}
-	
-	This results in a more modular, extensible, and maintainable application structure.
+\vspace{20pt}
+
+Using the \texttt{@FXML} injection mechanism provides several advantages:
+
+\begin{itemize}
+\item Reduces direct coupling between UI and controller code.
+\item Simplifies event handling.
+\item Improves code readability and modularity.
+\item Supports the MVC architecture naturally.
+\end{itemize}
+
+\bigskip
+
+By combining MVC with FXML-based injection, JavaFX applications become easier to maintain and extend.
+
 \end{frame}
 
 
@@ -980,10 +1088,10 @@
 
 \subsection{Setting Up a JavaFX Project}
 
-\begin{frame}[fragile]{Setting Up a JavaFX Project and Application Structure}
+\begin{frame}[fragile]{\LARGE{Setting Up a JavaFX Project and Application Structure}}
 	\vspace{20pt}
 	To create a JavaFX application, follow the steps in the Hello World section  
-	(Subsections \ref{gradle_javafx} and \ref{hello_world_menggunakan_javafx}).
+	(Subsection \ref{gradle_javafx}).
 	
 	A JavaFX application consists of several key components:
 	\begin{itemize}

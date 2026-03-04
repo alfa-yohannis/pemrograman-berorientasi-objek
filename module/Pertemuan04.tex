@@ -448,153 +448,250 @@ Dengan memahami konsep \textit{Event-Driven Programming}, pengembangan aplikasi 
 
 \subsection{Model-View-Controller (MVC) dalam JavaFX}
 
-Model-View-Controller (MVC) adalah pola desain yang digunakan dalam pengembangan perangkat lunak untuk memisahkan logika bisnis, tampilan, dan kontrol aliran data dalam aplikasi. JavaFX mendukung implementasi MVC dengan baik, memungkinkan pengembangan antarmuka pengguna yang lebih modular dan mudah dikelola.
+Model-View-Controller (MVC) adalah pola desain yang digunakan dalam pengembangan perangkat lunak untuk memisahkan tanggung jawab utama dalam aplikasi menjadi tiga komponen yang berbeda. Pemisahan ini membantu meningkatkan keterbacaan kode, mempermudah pemeliharaan, serta memungkinkan pengembangan aplikasi dalam skala besar.
+
+JavaFX menyediakan dukungan yang baik untuk implementasi pola MVC melalui penggunaan \textit{FXML}, \textit{Controller}, dan mekanisme \textit{Property Binding}. Dengan pendekatan ini, tampilan aplikasi dapat didefinisikan secara terpisah dari logika program.
+
+Komponen utama dalam MVC terdiri dari:
 
 \begin{itemize}
-\item \textbf{Model} – Merepresentasikan data dan logika bisnis aplikasi.
-\item \textbf{View} – Bertanggung jawab untuk menampilkan data ke pengguna.
-\item \textbf{Controller} – Mengelola interaksi antara View dan Model.
+\item \textbf{Model} – merepresentasikan data serta logika bisnis aplikasi.
+\item \textbf{View} – bertanggung jawab menampilkan data kepada pengguna.
+\item \textbf{Controller} – menangani interaksi pengguna serta menghubungkan View dengan Model.
 \end{itemize}
 
-Pemisahan ini mempermudah pengujian, pemeliharaan, dan pengembangan aplikasi dalam skala besar.
+Pemisahan ini mempermudah pengujian, pemeliharaan, dan pengembangan aplikasi dalam skala besar karena perubahan pada satu komponen tidak secara langsung memengaruhi komponen lainnya.
 
-\textbf{Contoh implementasi MVC dalam JavaFX:}
+\subsection{Bootstrap Aplikasi JavaFX}
+
+Sebelum komponen MVC digunakan, aplikasi JavaFX memerlukan sebuah kelas utama yang bertugas memulai aplikasi dan memuat tampilan awal. Kelas ini biasanya mewarisi kelas \texttt{Application}.
+
+\begin{lstlisting}[style=JavaStyle, caption=Kelas utama untuk memulai aplikasi JavaFX]
+package org.mvc;
+
+import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.Parent;
+import javafx.stage.Stage;
+
+public class MvcMain extends Application {
+  @Override
+  public void start(Stage stage) throws Exception {
+    Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
+    Scene scene = new Scene(root);
+    stage.setTitle("Aplikasi MVC");
+    stage.setScene(scene);
+    stage.show();
+  }
+
+  public static void main(String[] args) {
+    launch(args);
+  }
+}
+\end{lstlisting}
+
+Pada kode di atas, method \texttt{start()} merupakan titik awal aplikasi JavaFX. Method ini memuat file \texttt{FXML} yang berisi definisi tampilan aplikasi menggunakan \texttt{FXMLLoader}. Setelah tampilan dimuat, objek \texttt{Scene} dibuat dan ditampilkan pada \texttt{Stage}, yaitu jendela utama aplikasi.
+
+Kelas ini berfungsi sebagai \textit{bootstrap} aplikasi dan bukan bagian langsung dari komponen MVC.
+
+\subsection{Model dalam JavaFX}
+
+Model merepresentasikan data yang digunakan oleh aplikasi. Dalam JavaFX, model biasanya menggunakan \textit{JavaFX Property} agar data dapat dihubungkan langsung dengan komponen UI melalui mekanisme \textit{binding}.
 
 \begin{lstlisting}[style=JavaStyle, caption=Model dalam aplikasi JavaFX]
+package org.mvc.model;
+
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
+
 public class Mahasiswa {
-	private StringProperty nama = new SimpleStringProperty();
-	private IntegerProperty umur = new SimpleIntegerProperty();
-	
-	public Mahasiswa(String nama, int umur) {
-		this.nama.set(nama);
-		this.umur.set(umur);
-	}
-	
-	public StringProperty namaProperty() { return nama; }
-	public IntegerProperty umurProperty() { return umur; }
+
+  private StringProperty nama = new SimpleStringProperty();
+  private IntegerProperty umur = new SimpleIntegerProperty();
+
+  public Mahasiswa(String nama, int umur) {
+    this.nama.set(nama);
+    this.umur.set(umur);
+  }
+
+  public StringProperty namaProperty() { return nama; }
+  public IntegerProperty umurProperty() { return umur; }
+
 }
 \end{lstlisting}
 
-Kode di atas merepresentasikan Model dengan properti \texttt{nama} dan \texttt{umur}. Properti ini menggunakan \textit{Property Binding} agar dapat dihubungkan langsung ke tampilan.
+Kelas \texttt{Mahasiswa} berfungsi sebagai Model yang menyimpan data mahasiswa. Properti \texttt{nama} dan \texttt{umur} menggunakan tipe \texttt{Property} dari JavaFX sehingga dapat digunakan dalam mekanisme \textit{binding} dengan komponen UI.
 
-\begin{lstlisting}[style=JavaStyle, caption=View dalam aplikasi JavaFX]
-public class MahasiswaView {
-	private TableView<Mahasiswa> table = new TableView<>();
-	
-	public Parent getView() {
-		TableColumn<Mahasiswa, String> kolomNama = new TableColumn<>("Nama");
-		kolomNama.setCellValueFactory(data -> data.getValue().namaProperty());
-		
-		TableColumn<Mahasiswa, Integer> kolomUmur = new TableColumn<>("Umur");
-		kolomUmur.setCellValueFactory(data -> data.getValue().umurProperty().asObject());
-		
-		table.getColumns().addAll(kolomNama, kolomUmur);
-		return new VBox(table);
-	}
-}
-\end{lstlisting}
+Penggunaan \texttt{StringProperty} dan \texttt{IntegerProperty} memungkinkan perubahan data pada Model secara otomatis tercermin pada tampilan jika properti tersebut dihubungkan dengan komponen UI.
 
-Bagian View mendefinisikan tampilan tabel untuk menampilkan daftar mahasiswa.
+\subsection{View dalam JavaFX}
 
-\begin{lstlisting}[style=JavaStyle, caption=Controller dalam aplikasi JavaFX]
-public class MahasiswaController {
-	private MahasiswaView view;
-	private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
-	
-	public MahasiswaController(MahasiswaView view) {
-		this.view = view;
-		data.add(new Mahasiswa("Budi", 20));
-		data.add(new Mahasiswa("Siti", 21));
-		view.getTable().setItems(data);
-	}
-}
-\end{lstlisting}
+View dalam JavaFX biasanya didefinisikan menggunakan \textit{FXML}. FXML adalah bahasa markup berbasis XML yang digunakan untuk mendeskripsikan struktur antarmuka pengguna secara deklaratif.
 
-Controller mengatur aliran data antara Model dan View serta menangani interaksi pengguna.
+\begin{lstlisting}[style=JavaStyle, caption=View menggunakan FXML dalam JavaFX]
+<?xml version="1.0" encoding="UTF-8"?>
 
-\subsection{Pemisahan Logika Bisnis dan Tampilan}
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.GridPane?>
 
-Dalam pengembangan aplikasi berbasis JavaFX, memisahkan logika bisnis dari tampilan sangat penting untuk memastikan fleksibilitas dan keterbacaan kode. Prinsip ini mengacu pada pendekatan yang menghindari pencampuran kode UI dengan kode yang mengelola data atau melakukan operasi bisnis.
+<GridPane xmlns:fx="http://javafx.com/fxml" hgap="8.0" vgap="8.0"
+          fx:controller="org.mvc.controller.MahasiswaController">
 
-Pendekatan ini dapat diterapkan dengan:
-\begin{itemize}
-\item Menggunakan kelas terpisah untuk menangani logika bisnis.
-\item Menggunakan FXML untuk mendefinisikan tampilan.
-\item Menggunakan \textit{Binding} dan \textit{Listener} untuk menghubungkan UI dengan data.
-\end{itemize}
+    <Label text="Nama:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+    <TextField fx:id="txtNama" GridPane.columnIndex="1" GridPane.rowIndex="0" />
 
-\textbf{Contoh penggunaan FXML untuk pemisahan tampilan:}
+    <Label text="Umur:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+    <TextField fx:id="txtUmur" GridPane.columnIndex="1" GridPane.rowIndex="1" />
 
-\begin{lstlisting}[style=XmlStyle, caption=Contoh file FXML]
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:controller="controller.MahasiswaController">
-<Label text="Nama:"/>
-<TextField fx:id="txtNama"/>
-<Button text="Tambah" onAction="#tambahMahasiswa"/>
+    <Button text="Tambah"
+            onAction="#tambahMahasiswa"
+            GridPane.columnIndex="1"
+            GridPane.rowIndex="2" />
+
+    <TableView fx:id="tableMahasiswa"
+               prefHeight="240.0"
+               prefWidth="360.0"
+               GridPane.columnIndex="0"
+               GridPane.rowIndex="3"
+               GridPane.columnSpan="2">
+
+        <columns>
+            <TableColumn fx:id="colNama" prefWidth="220.0" text="Nama" />
+            <TableColumn fx:id="colUmur" prefWidth="120.0" text="Umur" />
+        </columns>
+
+    </TableView>
+
 </GridPane>
 \end{lstlisting}
 
-Kode di atas mendefinisikan tampilan menggunakan FXML tanpa mencampurkan logika bisnis di dalamnya.
+Dalam kode FXML di atas, komponen antarmuka seperti \texttt{Label}, \texttt{TextField}, \texttt{Button}, dan \texttt{TableView} didefinisikan secara deklaratif. Atribut \texttt{fx:id} digunakan untuk menghubungkan komponen UI dengan field pada controller, sedangkan atribut \texttt{onAction} digunakan untuk menghubungkan aksi tombol dengan method pada controller.
 
-\textbf{Contoh controller yang menangani event dari UI:}
+\subsection{Controller dalam JavaFX}
 
-\begin{lstlisting}[style=JavaStyle, caption=Menangani aksi tombol dalam JavaFX]
+Controller bertanggung jawab menangani interaksi pengguna serta menghubungkan View dengan Model.
+
+\begin{lstlisting}[style=JavaStyle, caption=Controller dalam aplikasi JavaFX]
+package org.mvc.controller;
+
+import org.mvc.model.Mahasiswa;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXML;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+
 public class MahasiswaController {
-	@FXML private TextField txtNama;
-	private ObservableList<Mahasiswa> data = FXCollections.observableArrayList();
-	
-	@FXML
-	private void tambahMahasiswa() {
-		String nama = txtNama.getText();
-		data.add(new Mahasiswa(nama, 18));
-		txtNama.clear();
-	}
+
+  private final ObservableList<Mahasiswa> data =
+      FXCollections.observableArrayList();
+
+  @FXML
+  private TextField txtNama;
+
+  @FXML
+  private TextField txtUmur;
+
+  @FXML
+  private TableView<Mahasiswa> tableMahasiswa;
+
+  @FXML
+  private TableColumn<Mahasiswa, String> colNama;
+
+  @FXML
+  private TableColumn<Mahasiswa, Number> colUmur;
+
+  @FXML
+  private void initialize() {
+
+    colNama.setCellValueFactory(
+        cellData -> cellData.getValue().namaProperty());
+
+    colUmur.setCellValueFactory(
+        cellData -> cellData.getValue().umurProperty());
+
+    tableMahasiswa.setItems(data);
+
+    data.add(new Mahasiswa("Budi", 20));
+    data.add(new Mahasiswa("Siti", 21));
+  }
+
+  @FXML
+  private void tambahMahasiswa() {
+
+    String nama = txtNama.getText() == null ? ""
+        : txtNama.getText().trim();
+
+    if (nama.isEmpty()) {
+      return;
+    }
+
+    String umurText = txtUmur.getText() == null ? ""
+        : txtUmur.getText().trim();
+
+    int umur = 0;
+
+    if (!umurText.isEmpty()) {
+      try {
+        umur = Integer.parseInt(umurText);
+      } catch (NumberFormatException ex) {
+        return;
+      }
+    }
+
+    data.add(new Mahasiswa(nama, umur));
+
+    txtNama.clear();
+    txtUmur.clear();
+  }
 }
 \end{lstlisting}
 
-Dengan pendekatan ini, tampilan (View) dapat diperbarui tanpa perlu mengubah kode logika bisnis.
+Field yang diberi anotasi \texttt{@FXML} akan dihubungkan secara otomatis dengan komponen UI yang memiliki \texttt{fx:id} yang sama pada file FXML.
+
+Method \texttt{initialize()} dipanggil secara otomatis setelah proses pemuatan FXML selesai. Pada method ini dilakukan konfigurasi tabel serta pengisian data awal.
+
+\texttt{ObservableList} digunakan sebagai struktur data yang dapat dipantau oleh komponen UI. Ketika elemen baru ditambahkan ke dalam list, tampilan tabel akan diperbarui secara otomatis.
+
+Method \texttt{tambahMahasiswa()} dipanggil ketika tombol ``Tambah'' ditekan. Method ini membaca input dari pengguna, membuat objek \texttt{Mahasiswa}, lalu menambahkannya ke dalam daftar data yang ditampilkan pada tabel.
+
+\subsection{Pemisahan Logika Bisnis dan Tampilan}
+
+Dalam pengembangan aplikasi JavaFX, sangat penting untuk memisahkan logika bisnis dari tampilan. Pendekatan ini meningkatkan keterbacaan kode serta mempermudah pengembangan aplikasi.
+
+Beberapa prinsip yang digunakan antara lain:
+
+\begin{itemize}
+\item Menggunakan FXML untuk mendefinisikan struktur tampilan.
+\item Menggunakan Controller untuk menangani interaksi pengguna.
+\item Menggunakan Model untuk menyimpan dan mengelola data aplikasi.
+\item Menggunakan \textit{binding} atau \textit{ObservableList} untuk menghubungkan data dengan tampilan.
+\end{itemize}
+
+Dengan pendekatan ini, tampilan dapat diubah tanpa memengaruhi logika program, dan logika bisnis dapat dikembangkan secara independen dari komponen UI.
 
 \subsection{Dependency Injection dalam JavaFX}
 
-Dependency Injection (DI) adalah teknik yang digunakan untuk mengelola ketergantungan antara komponen dalam aplikasi, sehingga meningkatkan fleksibilitas dan memudahkan pengujian. JavaFX dapat menggunakan berbagai framework DI seperti:
+JavaFX secara sederhana telah menyediakan mekanisme \textit{Dependency Injection} melalui penggunaan anotasi \texttt{@FXML}. Komponen UI yang dideklarasikan dalam FXML akan secara otomatis diinjeksikan ke dalam controller berdasarkan nilai \texttt{fx:id}.
+
+Pendekatan ini memberikan beberapa keuntungan:
+
 \begin{itemize}
-\item \textbf{Guice} – Framework DI yang dikembangkan oleh Google.
-\item \textbf{Spring} – Framework populer untuk mengelola dependensi dalam aplikasi berbasis Java.
-\item \textbf{CDI (Contexts and Dependency Injection)} – Standar Java EE untuk DI.
+\item Mengurangi ketergantungan langsung antar komponen.
+\item Mempermudah pengujian unit karena komponen dapat diuji secara terpisah.
+\item Memungkinkan perubahan implementasi tanpa memodifikasi struktur utama aplikasi.
 \end{itemize}
 
-\textbf{Contoh penggunaan Dependency Injection dengan Guice dalam JavaFX:}
-
-\begin{lstlisting}[style=JavaStyle, caption=Contoh implementasi Dependency Injection dengan Guice]
-public class MahasiswaService {
-	public List<Mahasiswa> getMahasiswa() {
-		return List.of(new Mahasiswa("Andi", 22), new Mahasiswa("Lina", 23));
-	}
-}
-
-public class MahasiswaController {
-	private MahasiswaService mahasiswaService;
-	
-	@Inject
-	public MahasiswaController(MahasiswaService service) {
-		this.mahasiswaService = service;
-	}
-	
-	public void tampilkanMahasiswa() {
-		mahasiswaService.getMahasiswa().forEach(m -> System.out.println(m.getNama()));
-	}
-}
-\end{lstlisting}
-
-Dalam contoh ini, Guice mengelola instansiasi \texttt{MahasiswaService} dan menyuntikkan dependensi tersebut ke dalam \texttt{MahasiswaController}. Hal ini memungkinkan pemisahan kode dan memudahkan pengujian.
-
-\textbf{Keuntungan menggunakan Dependency Injection dalam JavaFX:}
-\begin{itemize}
-\item Mengurangi ketergantungan langsung antara komponen.
-\item Memudahkan pengujian unit karena objek dapat diuji secara terisolasi.
-\item Meningkatkan fleksibilitas kode dengan memungkinkan perubahan implementasi tanpa perlu memodifikasi kode utama.
-\end{itemize}
-
-Dengan mengimplementasikan Dependency Injection, arsitektur aplikasi JavaFX menjadi lebih modular, mudah diperluas, dan lebih mudah dikelola.
+Dengan memanfaatkan pola MVC serta mekanisme injeksi dependensi yang disediakan oleh JavaFX, arsitektur aplikasi menjadi lebih modular, mudah dipelihara, dan lebih mudah dikembangkan di masa depan.
 
 
 
@@ -805,6 +902,7 @@ grid.add(btnSubmit, 1, 2);
 
 Scene scene = new Scene(grid, 300, 200);
 primaryStage.setScene(scene);
+primaryStage.show();
 \end{lstlisting}
 
 Kode di atas menunjukkan bagaimana elemen UI ditempatkan dalam sel-sel grid, memungkinkan pengaturan yang lebih terstruktur.

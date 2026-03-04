@@ -10,6 +10,13 @@
     },
     {
       "type": "java",
+      "name": "MvcMain",
+      "request": "launch",
+      "mainClass": "org.mvc.MvcMain",
+      "vmArgs": "--module-path /data1/programs/javafx-sdk-21.0.5/lib --add-modules javafx.base,javafx.controls,javafx.fxml,javafx.graphics,javafx.media,javafx.swing,javafx.swt,javafx.web --class-path /data1/programs/birt-runtime-4.17.0-202409160710/ReportEngine/lib/*.jar"
+    },
+    {
+      "type": "java",
       "name": "App",
       "request": "launch",
       "mainClass": "org.example.App",

@@ -12,9 +12,13 @@ import javafx.animation.Timeline;
 import javafx.animation.TranslateTransition;
 import javafx.application.Application;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
@@ -34,40 +38,78 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) {
 
-        Label label = new Label("Hello , JavaFX!");
-        StackPane root = new StackPane(label);
-        Scene scene = new Scene(root, 300, 200);
-        primaryStage.setTitle("Hello JavaFX");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        System.out.println("Ini adalah metode start, aplikasi sedang berjalan");
 
-        // Circle circle = new Circle(50, Color.RED);
+        // Button btnGanti = new Button("Ganti Scene");
 
-        // FadeTransition fade = new FadeTransition(Duration.seconds(1), circle);
-        // fade.setFromValue(1.0);
-        // fade.setToValue(0.3);
+        // btnGanti.setOnAction(e -> {
+        //     StackPane newRoot = new StackPane(new Label("Scene Baru"));
+        //     Scene newScene = new Scene(newRoot, 600, 400);
+        //     primaryStage.setScene(newScene);
+        // });
 
-        // TranslateTransition translate = new TranslateTransition(Duration.seconds(1), circle);
-        // translate.setByX(100);
+        // VBox root = new VBox(btnGanti);
+        // Scene scene = new Scene(root, 600, 400);
 
-        // ScaleTransition scale = new ScaleTransition(Duration.seconds(1), circle);
-        // scale.setToX(1.5);
-        // scale.setToY(1.5);
+        // primaryStage.setScene(scene);
+        // primaryStage.setTitle("Aplikasi JavaFX - Ganti Scene");
+        // primaryStage.show();
 
-        // RotateTransition rotate = new RotateTransition(Duration.seconds(1), circle);
-        // rotate.setByAngle(360);
+        // ListView<String> listView = new ListView<>();
+        // listView.getItems().addAll("Item 1", "Item 2", "Item 3");
 
-        // SequentialTransition seqTransition = new SequentialTransition(fade, translate, scale, rotate);
-        // seqTransition.setCycleCount(Timeline.INDEFINITE);
-        // seqTransition.play();
+        // listView.getSelectionModel().selectedItemProperty().addListener(new
+        // ChangeListener<String>() {
+        // @Override
+        // public void changed(ObservableValue<? extends String> obs, String oldVal,
+        // String newVal) {
+        // System.out.println("Dipilih: " + newVal);
+        // }
+        // });
 
-        // StackPane root = new StackPane(circle);
+        // // listView.getSelectionModel().selectedItemProperty().addListener((obs,
+        // oldVal, newVal) -> {
+        // // System.out.println("Dipilih: " + newVal);
+        // // });
+
+        // VBox root = new VBox(10, listView);
+        // root.setAlignment(Pos.CENTER);
         // root.setPadding(new Insets(20));
 
-        // Scene scene = new Scene(root, 400, 300);
+        // Scene scene = new Scene(root, 300, 200);
         // primaryStage.setScene(scene);
-        // primaryStage.setTitle("SequentialTransition Example in JavaFX");
+        // primaryStage.setTitle("ListView dengan Event dalam JavaFX");
         // primaryStage.show();
+
+        Circle circle = new Circle(50, Color.RED);
+
+        FadeTransition fade = new FadeTransition(Duration.seconds(1), circle);
+        fade.setFromValue(1.0);
+        fade.setToValue(0.3);
+
+        TranslateTransition translate = new TranslateTransition(Duration.seconds(1),
+        circle);
+        translate.setByX(100);
+
+        ScaleTransition scale = new ScaleTransition(Duration.seconds(1), circle);
+        scale.setToX(1.5);
+        scale.setToY(1.5);
+
+        RotateTransition rotate = new RotateTransition(Duration.seconds(1), circle);
+        rotate.setByAngle(360);
+
+        SequentialTransition seqTransition = new SequentialTransition(fade,
+        translate, scale, rotate);
+        seqTransition.setCycleCount(Timeline.INDEFINITE);
+        seqTransition.play();
+
+        StackPane root = new StackPane(circle);
+        root.setPadding(new Insets(20));
+
+        Scene scene = new Scene(root, 400, 300);
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("SequentialTransition Example in JavaFX");
+        primaryStage.show();
     }
 
     @Override
