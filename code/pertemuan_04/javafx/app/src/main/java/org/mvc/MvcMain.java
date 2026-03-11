@@ -9,7 +9,8 @@ import javafx.stage.Stage;
 public class MvcMain extends Application {
   @Override
   public void start(Stage stage) throws Exception {
-    Parent root = FXMLLoader.load(getClass().getResource("/main.fxml"));
+    Parent root = FXMLLoader.load(getClass()
+      .getResource("/main.fxml"));
     Scene scene = new Scene(root);
     stage.setTitle("Aplikasi MVC");
     stage.setScene(scene);
