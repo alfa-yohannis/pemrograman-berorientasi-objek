@@ -52,10 +52,10 @@ Person <|-- Teacher
 Staff <|-- Teacher   
 Teacher ..|> Payable 
 
-University "1" *-- "0..*" Person   : Contains
-University "1" *-- "0..*" Course   : Contains
-Course "0..*" o-- "0..*" Student    : Enrolled
-Course "0..*" o-- "1" Teacher       : Teaches
+University "1" o-- "0..*" Course   : Offers
+Student "0..*" -- "0..*" Course     : Enrolled
+Teacher "1" -- "0..*" Course        : Teaches
+Student "0..*" -- "1" University    : StudiesAt
 
 ' Adding Notes
 note right of Person
@@ -75,7 +75,7 @@ end note
 
 note right of University
   Represents an educational institution.
-  Contains people and courses.
+  Offers multiple courses.
 end note
 
 note right of Payable

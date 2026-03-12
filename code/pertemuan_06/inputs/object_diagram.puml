@@ -31,17 +31,17 @@ object university <<Object>> {
 }
 
 ' Relationships
-university *-- student1 : Contains
-university *-- student2 : Contains
-university *-- teacher1 : Contains
-university *-- course1 : Contains
-university *-- course2 : Contains
+student1 -- course1 : Enrolled
+student1 -- course2 : Enrolled
+student2 -- course2 : Enrolled
+teacher1 -- course1 : Teaches
+teacher1 -- course2 : Teaches
+university -- course1 : Offers
+university -- course2 : Offers
 
-course1 o-- student1 : Enrolled
-course2 o-- student1 : Enrolled
-course2 o-- student2 : Enrolled
-course1 o-- teacher1 : Teaches
-course2 o-- teacher1 : Teaches
+' Association Relationship
+student1 -- university : StudiesAt
+student2 -- university : StudiesAt
 
 ' Notes for explanation
 note right of student1
@@ -51,7 +51,7 @@ end note
 
 note right of course1
   Instance of Course Class
-  Aggregates teacher and students
+  Represents a real-world course
 end note
 
 note right of teacher1
@@ -60,7 +60,7 @@ note right of teacher1
 end note
 
 note right of university
-  Contains people and courses
+  Represents the university entity
 end note
 
 @enduml

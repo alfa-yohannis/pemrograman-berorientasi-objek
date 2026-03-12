@@ -5,7 +5,7 @@ import pathlib
 import sys
 
 INPUT_DIR = pathlib.Path(sys.argv[1]) if len(sys.argv) > 1 else pathlib.Path(".")
-OUTPUT_DIR = INPUT_DIR / "converted"
+OUTPUT_DIR = INPUT_DIR / "."
 
 OUTPUT_DIR.mkdir(exist_ok=True)
 
