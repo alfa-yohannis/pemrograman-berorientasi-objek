@@ -1,10 +1,12 @@
+package org.example.srp2b;
 
-	package org.example.srp2b;
-	
+import java.util.regex.Pattern;
+
 public class EmailValidator {
-		public boolean isValid(String email) {
-			// Validasi format email
-                    return false;
-			// Validasi format email
-		}
-	}
+    private static final Pattern EMAIL_PATTERN =
+            Pattern.compile("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$");
+
+    public boolean isValid(String email) {
+        return email != null && EMAIL_PATTERN.matcher(email).matches();
+    }
+}

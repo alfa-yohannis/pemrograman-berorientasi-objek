@@ -1,18 +1,17 @@
-// src/main/java/org/example/srp1b/Invoice.java
 package org.example.srp1b;
 
 import java.util.List;
 
 public class Invoice {
-    private List<Item> items;
+    private final List<Item> items;
 
     public Invoice(List<Item> items) {
-        this.items = items;
+        this.items = List.copyOf(items);
     }
 
     public double calculateTotal() {
         return items.stream()
-                    .mapToDouble(Item::getTotal)
-                    .sum();
+                .mapToDouble(Item::getTotal)
+                .sum();
     }
 }
